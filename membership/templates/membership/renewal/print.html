@@ -1,0 +1,562 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Renewal Receipt</title>
+
+<style>
+
+@page{
+    size:A5 portrait;
+    margin:18mm 10mm 10mm 10mm;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:11px;
+    color:#000;
+}
+
+.receipt{
+    width:128mm;
+    margin:auto;
+}
+
+/* HEADER */
+
+.header{
+    text-align:center;
+    padding-top:5mm;
+}
+
+.logo{
+    height:40px;
+    margin-bottom:5px;
+}
+
+.company-name{
+    font-size:22px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.subtitle{
+    font-size:11px;
+    line-height:18px;
+    font-weight:bold;
+}
+
+
+/* TITLE */
+
+.title{
+
+    margin-top:12px;
+
+    background:#075985;
+
+    color:#fff;
+
+    text-align:center;
+
+    padding:8px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+}
+
+
+/* INFO */
+
+.info{
+
+    margin-top:15px;
+
+    font-weight:bold;
+
+}
+
+.info-row{
+
+    display:flex;
+
+    line-height:24px;
+
+}
+
+.info-label{
+
+    width:40mm;
+
+    flex-shrink:0;
+
+}
+
+.info-value{
+
+    flex:1;
+
+}
+
+
+/* TABLE */
+
+.fee-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:15px;
+
+}
+
+.fee-table th,
+.fee-table td{
+
+    border:1px solid #666;
+
+    padding:6px;
+
+}
+
+.fee-table th{
+
+    background:#efefef;
+
+}
+
+.amount{
+
+    text-align:right;
+
+}
+
+.total-row td{
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+
+/* WORDS */
+
+.section{
+
+    margin-top:15px;
+
+}
+
+.section-title{
+
+    font-weight:bold;
+
+}
+
+.words{
+
+    margin-top:5px;
+
+}
+
+
+/* SIGNATURE */
+
+.signature{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:35px;
+
+    text-align:center;
+
+}
+
+.sign-box{
+
+    width:30%;
+
+}
+
+.sign-line{
+
+    margin-top:35px;
+
+    border-top:1px solid #000;
+
+    padding-top:5px;
+
+}
+
+
+/* FOOTER */
+
+.footer{
+
+    margin-top:20px;
+
+    text-align:center;
+
+    font-size:10px;
+
+}
+
+
+.no-print{
+
+    margin-top:20px;
+
+}
+
+@media print{
+
+.no-print{
+
+display:none;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="receipt">
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+{% if renewal.member.organisation.logo %}
+<img
+src="{{ renewal.member.organisation.logo.url }}"
+class="logo">
+{% endif %}
+
+<div class="company-name">
+
+{{ renewal.member.organisation.organisation_name }}
+
+</div>
+
+<div class="subtitle">
+
+{{ renewal.member.organisation.address }}
+
+<br>
+
+Mobile :
+{{ renewal.member.organisation.mobile }}
+
+&nbsp;&nbsp;
+
+Email :
+{{ renewal.member.organisation.email }}
+
+</div>
+
+</div>
+
+
+<!-- TITLE -->
+
+<div class="title">
+
+MEMBERSHIP RENEWAL RECEIPT
+
+</div>
+
+
+
+<!-- INFORMATION -->
+
+<div class="info">
+
+<div class="info-row">
+<div class="info-label">Renewal No</div>
+<div class="info-value">
+: {{ renewal.renewal_no }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Renewal Date</div>
+<div class="info-value">
+: {{ renewal.renewal_date|date:"d-m-Y" }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Member No</div>
+<div class="info-value">
+: {{ renewal.member.member_no }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Membership No</div>
+<div class="info-value">
+: {{ renewal.member.membership_no }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Company Name</div>
+<div class="info-value">
+: {{ renewal.member.company_name }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Owner Name</div>
+<div class="info-value">
+: {{ renewal.member.owner_name }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Membership Type</div>
+<div class="info-value">
+: {{ renewal.member.membership_type.name }}
+</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Payment Mode</div>
+<div class="info-value">
+: {{ renewal.payment_mode }}
+</div>
+</div>
+
+</div>
+
+
+<!-- TABLE -->
+
+<table class="fee-table">
+
+<thead>
+
+<tr>
+
+<th width="10%">
+S.No
+</th>
+
+<th>
+Description
+</th>
+
+<th width="30%">
+Details
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td align="center">
+1
+</td>
+
+<td>
+Previous Valid Upto
+</td>
+
+<td align="center">
+{{ renewal.previous_valid_upto|date:"d-m-Y" }}
+</td>
+
+</tr>
+
+<tr>
+
+<td align="center">
+2
+</td>
+
+<td>
+Renewed Valid Upto
+</td>
+
+<td align="center">
+{{ renewal.new_valid_upto|date:"d-m-Y" }}
+</td>
+
+</tr>
+
+<tr>
+
+<td align="center">
+3
+</td>
+
+<td>
+Renewal Fee
+</td>
+
+<td class="amount">
+₹ {{ renewal.amount }}
+</td>
+
+</tr>
+
+<tr class="total-row">
+
+<td colspan="2" class="amount">
+
+TOTAL
+
+</td>
+
+<td class="amount">
+
+₹ {{ renewal.amount }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+<!-- AMOUNT WORDS -->
+
+<div class="section">
+
+<div class="section-title">
+
+Amount in Words :
+
+</div>
+
+<div class="words">
+
+{{ amount_words }}
+
+</div>
+
+</div>
+
+
+
+<!-- REMARKS -->
+
+<div class="section">
+
+<div class="section-title">
+
+Remarks :
+
+</div>
+
+<div>
+
+{{ renewal.remarks|default:"-" }}
+
+</div>
+
+</div>
+
+
+
+<!-- SIGNATURE -->
+
+<div class="signature">
+
+<div class="sign-box">
+
+<div class="sign-line">
+
+Member Signature
+
+</div>
+
+</div>
+
+<div class="sign-box">
+
+<div class="sign-line">
+
+Treasurer
+
+</div>
+
+</div>
+
+<div class="sign-box">
+
+<div class="sign-line">
+
+Authorized Signatory
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+Generated by Membership ERP
+
+<br>
+
+This is a Computer Generated Renewal Receipt.
+
+</div>
+
+
+
+<!-- BUTTON -->
+
+<div class="no-print">
+
+<a href="{% url 'renewal_list' %}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+<button
+onclick="window.print()"
+class="btn btn-primary">
+
+🖨 Print
+
+</button>
+
+</div>
+
+</div>
+
+</body>
+</html>

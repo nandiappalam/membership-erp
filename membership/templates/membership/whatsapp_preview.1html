@@ -1,0 +1,97 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<h3>WhatsApp Reminder Preview</h3>
+
+<button
+    type="button"
+    class="btn btn-success mb-3"
+    onclick="openAllWhatsApp()">
+
+    <i class="fa fa-whatsapp"></i>
+
+    Open All WhatsApp
+
+</button>
+
+<table class="table table-bordered">
+
+    <tr>
+        <th>Member</th>
+        <th>Mobile</th>
+        <th>Message</th>
+        <th>Action</th>
+    </tr>
+
+    {% for m in members %}
+
+    <tr>
+
+        <td>{{ m.owner_name }}</td>
+
+        <td>{{ m.mobile }}</td>
+
+        <td>
+            Dear {{ m.owner_name }},
+
+            Your membership is due for renewal.
+
+            Kindly renew before
+            {{ m.membership_valid_upto|date:"d-m-Y" }}.
+
+            Thank you.
+        </td>
+
+        <td>
+
+            <a
+            target="_blank"
+            class="btn btn-success btn-sm"
+            href="https://wa.me/91{{ m.mobile }}?text=Dear%20{{ m.owner_name|urlencode }},%0A%0AYour%20membership%20is%20due%20for%20renewal.%20Kindly%20renew%20before%20{{ m.membership_valid_upto|date:'d-m-Y' }}.%0A%0AThank%20You.">
+
+            WhatsApp
+
+            </a>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<a href="{% url 'expiry_report' %}" class="btn btn-secondary">
+    Back
+</a>
+
+<script>
+
+const whatsappLinks = [
+
+{% for w in whatsapp_links %}
+
+"{{ w.url|escapejs }}",
+
+{% endfor %}
+
+];
+
+function openAllWhatsApp(){
+
+    whatsappLinks.forEach(function(link, index){
+
+        setTimeout(function(){
+
+            window.open(link, "_blank");
+
+        }, index * 1500);
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

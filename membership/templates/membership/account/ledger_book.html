@@ -1,0 +1,428 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Ledger Book{% endblock %}
+
+{% block content %}
+
+<style>
+
+.ledger-table{
+    font-size:13px;
+}
+
+.ledger-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+    vertical-align:middle;
+    white-space:nowrap;
+}
+
+.ledger-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.ledger-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.ledger-table td{
+    vertical-align:middle;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas, monospace;
+    font-weight:600;
+}
+
+.debit{
+    color:#198754;
+}
+
+.credit{
+    color:#dc3545;
+}
+
+.balance{
+    font-weight:bold;
+    color:#0b3f92;
+}
+
+.opening-row{
+    background:#fff8dc !important;
+    font-weight:bold;
+}
+
+.total-row{
+    background:#e7f5ff !important;
+    font-weight:bold;
+}
+
+.closing-row{
+    background:#d1e7dd !important;
+    font-weight:bold;
+}
+
+@media print{
+
+    .btn,
+    form,
+    .card-header,
+    .no-print{
+        display:none !important;
+    }
+
+    body{
+        background:#fff;
+    }
+
+    .card{
+        border:none;
+        box-shadow:none;
+    }
+
+    .ledger-table{
+        font-size:11px;
+    }
+
+}
+
+
+</style>
+
+<div class="container-fluid">
+
+<div class="row mb-4">
+
+    <div class="col-md-2">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Ledger</small>
+                <h5 class="mb-0">{{ ledger.ledger_name }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card border-info shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Group</small>
+                <h5 class="mb-0">{{ ledger.group.name }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card border-warning shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Opening</small>
+                <h5 class="mb-0">
+                    {{ ledger.opening_type }}
+                    {{ ledger.opening_balance|floatformat:2 }}
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card border-success shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Debit</small>
+                <h5 class="text-success mb-0">
+                    {{ total_debit|floatformat:2 }}
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Credit</small>
+                <h5 class="text-danger mb-0">
+                    {{ total_credit|floatformat:2 }}
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card border-dark shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Closing</small>
+                <h5 class="mb-0">
+                    {{ closing_type }}
+                    {{ closing_balance|floatformat:2 }}
+                </h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-3">
+<a href="{% url 'ledger_print' ledger.id %}"
+   target="_blank"
+   class="btn btn-primary">
+    🖨 Print
+</a>
+
+<a href="{% url 'ledger_pdf' ledger.id %}"
+   class="btn btn-danger">
+    📄 PDF
+</a>
+
+<a href="{% url 'ledger_excel' ledger.id %}"
+   class="btn btn-success">
+    📊 Excel
+</a>
+
+    <a href="{% url 'voucher_create' %}"
+       class="btn btn-warning">
+        ➕ New Voucher
+    </a>
+
+</div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <label class="text-muted">Ledger Code</label>
+                <h5>{{ ledger.ledger_code }}</h5>
+            </div>
+
+            
+
+            
+
+            <div class="col-md-3">
+
+                <label class="text-muted">Status</label>
+
+                <h5>
+
+                    {% if ledger.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row">
+
+                <div class="col-md-2">
+
+                    <label>From Date</label>
+
+                    <input
+                        type="date"
+                        name="from_date"
+                        class="form-control"
+                        value="{{ request.GET.from_date }}">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label>To Date</label>
+
+                    <input
+                        type="date"
+                        name="to_date"
+                        class="form-control"
+                        value="{{ request.GET.to_date }}">
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label>Search</label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Voucher / Narration"
+                        value="{{ request.GET.search }}">
+
+                </div>
+
+                <div class="col-md-4 pt-4">
+
+                    <button class="btn btn-primary">
+                        Search
+                    </button>
+
+                    <a href="" class="btn btn-secondary">
+                        Reset
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<table class="table table-bordered table-hover ledger-table">
+
+<thead class="table-primary">
+
+<tr>
+
+    <th width="90">Date</th>
+
+    <th width="120">Voucher No</th>
+
+    <th width="90">Type</th>
+
+    <th>Particulars</th>
+
+    <th>Narration</th>
+
+    <th class="text-end">Debit</th>
+
+    <th class="text-end">Credit</th>
+
+    <th class="text-end">Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+<tr class="opening-row">
+    <td colspan="7">
+        <b>Opening Balance</b>
+    </td>
+
+    <td class="text-end">
+        {{ ledger.opening_type }}
+        {{ ledger.opening_balance|floatformat:2 }}
+    </td>
+</tr>
+
+{% for r in rows %}
+
+<tr>
+
+<td>{{ r.entry.voucher.voucher_date|date:"d-m-Y" }}</td>
+
+<td>
+    {% if r.entry.voucher %}
+        <a href="{% url 'voucher_print' r.entry.voucher.id %}"
+   class="text-decoration-none fw-bold text-primary">
+    {{ r.entry.voucher.voucher_no }}
+</a>
+    {% else %}
+        -
+    {% endif %}
+</td>
+
+<td>{{ r.entry.voucher.get_voucher_type_display }}</td>
+
+<td>{{ r.entry.ledger.ledger_name }}</td>
+
+<td>{{ r.entry.narration }}</td>
+
+<td class="amount debit">
+    {{ r.entry.debit|floatformat:2 }}
+</td>
+
+<td class="amount credit">
+    {{ r.entry.credit|floatformat:2 }}
+</td>
+
+<td class="amount balance">
+    {{ r.balance_type }}
+    {{ r.running_balance|floatformat:2 }}
+</td>
+
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="8" class="text-center">
+    No Transactions Found
+</td>
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+    <td colspan="5" class="text-end">
+        <b>Total</b>
+    </td>
+
+    <td class="text-end">
+        <b>{{ total_debit|floatformat:2 }}</b>
+    </td>
+
+    <td class="text-end">
+        <b>{{ total_credit|floatformat:2 }}</b>
+    </td>
+
+    <td></td>
+
+</tr>
+
+<tr class="closing-row">
+
+    <td colspan="7" class="text-end">
+        <b>Closing Balance</b>
+    </td>
+
+    <td class="text-end">
+        <b>
+        {{ closing_type }}
+        {{ closing_balance|floatformat:2 }}
+    </b>
+    </td>
+
+</tr>
+
+</tfoot>
+
+
+</tbody>
+
+</table>
+<button onclick="window.print()" class="btn btn-success">
+    <i class="fa fa-print"></i> Print
+</button>
+
+<a href="{% url 'ledger_list' %}" class="btn btn-secondary">
+Back
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

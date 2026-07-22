@@ -1,0 +1,38 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Delete User{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-danger text-white">
+        <h4>Delete User</h4>
+    </div>
+
+    <div class="card-body">
+
+        <h5>
+            Are you sure you want to delete
+            <b>{{ user.username }}</b> ?
+        </h5>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+                Yes, Delete
+            </button>
+
+            <a href="{% url 'user_list' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

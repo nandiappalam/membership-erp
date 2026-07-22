@@ -1,0 +1,190 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3>Membership Renewal</h3>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Renewal Date</label>
+                <input type="date"
+                       name="renewal_date"
+                       class="form-control"
+                       value="{{ today|date:'Y-m-d' }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Member</label>
+
+                <select
+                    name="member"
+                    class="form-control">
+
+                    <option value="">Select Member</option>
+
+                    {% for m in members %}
+
+                    <option value="{{ m.id }}">
+                        {{ m.membership_no }}
+                        -
+                        {{ m.owner_name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+            <div class="row mt-3">
+
+    <div class="col-md-6">
+        <label>Membership No</label>
+        <input id="membership_no"
+               class="form-control"
+               readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label>Member Name</label>
+        <input id="owner_name"
+               class="form-control"
+               readonly>
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+        <label>Company</label>
+        <input id="company_name"
+               class="form-control"
+               readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label>Membership Type</label>
+        <input id="membership_type"
+               class="form-control"
+               readonly>
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+        <label>Current Valid Upto</label>
+        <input id="valid_upto"
+               class="form-control"
+               readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label>Renewal Amount</label>
+        <input id="amount"
+               name="amount"
+               class="form-control">
+    </div>
+
+</div>
+
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label>Payment Mode</label>
+
+                <select
+                    name="payment_mode"
+                    class="form-control">
+
+                    <option>Cash</option>
+                    <option>UPI</option>
+                    <option>Card</option>
+                    <option>Cheque</option>
+                    <option>Bank</option>
+
+                </select>
+
+            </div>
+
+        </div>
+        
+        <div class="col-md-3">
+    <label>Renewal No</label>
+    <input
+        type="text"
+        class="form-control"
+        value="{{ renewal_no }}"
+        readonly>
+</div>
+
+        <div class="mt-3">
+
+            <label>Remarks</label>
+
+            <textarea
+                name="remarks"
+                rows="3"
+                class="form-control"></textarea>
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-primary">
+            Save Renewal
+        </button>
+
+        <a href="{% url 'renewal_list' %}"
+           class="btn btn-secondary">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+<script>
+
+const member = document.querySelector('[name=member]');
+
+member.addEventListener("change", async function () {
+
+    if (!this.value) return;
+
+    const res = await fetch(`/api/member/${this.value}/`);
+
+    const data = await res.json();
+
+    document.getElementById("membership_no").value = data.membership_no;
+
+    document.getElementById("owner_name").value = data.owner_name;
+
+    document.getElementById("company_name").value = data.company_name;
+
+    document.getElementById("membership_type").value = data.membership_type;
+
+    document.getElementById("valid_upto").value = data.valid_upto;
+
+    document.getElementById("amount").value = data.fee;
+
+});
+
+</script>
+
+
+{% endblock %}

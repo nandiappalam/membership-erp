@@ -1,0 +1,143 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Voucher List{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">Voucher List</h4>
+
+            <a href="{% url 'voucher_create' %}"
+               class="btn btn-light">
+
+                + New Voucher
+
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Voucher No</th>
+
+                            <th>Type</th>
+
+                            <th>Date</th>
+
+                            <th>Reference</th>
+
+                            <th>Status</th>
+
+                            <th width="150">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for v in vouchers %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>{{ v.voucher_no }}</td>
+
+                            <td>{{ v.get_voucher_type_display }}</td>
+
+                            <td>{{ v.voucher_date|date:"d-m-Y" }}</td>
+
+                            <td>{{ v.reference_no }}</td>
+
+                            <td>
+
+                                {% if v.status == "ACTIVE" %}
+
+                                    <span class="badge bg-success">
+
+                                        Active
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Cancelled
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="{% url 'voucher_edit' v.id %}"
+                                   class="btn btn-warning btn-sm">
+
+                                    Edit
+
+                                </a>
+
+                                <a href="{% url 'voucher_delete' v.id %}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Are you sure you want to cancel this voucher?')">
+
+    Cancel
+
+</a>
+
+<a href="{% url 'voucher_print' v.pk %}"
+                                   class="btn btn-warning btn-sm">
+
+                                    Print
+
+                                </a>
+</td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="7" class="text-center">
+
+                                No vouchers found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

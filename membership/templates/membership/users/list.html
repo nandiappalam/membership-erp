@@ -1,0 +1,80 @@
+{% extends 'membership/base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between mb-3">
+
+    <h3>User Management</h3>
+
+    <a href="{% url 'user_create' %}" class="btn btn-primary">
+
+        Add User
+
+    </a>
+
+</div>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Username</th>
+<th>Email</th>
+<th>Staff</th>
+<th>Active</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for user in users %}
+
+<tr>
+
+<td>{{ user.id }}</td>
+
+<td>{{ user.username }}</td>
+
+<td>{{ user.email }}</td>
+
+<td>{{ user.is_staff }}</td>
+
+<td>{{ user.is_active }}</td>
+
+<td>
+
+<a
+href="{% url 'user_edit' user.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a
+href="{% url 'user_delete' user.id %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

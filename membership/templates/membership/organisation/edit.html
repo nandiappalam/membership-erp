@@ -1,0 +1,159 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Create Organisation{% endblock %}
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="card shadow">
+
+<div class="card-header bg-success text-white">
+
+<h4>Create Organisation</h4>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Organisation Name</label>
+<input type="text"
+       name="organisation_name"
+       value="{{ organisation.organisation_name }}"
+       class="form-control">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Short Name</label>
+<input type="text"
+       name="short_name"
+       value="{{ organisation.short_name }}"
+       class="form-control">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Mobile</label>
+<input type="text"
+       name="mobile"
+       value="{{ organisation.mobile }}"
+       class="form-control">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Email</label>
+<input type="email"
+       name="email"
+       value="{{ organisation.email }}"
+       class="form-control">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Website</label>
+<input type="text"
+       name="website"
+       value="{{ organisation.website }}"
+       class="form-control">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Country</label>
+<input type="text"
+       name="country"
+       value="{{ organisation.country }}"
+       class="form-control">
+</div>
+
+<div class="col-md-4 mb-3">
+<label>District</label>
+<input type="text"
+       name="district"
+       value="{{ organisation.district }}"
+       class="form-control">
+</div>
+
+<div class="col-md-4 mb-3">
+<label>State</label>
+<input type="text"
+       name="state"
+       value="{{ organisation.state }}"
+       class="form-control">
+</div>
+
+<div class="col-md-4 mb-3">
+
+    <label>Logo</label>
+
+    {% if organisation.logo %}
+        <div class="mb-2">
+            <img src="{{ organisation.logo.url }}"
+                 width="120"
+                 height="120"
+                 class="img-thumbnail">
+        </div>
+    {% else %}
+        <div class="mb-2 text-muted">
+            No Logo Uploaded
+        </div>
+    {% endif %}
+
+    <input type="file"
+           name="logo"
+           class="form-control">
+
+</div>
+
+<div class="col-md-4 mb-3">
+<label>GST No</label>
+<input type="text"
+       name="gst_no"
+       value="{{ organisation.gst_no }}"
+       class="form-control">
+</div>
+
+<div class="col-md-4 mb-3">
+<label>PAN No</label>
+<input type="text"
+       name="pan_no"
+       value="{{ organisation.pan_no }}"
+       class="form-control">
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Registration No</label>
+<input type="text"
+       name="registration_no"
+       value="{{ organisation.registration_no }}"
+       class="form-control">
+</div>
+
+<div class="col-12 mb-3">
+<label>Address</label>
+<textarea name="address" class="form-control">{{ organisation.address }}</textarea>
+</div>
+
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button class="btn btn-success">
+Save
+</button>
+
+<a href="{% url 'organisation_list' %}" class="btn btn-secondary">
+Cancel
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+{% endblock %}

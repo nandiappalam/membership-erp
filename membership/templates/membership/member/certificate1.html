@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Certificate of Membership</title>
+<style>
+ 
+@page{
+    size:A4 landscape;
+    margin:10mm;
+}
+ 
+*{
+    box-sizing:border-box;
+}
+ 
+body{
+    margin:0;
+    padding:0;
+    font-family:"Times New Roman", serif;
+    background:#f0f0f0;
+}
+ 
+.certificate{
+    width:277mm;
+    height:190mm;
+    margin:auto;
+    background:#fffdf8;
+    position:relative;
+    border:3px solid #0b3f92;
+    padding:8mm 16mm;
+    overflow:hidden;
+}
+ 
+/* Gold Inner Border */
+.certificate::before{
+    content:"";
+    position:absolute;
+    top:5mm;
+    left:5mm;
+    right:5mm;
+    bottom:5mm;
+    border:1px solid #c9a13b;
+    pointer-events:none;
+}
+ 
+/* Faint watermark seal in the background */
+.watermark{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:120mm;
+    height:120mm;
+    transform:translate(-50%,-50%);
+    border:1.5px solid rgba(11,63,146,0.06);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+ 
+.watermark img{
+    width:70mm;
+    height:70mm;
+    object-fit:contain;
+    opacity:0.05;
+}
+ 
+/* Decorative Corners */
+.corner{
+    position:absolute;
+    width:14mm;
+    height:14mm;
+    border:2px solid #c9a13b;
+    z-index:2;
+}
+ 
+.tl{ top:5mm; left:5mm; border-right:none; border-bottom:none; }
+.tr{ top:5mm; right:5mm; border-left:none; border-bottom:none; }
+.bl{ bottom:5mm; left:5mm; border-right:none; border-top:none; }
+.br{ bottom:5mm; right:5mm; border-left:none; border-top:none; }
+ 
+/* ================= HEADER ================= */
+ 
+.header{
+    position:relative;
+    z-index:2;
+    text-align:center;
+}
+ 
+.logo-box{
+    width:20mm;
+    height:20mm;
+    margin:0 auto 3mm;
+    border:1.5px solid #c9a13b;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+}
+ 
+.logo{
+    width:16mm;
+    height:16mm;
+    object-fit:contain;
+}
+ 
+.org-name{
+    font-size:20px;
+    font-weight:bold;
+    color:#0b3f92;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+ 
+.org-subtitle{
+    margin-top:1.5mm;
+    font-size:10px;
+    color:#777;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+ 
+.title-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4mm;
+    margin-top:5mm;
+}
+ 
+.title-line{
+    width:28mm;
+    height:1px;
+    background:#c9a13b;
+}
+ 
+.certificate-title{
+    font-size:26px;
+    font-weight:bold;
+    color:#b8860b;
+    letter-spacing:2.5px;
+    white-space:nowrap;
+}
+ 
+/*================ CONTENT ================*/
+ 
+.content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    margin-top:6mm;
+}
+ 
+.certify-text{
+    font-size:12px;
+    letter-spacing:3px;
+    color:#666;
+    text-transform:uppercase;
+}
+ 
+.member-name{
+    margin-top:4mm;
+    font-size:32px;
+    font-weight:bold;
+    color:#0b3f92;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+ 
+.name-underline{
+    width:70mm;
+    height:1px;
+    background:#c9a13b;
+    margin:2mm auto 0;
+}
+ 
+.company-name{
+    margin-top:3mm;
+    font-size:15px;
+    color:#555;
+    font-style:italic;
+}
+ 
+.paragraph{
+    width:210mm;
+    margin:6mm auto 0;
+    font-size:13.5px;
+    line-height:1.7;
+    color:#333;
+}
+ 
+/*============== INFO STRIP ==============*/
+ 
+.info-strip{
+    position:relative;
+    z-index:2;
+    width:230mm;
+    margin:8mm auto 0;
+    border-top:1px solid #e0d3ad;
+    border-bottom:1px solid #e0d3ad;
+    padding:4mm 0;
+    display:flex;
+    justify-content:space-between;
+}
+ 
+.info-item{
+    flex:1;
+    text-align:center;
+    border-left:1px solid #ece3c8;
+}
+ 
+.info-item:first-child{
+    border-left:none;
+}
+ 
+.info-label{
+    font-size:9.5px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#999;
+}
+ 
+.info-value{
+    margin-top:1.5mm;
+    font-size:14px;
+    font-weight:bold;
+    color:#0b3f92;
+}
+ 
+/*============== SIGNATURE ==============*/
+ 
+.signature-area{
+    position:relative;
+    z-index:2;
+    margin-top:12mm;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8mm;
+}
+ 
+.sign{
+    width:55mm;
+    text-align:center;
+}
+ 
+.sign-line{
+    border-top:1.5px solid #333;
+    margin-bottom:2mm;
+}
+ 
+.sign-title{
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:1px;
+    color:#0b3f92;
+}
+ 
+.seal{
+    width:26mm;
+    height:26mm;
+    border:1.5px dashed #c9a13b;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:9px;
+    color:#999;
+    font-weight:bold;
+    letter-spacing:0.5px;
+}
+ 
+</style>
+</head>
+ 
+<body>
+ 
+<div class="certificate">
+ 
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+ 
+    <div class="watermark">
+        {% if member.organisation.logo %}
+        <img src="{{ member.organisation.logo.url }}">
+        {% endif %}
+    </div>
+ 
+    <div class="header">
+ 
+        <div class="logo-box">
+            {% if member.organisation.logo %}
+            <img src="{{ member.organisation.logo.url }}" class="logo">
+            {% endif %}
+        </div>
+ 
+        <div class="org-name">{{ member.organisation.organisation_name }}</div>
+        <div class="org-subtitle">Registered Association</div>
+ 
+        <div class="title-row">
+            <div class="title-line"></div>
+            <div class="certificate-title">CERTIFICATE OF MEMBERSHIP</div>
+            <div class="title-line"></div>
+        </div>
+ 
+    </div>
+ 
+    <div class="content">
+ 
+        <div class="certify-text">This is to certify that</div>
+ 
+        <div class="member-name">{{ member.owner_name }}</div>
+        <div class="name-underline"></div>
+ 
+        <div class="company-name">{{ member.company_name }}</div>
+ 
+        <div class="paragraph">
+            has been admitted as a <b>{{ member.membership_type.name }}</b> Member of
+            <b>{{ member.organisation.organisation_name }}</b> and is entitled to all rights
+            and privileges of membership subject to the Rules and Regulations of the Association.
+        </div>
+ 
+    </div>
+ 
+    <div class="info-strip">
+ 
+        <div class="info-item">
+            <div class="info-label">Membership No</div>
+            <div class="info-value">{{ member.membership_no }}</div>
+        </div>
+ 
+        <div class="info-item">
+            <div class="info-label">Membership Type</div>
+            <div class="info-value">{{ member.membership_type.name }}</div>
+        </div>
+ 
+        <div class="info-item">
+            <div class="info-label">Joining Date</div>
+            <div class="info-value">{{ member.joining_date|date:"d-m-Y" }}</div>
+        </div>
+ 
+        <div class="info-item">
+            <div class="info-label">Valid Upto</div>
+            <div class="info-value">{{ member.membership_valid_upto|date:"d-m-Y" }}</div>
+        </div>
+ 
+    </div>
+ 
+    <div class="signature-area">
+ 
+        <div class="sign">
+            <div class="sign-line"></div>
+            <div class="sign-title">President</div>
+        </div>
+ 
+        <div class="seal">OFFICIAL<br>SEAL</div>
+ 
+        <div class="sign">
+            <div class="sign-line"></div>
+            <div class="sign-title">Secretary</div>
+        </div>
+ 
+    </div>
+ 
+</div>
+ 
+</body>
+</html>

@@ -1,0 +1,353 @@
+
+<div class="toolbar no-print">
+    <button onclick="window.print()">🖨 Print</button>
+    <button onclick="window.close()">✖ Close</button>
+</div>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Certificate of Membership</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+ 
+@page{
+    size:A4 landscape;
+    margin:10mm;
+}
+ 
+*{
+    box-sizing:border-box;
+}
+ 
+body{
+    margin:0;
+    padding:0;
+    font-family:"Segoe UI", Arial, sans-serif;
+    background:#e8e8e6;
+}
+ 
+.certificate{
+    width:277mm;
+    height:190mm;
+    margin:auto;
+    background:
+        repeating-linear-gradient(
+            135deg,
+            rgba(11,44,82,0.02) 0mm,
+            rgba(11,44,82,0.02) 1mm,
+            transparent 1mm,
+            transparent 6mm
+        ),
+        #f8f8f6;
+    position:relative;
+    overflow:hidden;
+    border:5px solid #cda43d;
+}
+ 
+/* thin inner navy rule lines, offset from the outer gold border */
+.certificate::before{
+    content:"";
+    position:absolute;
+    top:36mm;
+    left:6mm;
+    bottom:16mm;
+    width:1px;
+    background:#0b2c52;
+    z-index:3;
+}
+ 
+.certificate::after{
+    content:"";
+    position:absolute;
+    top:36mm;
+    right:6mm;
+    bottom:16mm;
+    width:1px;
+    background:#0b2c52;
+    z-index:3;
+}
+ 
+/* ============== TOP CHEVRON BANNER ============== */
+ 
+.ribbon-gold-top{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:38mm;
+    background:linear-gradient(90deg,#b8912c 0%,#f2dfa0 25%,#f7ecc4 50%,#f2dfa0 75%,#b8912c 100%);
+    clip-path:polygon(0 0, 100% 0, 100% 58%, 50% 100%, 0 58%);
+    z-index:1;
+}
+ 
+.header-navy{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:33mm;
+    background:linear-gradient(180deg,#0d3260,#0a2547);
+    clip-path:polygon(0 0, 100% 0, 100% 52%, 50% 100%, 0 52%);
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    text-align:center;
+}
+ 
+.cert-eyebrow{
+    font-size:9px;
+    letter-spacing:4px;
+    color:#e8c877;
+    text-transform:uppercase;
+    margin-bottom:2mm;
+}
+ 
+.cert-title{
+    font-family:"Playfair Display", serif;
+    font-size:38px;
+    font-weight:800;
+    color:#eecd82;
+    letter-spacing:5px;
+    line-height:1;
+}
+ 
+.cert-subtitle{
+    font-size:13px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+    color:#fff;
+    margin-top:2mm;
+    font-family:"Playfair Display", serif;
+}
+ 
+/* ============== BOTTOM CHEVRON BANNER ============== */
+ 
+.ribbon-gold-bottom{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:18mm;
+    background:linear-gradient(90deg,#b8912c 0%,#f2dfa0 25%,#f7ecc4 50%,#f2dfa0 75%,#b8912c 100%);
+    clip-path:polygon(0 100%, 100% 100%, 100% 42%, 50% 0, 0 42%);
+    z-index:1;
+}
+ 
+.footer-navy{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:14mm;
+    background:linear-gradient(0deg,#0d3260,#0a2547);
+    clip-path:polygon(0 100%, 100% 100%, 100% 30%, 50% 0, 0 30%);
+    z-index:2;
+}
+ 
+/* ============== CONTENT ============== */
+ 
+.content{
+    position:relative;
+    z-index:4;
+    text-align:center;
+    padding-top:42mm;
+}
+ 
+.awarded-to{
+    font-size:13px;
+    letter-spacing:1px;
+    color:#0b2c52;
+}
+ 
+.script-name{
+    font-family:"Great Vibes", "Brush Script MT", cursive;
+    font-size:58px;
+    color:#c9a227;
+    margin-top:3mm;
+    line-height:1;
+}
+ 
+.owner-name{
+    font-size:14px;
+    font-weight:600;
+    color:#0b2c52;
+    letter-spacing:1px;
+    margin-top:2mm;
+    text-transform:uppercase;
+}
+ 
+.paragraph{
+    width:190mm;
+    margin:6mm auto 0;
+    font-size:13.5px;
+    line-height:1.7;
+    color:#333;
+}
+ 
+.given-line{
+    margin-top:4mm;
+    font-size:13px;
+    color:#0b2c52;
+}
+ 
+/* ============== INFO STRIP ============== */
+ 
+.info-strip{
+    margin:5mm auto 0;
+    font-size:10.5px;
+    color:#777;
+    letter-spacing:0.5px;
+}
+ 
+.info-strip b{
+    color:#0b2c52;
+}
+ 
+.info-strip span{
+    margin:0 4mm;
+}
+ 
+/* ============== SIGNATURES ============== */
+ 
+.signature-area{
+    position:relative;
+    z-index:4;
+    margin-top:8mm;
+    display:flex;
+    justify-content:center;
+    gap:40mm;
+}
+ 
+.sign{
+    width:55mm;
+    text-align:center;
+}
+ 
+.sign-line{
+    border-top:1.5px solid #cda43d;
+    margin-bottom:2mm;
+}
+ 
+.sign-role{
+    font-size:12px;
+    font-weight:700;
+    color:#c9a227;
+    letter-spacing:0.5px;
+}
+ 
+.sign-org{
+    font-size:11px;
+    color:#0b2c52;
+    margin-top:0.5mm;
+}
+
+.toolbar{
+    text-align:center;
+    padding:15px;
+    background:#f5f5f5;
+    border-bottom:1px solid #ddd;
+}
+
+.toolbar button{
+    padding:8px 18px;
+    margin:0 5px;
+    border:none;
+    background:#0059b3;
+    color:#fff;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.toolbar button:hover{
+    background:#003d7a;
+}
+
+@media print{
+
+    .no-print{
+        display:none !important;
+    }
+
+    body{
+        background:#fff !important;
+    }
+
+}
+
+
+</style>
+</head>
+ 
+<body>
+ 
+<div class="certificate">
+ 
+    <div class="ribbon-gold-top"></div>
+    <div class="header-navy">
+        <div class="cert-eyebrow">{{ member.organisation.organisation_name }}</div>
+        <div class="cert-title">CERTIFICATE</div>
+        <div class="cert-subtitle">OF MEMBERSHIP</div>
+    </div>
+ 
+    <div class="content">
+ 
+        <div class="awarded-to">This certificate is proudly presented to</div>
+ 
+        <div class="script-name">{{ member.company_name }}</div>
+        <div class="owner-name">{{ member.owner_name }}</div>
+ 
+        <div class="paragraph">
+            has been admitted as a <b>{{ member.membership_type.name }}</b> Member of
+            <b>{{ member.organisation.organisation_name }}</b> and is entitled to all rights
+            and privileges of membership subject to the Rules and Regulations of the Association.
+        </div>
+ 
+        <div class="given-line">
+            Given on this day, {{ member.joining_date|date:"F d, Y" }}
+        </div>
+ 
+        <div class="info-strip">
+            <span>Membership No: <b>{{ member.membership_no }}</b></span>
+            <span>Valid Upto: <b>{{ member.membership_valid_upto|date:"d-m-Y" }}</b></span>
+        </div>
+ 
+    </div>
+ 
+    <div class="signature-area">
+ 
+        <div class="sign">
+            <div class="sign-line"></div>
+            <div class="sign-role">President</div>
+            <div class="sign-org">{{ member.organisation.organisation_name }}</div>
+        </div>
+ 
+        <div class="sign">
+            <div class="sign-line"></div>
+            <div class="sign-role">Secretary</div>
+            <div class="sign-org">{{ member.organisation.organisation_name }}</div>
+        </div>
+ 
+    </div>
+ 
+    <div class="footer-navy"></div>
+    <div class="ribbon-gold-bottom"></div>
+ 
+</div>
+ 
+</body>
+<script>
+window.onload = function () {
+    window.print();
+}
+
+window.onafterprint = function () {
+    window.close();
+}
+</script>
+</html>

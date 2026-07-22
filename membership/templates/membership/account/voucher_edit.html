@@ -1,0 +1,232 @@
+{% extends "membership/base.html" %}
+ 
+{% block title %}Edit Voucher{% endblock %}
+ 
+{% block content %}
+ 
+<div class="container-fluid">
+ 
+<form method="post" id="voucherForm">
+ 
+{% csrf_token %}
+ 
+<div class="card shadow">
+ 
+<div class="card-header bg-warning text-dark">
+    <h4 class="mb-0">Edit Voucher</h4>
+</div>
+ 
+<div class="card-body">
+ 
+<div class="row">
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher No</label>
+    <input type="text" class="form-control" value="{{ voucher.voucher_no }}" readonly>
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher Date</label>
+    <input type="date" name="voucher_date" value="{{ voucher.voucher_date|date:'Y-m-d' }}" class="form-control" required>
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher Type</label>
+    <select name="voucher_type" class="form-select">
+        <option value="RV" {% if voucher.voucher_type == "RV" %}selected{% endif %}>Receipt Voucher</option>
+        <option value="PV" {% if voucher.voucher_type == "PV" %}selected{% endif %}>Payment Voucher</option>
+        <option value="JV" {% if voucher.voucher_type == "JV" %}selected{% endif %}>Journal Voucher</option>
+        <option value="CV" {% if voucher.voucher_type == "CV" %}selected{% endif %}>Contra Voucher</option>
+    </select>
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Status</label>
+    <input type="text" class="form-control" value="{{ voucher.get_status_display }}" readonly>
+</div>
+ 
+</div>
+ 
+<div class="row mt-3">
+ 
+<div class="col-md-6">
+    <label class="form-label">Reference No</label>
+    <input type="text" name="reference_no" class="form-control" value="{{ voucher.reference_no }}">
+</div>
+ 
+<div class="col-md-6">
+    <label class="form-label">Created By</label>
+    <input type="text" class="form-control" value="{{ voucher.created_by.username }}" readonly>
+</div>
+ 
+</div>
+ 
+<div class="row mt-3">
+<div class="col-md-12">
+    <label class="form-label">Narration</label>
+    <textarea name="narration" class="form-control">{{ voucher.narration }}</textarea>
+</div>
+</div>
+ 
+<table class="table table-bordered mt-3">
+<thead>
+<tr>
+    <th>Type</th>
+    <th>Ledger</th>
+    <th>Debit</th>
+    <th>Credit</th>
+    <th>Remarks</th>
+    <th width="60">Delete</th>
+</tr>
+</thead>
+<tbody id="tbody">
+ 
+{% for d in details %}
+<tr>
+ 
+    <td>
+        {% if d.debit > 0 %}
+            <span class="badge bg-secondary">Dr</span>
+            <input type="hidden" name="entry_type[]" value="Dr">
+        {% else %}
+            <span class="badge bg-secondary">Cr</span>
+            <input type="hidden" name="entry_type[]" value="Cr">
+        {% endif %}
+    </td>
+ 
+    <td>
+        <input class="form-control particular ledger-input" value="{{ d.ledger.ledger_name }}">
+        <input type="hidden" class="ledger-id" name="ledger_id[]" value="{{ d.ledger.id }}">
+    </td>
+ 
+    <td>
+        <input type="number" step="0.01" class="form-control amount debit" name="debit[]" value="{{ d.debit }}">
+    </td>
+ 
+    <td>
+        <input type="number" step="0.01" class="form-control amount credit" name="credit[]" value="{{ d.credit }}">
+    </td>
+ 
+    <td>
+        <input class="form-control remark" name="remark[]" value="{{ d.narration }}">
+    </td>
+ 
+    <td>
+        <button type="button" class="btn btn-danger btn-sm delete-row">🗑</button>
+    </td>
+ 
+</tr>
+{% endfor %}
+ 
+</tbody>
+<tfoot>
+ 
+<tr>
+    <td colspan="2" class="text-end"><b>Total</b></td>
+    <td><input id="totalDebit" class="form-control" readonly value="0.00"></td>
+    <td><input id="totalCredit" class="form-control" readonly value="0.00"></td>
+    <td colspan="2"></td>
+</tr>
+ 
+</tfoot>
+</table>
+ 
+<button type="button" id="addRowBtn" class="btn btn-primary">+ Add Row</button>
+ 
+<hr>
+ 
+<div class="d-flex justify-content-end gap-2">
+    <button type="submit" class="btn btn-success">💾 Update</button>
+    <a href="{% url 'voucher_list' %}" class="btn btn-secondary">Cancel</a>
+</div>
+ 
+</div>
+</div>
+ 
+</form>
+ 
+</div>
+ 
+<script>
+const tbody = document.getElementById("tbody");
+const totalDebitInput = document.getElementById("totalDebit");
+const totalCreditInput = document.getElementById("totalCredit");
+ 
+/* ---------- Totals ---------- */
+function calculateTotals(){
+    let dr = 0;
+    let cr = 0;
+ 
+    tbody.querySelectorAll(".debit").forEach(function(input){
+        dr += parseFloat(input.value || 0);
+    });
+    tbody.querySelectorAll(".credit").forEach(function(input){
+        cr += parseFloat(input.value || 0);
+    });
+ 
+    totalDebitInput.value = dr.toFixed(2);
+    totalCreditInput.value = cr.toFixed(2);
+}
+ 
+/* Fires on every debit/credit keystroke, on any row (existing or newly added) */
+document.addEventListener("input", function(e){
+    if (e.target.classList.contains("debit") || e.target.classList.contains("credit")) {
+        calculateTotals();
+    }
+});
+ 
+/* ---------- Add Row ---------- */
+document.getElementById("addRowBtn").addEventListener("click", function(){
+    const firstRow = tbody.querySelector("tr");
+    if (!firstRow) return;
+ 
+    const row = firstRow.cloneNode(true);
+ 
+    row.querySelector(".ledger-input").value = "";
+    row.querySelector(".ledger-id").value = "";
+    row.querySelector(".remark").value = "";
+    row.querySelector(".debit").value = "0.00";
+    row.querySelector(".credit").value = "0.00";
+ 
+    const typeInput = row.querySelector("input[name='entry_type[]']");
+    if (typeInput) typeInput.value = "Dr";
+ 
+    const badge = row.querySelector(".badge");
+    if (badge) {
+        badge.classList.remove("bg-secondary");
+        badge.classList.add("bg-primary");
+        badge.textContent = "Dr";
+    }
+ 
+    tbody.appendChild(row);
+    calculateTotals();
+});
+ 
+/* ---------- Delete Row (event delegation — works for rows added later too) ---------- */
+document.addEventListener("click", function(e){
+    if (!e.target.classList.contains("delete-row")) return;
+ 
+    if (tbody.querySelectorAll("tr").length <= 1) {
+        alert("Minimum one row required.");
+        return;
+    }
+ 
+    e.target.closest("tr").remove();
+    calculateTotals();
+});
+ 
+/* ---------- Submit validation ---------- */
+document.getElementById("voucherForm").addEventListener("submit", function(e){
+    calculateTotals();
+ 
+    if (totalDebitInput.value !== totalCreditInput.value) {
+        e.preventDefault();
+        alert("Debit and Credit must be equal.");
+    }
+});
+ 
+/* Initial calculation on page load, so totals aren't blank before any interaction */
+calculateTotals();
+</script>
+ 
+{% endblock %}

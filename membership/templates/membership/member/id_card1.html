@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Membership ID Card - Portrait</title>
+<style>
+ 
+@page{
+    size:54mm 86mm;
+    margin:0;
+}
+ 
+*{
+    box-sizing:border-box;
+}
+ 
+body{
+    margin:0;
+    font-family:'Segoe UI', Arial, Helvetica, sans-serif;
+    background:#e9edf2;
+}
+ 
+.card{
+    width:54mm;
+    height:86mm;
+    margin:auto;
+    background:#ffffff;
+    border-radius:3mm;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 2px 8px rgba(0,0,0,0.25);
+}
+ 
+/*================= HEADER =================*/
+ 
+.header{
+    height:20mm;
+    background:linear-gradient(135deg,#003d7a 0%,#0066cc 100%);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:2mm 3mm;
+    position:relative;
+}
+ 
+.header::after{
+    content:"";
+    position:absolute;
+    right:-8mm;
+    top:-8mm;
+    width:22mm;
+    height:22mm;
+    background:rgba(255,255,255,0.08);
+    border-radius:50%;
+}
+ 
+.logo-wrap{
+    width:11mm;
+    height:11mm;
+    background:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.6);
+    margin-bottom:1.2mm;
+}
+ 
+.logo{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+ 
+.org-name{
+    font-size:8.5px;
+    font-weight:700;
+    letter-spacing:0.3px;
+    text-transform:uppercase;
+    line-height:1.2;
+}
+ 
+.org-tag{
+    font-size:5.5px;
+    font-weight:400;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    opacity:0.85;
+    margin-top:0.8mm;
+}
+ 
+/*================= PHOTO =================*/
+ 
+.photo{
+    width:20mm;
+    height:24mm;
+    margin:3.5mm auto 0;
+    border:1px solid #cdd6e0;
+    border-radius:1.5mm;
+    overflow:hidden;
+    background:#f4f6f8;
+}
+ 
+.photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+ 
+/*================= DETAILS =================*/
+ 
+.details{
+    text-align:center;
+    padding:2.5mm 3mm 0;
+}
+ 
+.name{
+    font-size:11px;
+    font-weight:700;
+    color:#0a1f3d;
+    line-height:1.15;
+    text-transform:uppercase;
+}
+ 
+.company{
+    font-size:8px;
+    font-weight:600;
+    color:#0066cc;
+    margin-top:0.8mm;
+}
+ 
+.divider{
+    height:1px;
+    background:#e2e6ec;
+    margin:2mm 4mm;
+}
+ 
+.info-block{
+    padding:0 3mm;
+}
+ 
+.info-row{
+    display:flex;
+    font-size:7px;
+    color:#333;
+    margin-top:1.2mm;
+}
+ 
+.info-label{
+    font-weight:700;
+    color:#0a1f3d;
+    width:16mm;
+    text-align:left;
+}
+ 
+.info-value{
+    font-weight:500;
+    text-align:left;
+}
+ 
+.badge{
+    display:inline-block;
+    font-size:6px;
+    font-weight:700;
+    color:#fff;
+    background:#0066cc;
+    padding:0.6mm 2.5mm;
+    border-radius:3mm;
+    margin-top:2mm;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+}
+ 
+/*================= FOOTER =================*/
+ 
+.footer{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#f4f6f8;
+    border-top:1px solid #e2e6ec;
+    padding:2.5mm 3mm;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+ 
+.qr{
+    width:15mm;
+    height:15mm;
+    background:#fff;
+    border:1px solid #cdd6e0;
+    border-radius:1mm;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:6px;
+    color:#888;
+    margin-bottom:2mm;
+}
+ 
+.qr img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+ 
+.signature{
+    text-align:center;
+    font-size:6.5px;
+    color:#333;
+}
+ 
+.sign-line{
+    width:24mm;
+    border-top:1px solid #333;
+    margin-bottom:0.8mm;
+}
+ 
+.card-id{
+    position:absolute;
+    top:1mm;
+    right:2mm;
+    font-size:5px;
+    color:rgba(255,255,255,0.75);
+    letter-spacing:0.3px;
+}
+ 
+</style>
+</head>
+<body>
+ 
+<div class="card">
+ 
+    <div class="header">
+        <div class="card-id">ID: {{ member.id }}</div>
+        <div class="logo-wrap">
+            {% if member.organisation.logo %}
+            <img src="{{ member.organisation.logo.url }}" class="logo">
+            {% endif %}
+        </div>
+        <div class="org-name">{{ member.organisation.organisation_name }}</div>
+        <div class="org-tag">Membership Identity Card</div>
+    </div>
+ 
+    <div class="photo">
+        {% if member.photo %}
+        <img src="{{ member.photo.url }}">
+        {% endif %}
+    </div>
+ 
+    <div class="details">
+        <div class="name">{{ member.owner_name }}</div>
+        <div class="company">{{ member.company_name }}</div>
+    </div>
+ 
+    <div class="divider"></div>
+ 
+    <div class="info-block">
+        <div class="info-row">
+            <div class="info-label">Membership</div>
+            <div class="info-value">: {{ member.membership_type.name }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Valid Upto</div>
+            <div class="info-value">: {{ member.membership_valid_upto|date:"d-m-Y" }}</div>
+        </div>
+        <div style="text-align:center;">
+            <div class="badge">{{ member.membership_type.name }} Member</div>
+        </div>
+    </div>
+ 
+    <div class="footer">
+        <div class="qr">
+            {% if member.qr_code %}
+            <img src="{{ member.qr_code.url }}">
+            {% else %}
+            QR
+            {% endif %}
+        </div>
+        <div class="signature">
+            <div class="sign-line"></div>
+            Secretary
+        </div>
+    </div>
+ 
+</div>
+ 
+</body>
+</html>

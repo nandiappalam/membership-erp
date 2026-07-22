@@ -1,0 +1,87 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Edit Membership Type{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning text-dark">
+            <h4>Edit Membership Type</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Membership Type</label>
+                    <input type="text"
+                           name="name"
+                           class="form-control"
+                           value="{{ membership.name }}"
+                           required>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Fee</label>
+                    <input type="number"
+                           step="0.01"
+                           name="fee"
+                           class="form-control"
+                           value="{{ membership.fee }}">
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Validity (Years)</label>
+                    <input type="number"
+                           name="validity_years"
+                           class="form-control"
+                           value="{{ membership.validity_years }}">
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea
+                        name="description"
+                        rows="4"
+                        class="form-control">{{ membership.description }}</textarea>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="is_active"
+                               id="is_active"
+                               {% if membership.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="is_active">
+                            Active
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card-footer text-end">
+
+            <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Update
+            </button>
+
+            <a href="{% url 'members_type_list' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </div>
+
+    </div>
+
+</form>
+
+{% endblock %}

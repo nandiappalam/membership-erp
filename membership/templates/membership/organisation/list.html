@@ -1,0 +1,104 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Organisation List{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+
+        <h4>Organisation List</h4>
+
+        <a href="{% url 'organisation_create' %}" class="btn btn-light">
+            <i class="fa fa-plus"></i>
+            New Organisation
+        </a>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+            <tr>
+                <th>ID</th>
+                <th>Logo</th>
+                <th>Organisation</th>
+                <th>Short Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th width="180">Action</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for organisation in organisations %}
+
+            <tr>
+
+                <td>{{ organisation.id }}</td>
+
+                <td>
+
+                    {% if organisation.logo %}
+                        <img src="{{ organisation.logo.url }}"
+                             width="45"
+                             height="45"
+                             class="rounded">
+                    {% endif %}
+
+                </td>
+
+                <td>{{ organisation.organisation_name }}</td>
+                <td>{{ organisation.short_name }}</td>
+                <td>{{ organisation.mobile }}</td>
+                <td>{{ organisation.email }}</td>
+
+                <td>
+
+                    <a href="{% url 'organisation_edit' organisation.id %}"
+                       class="btn btn-warning btn-sm">
+
+                        <i class="fa fa-edit"></i>
+
+                    </a>
+
+                    <a href="{% url 'organisation_delete' organisation.id %}"
+                       class="btn btn-danger btn-sm">
+
+                        <i class="fa fa-trash"></i>
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7" class="text-center">
+
+                    No Organisation Found
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

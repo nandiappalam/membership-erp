@@ -1,0 +1,171 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<h3>Membership Renewal</h3>
+
+<a href="{% url 'renewal_create' %}" class="btn btn-primary mb-3">
+    New Renewal
+</a>
+
+<form method="get" class="row g-2 mb-3">
+
+
+<div class="col-md-3">
+
+<input type="text"
+name="search"
+class="form-control"
+placeholder="Member Name / Renewal No"
+value="{{request.GET.search}}">
+
+</div>
+
+
+
+<div class="col-md-2">
+
+<select name="payment_mode"
+class="form-select">
+
+<option value="">
+All Payment
+</option>
+
+
+<option value="Cash">
+Cash
+</option>
+
+
+<option value="UPI">
+UPI
+</option>
+
+
+<option value="Bank">
+Bank
+</option>
+
+
+</select>
+
+</div>
+
+
+
+<div class="col-md-2">
+
+<input type="date"
+name="from_date"
+class="form-control">
+
+</div>
+
+
+
+<div class="col-md-2">
+
+<input type="date"
+name="to_date"
+class="form-control">
+
+</div>
+
+
+
+<div class="col-md-2">
+
+<button class="btn btn-success">
+Search
+</button>
+
+
+<a href="{% url 'renewal_list' %}"
+class="btn btn-secondary">
+Clear
+</a>
+
+</div>
+
+
+</form>
+
+
+<table class="table table-bordered">
+
+    <thead>
+
+    <tr>
+        <th>Renewal No</th>
+        <th>Date</th>
+        <th>Member</th>
+        <th>Previous Valid</th>
+        <th>New Valid Till</th>
+        <th>Amount</th>
+        <th>Action</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for r in renewals %}
+
+    <tr>
+
+        <td>{{ r.renewal_no }}</td>
+
+        <td>{{ r.renewal_date|date:"d-m-Y" }}</td>
+
+        <td>{{ r.member.owner_name }}</td>
+
+        <td>
+{{r.previous_valid_upto|date:"d-m-Y"}}
+</td>
+
+<td>
+{{r.new_valid_upto|date:"d-m-Y"}}
+</td>
+
+        <td>{{ r.amount }}</td>
+
+        <td>
+
+            <a href="{% url 'renewal_edit' r.id %}">Edit</a> |
+
+
+<a href="{% url 'renewal_delete' r.id %}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Delete this renewal?')">
+    Delete
+</a>
+
+
+<a href="{% url 'renewal_print' r.id %}"
+   target="_blank"
+   class="btn btn-primary btn-sm">
+    <i class="fa fa-print"></i> Print
+</a>
+
+        </td>
+
+    </tr>
+
+    {% empty %}
+
+    <tr>
+
+        <td colspan="6" class="text-center">
+            No Renewal Found
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

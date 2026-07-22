@@ -1,0 +1,80 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+        <h4>Add User</h4>
+    </div>
+
+    <div class="card-body">
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label>Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Full Name</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Mobile</label>
+                    <input type="text" name="mobile" class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Role</label>
+
+                    <select name="role" class="form-select">
+
+                        <option value="SUPER_ADMIN">Super Admin</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="USER" selected>User</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Photo</label>
+                    <input type="file" name="photo" class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+            </div>
+
+            <button class="btn btn-success">
+                Save User
+            </button>
+
+            <a href="{% url 'user_list' %}" class="btn btn-secondary">
+                Back
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

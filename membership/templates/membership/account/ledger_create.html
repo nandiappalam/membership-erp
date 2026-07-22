@@ -1,0 +1,172 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<h3>
+{% if ledger %}
+Edit Ledger
+{% else %}
+Create Ledger
+{% endif %}
+</h3>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+
+{% csrf_token %}
+
+
+<div class="row">
+
+
+<div class="col-md-4 mb-3">
+    <label>Ledger Code</label>
+
+    <input
+        class="form-control"
+        value="Auto Generated"
+        readonly>
+</div>
+
+
+
+<div class="col-md-8 mb-3">
+
+<label>
+Ledger Name
+</label>
+
+<input type="text"
+       name="ledger_name"
+       class="form-control"
+       value="{{ ledger.ledger_name|default:'' }}"
+       required>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Account Group
+</label>
+
+
+<select name="group" class="form-select" required>
+
+    <option value="">
+        Select Account Group
+    </option>
+
+    {% for g in groups %}
+
+        <option value="{{ g.id }}">
+            {{ g.parent.name }} → {{ g.name }}
+        </option>
+
+    {% endfor %}
+
+</select>
+</div>
+
+
+
+<div class="col-md-3 mb-3">
+
+<label>
+Opening Balance
+</label>
+
+<input type="number"
+       step="0.01"
+       name="opening_balance"
+       class="form-control"
+       value="{{ ledger.opening_balance|default:'0' }}">
+
+</div>
+
+
+
+<div class="col-md-3 mb-3">
+
+<label>
+Opening Type
+</label>
+
+
+<select name="opening_type"
+        class="form-select">
+
+
+<option value="DEBIT"
+
+{% if ledger.opening_type == "DEBIT" %}
+selected
+{% endif %}
+>
+
+Debit
+
+</option>
+
+
+<option value="CREDIT"
+
+{% if ledger.opening_type == "CREDIT" %}
+selected
+{% endif %}
+>
+
+Credit
+
+</option>
+
+
+</select>
+
+</div>
+
+
+
+<div class="col-md-12 mb-3">
+
+<label>
+Remarks
+</label>
+
+<textarea name="remarks"
+          class="form-control">{{ ledger.remarks }}</textarea>
+
+</div>
+
+
+</div>
+
+
+<button class="btn btn-success">
+
+Save
+
+</button>
+
+
+<a href="{% url 'ledger_list' %}"
+   class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+
+</form>
+
+
+{% endblock %}

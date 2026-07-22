@@ -1,0 +1,366 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Add Member{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<form method="post" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<!-- ========================================= -->
+<!-- Basic Information -->
+<!-- ========================================= -->
+
+<div class="card shadow mb-3">
+
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Basic Information</h5>
+    </div>
+
+    <div class="card-body">
+
+    <div class="row">
+
+        <div class="col-md-2">
+    <label>Member No</label>
+    <input type="text"
+           class="form-control"
+           value="{{ next_member_no|default:'1' }}"
+           readonly>
+</div>
+
+<div class="col-md-2">
+    <label>Membership No</label>
+    <input type="text"
+           class="form-control"
+           value="{{ next_membership_no|default:'2026-001' }}"
+           readonly>
+</div>
+        <div class="col-md-2">
+            <label>Joining Date</label>
+            <input type="date"
+                   name="joining_date"
+                   class="form-control"
+                   required>
+        </div>
+
+        <div class="col-md-2">
+            <label>Valid Upto</label>
+            <input type="text"
+                   class="form-control"
+                   value="Auto Calculated"
+                   readonly>
+        </div>
+
+        <div class="col-md-4">
+            <label>Membership Type</label>
+
+            <select name="membership_type"
+                    class="form-select"
+                    required>
+
+                <option value="">Select Membership Type</option>
+
+                {% for m in membership_types %}
+                    <option value="{{ m.id }}">
+                        {{ m.name }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-4 mt-3">
+            <label>Organisation</label>
+
+            <select name="organisation"
+                    class="form-select"
+                    required>
+
+                <option value="">Select Organisation</option>
+
+                {% for org in organisations %}
+                    <option value="{{ org.id }}">
+                        {{ org.organisation_name }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+    </div>
+
+</div>
+<!-- ========================================= -->
+<!-- Personal -->
+<!-- ========================================= -->
+
+<div class="card shadow mb-3">
+
+<div class="card-header bg-success text-white">
+<h5 class="mb-0">Personal Information</h5>
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-2">
+
+<label>Photo</label>
+
+<input
+type="file"
+name="photo"
+class="form-control">
+
+</div>
+
+<div class="col-md-2">
+
+<label>Company Logo</label>
+
+<input
+type="file"
+name="company_logo"
+class="form-control">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Owner Name</label>
+
+<input
+type="text"
+name="owner_name"
+class="form-control">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Company Name</label>
+
+<input
+type="text"
+name="company_name"
+class="form-control">
+
+</div>
+
+<div class="col-md-4 mt-3">
+
+<label>Brand Name</label>
+
+<input
+type="text"
+name="brand_name"
+class="form-control">
+
+</div>
+
+<div class="col-md-2 mt-3">
+
+<label>Status</label>
+
+<select
+name="status"
+class="form-select">
+
+<option value="ACTIVE">Active</option>
+<option value="INACTIVE">Inactive</option>
+<option value="SUSPENDED">Suspended</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Contact -->
+<!-- ========================================= -->
+
+<div class="card shadow mb-3">
+
+<div class="card-header bg-info text-white">
+<h5 class="mb-0">Contact Information</h5>
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-3">
+<label>Mobile</label>
+<input type="text" name="mobile" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>WhatsApp</label>
+<input type="text" name="whatsapp" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>Email</label>
+<input type="email" name="email" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>Website</label>
+<input type="text" name="website" class="form-control">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Address -->
+<!-- ========================================= -->
+
+<div class="card shadow mb-3">
+
+<div class="card-header bg-secondary text-white">
+<h5 class="mb-0">Address</h5>
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-12">
+<label>Address</label>
+<textarea
+name="address"
+rows="3"
+class="form-control"></textarea>
+</div>
+
+<div class="col-md-4 mt-3">
+<label>District</label>
+<input type="text" name="district" class="form-control">
+</div>
+
+<div class="col-md-4 mt-3">
+<label>State</label>
+<input type="text" name="state" class="form-control">
+</div>
+
+<div class="col-md-4 mt-3">
+<label>Pincode</label>
+<input type="text" name="pincode" class="form-control">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Documents -->
+<!-- ========================================= -->
+
+<div class="card shadow mb-3">
+
+<div class="card-header bg-dark text-white">
+<h5 class="mb-0">Company Documents</h5>
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-3">
+<label>GST No</label>
+<input type="text" name="gst_no" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>FSSAI No</label>
+<input type="text" name="fssai_no" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>UDYAM No</label>
+<input type="text" name="udyam_no" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label>Factory License</label>
+<input type="text" name="factory_license_no" class="form-control">
+</div>
+
+<div class="col-md-3 mt-3">
+<label>DO License</label>
+<input type="text" name="do_license_no" class="form-control">
+</div>
+
+<div class="col-md-3 mt-3">
+<label>Trade License</label>
+<input type="text" name="trade_license_no" class="form-control">
+</div>
+
+<div class="col-md-3 mt-3">
+<label>Fire NOC</label>
+<input type="text" name="fire_noc_no" class="form-control">
+</div>
+
+<div class="col-md-3 mt-3">
+<label>Pollution Certificate</label>
+<input type="text" name="pollution_no" class="form-control">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Remarks -->
+<!-- ========================================= -->
+
+<div class="card shadow">
+
+<div class="card-header bg-warning">
+<h5 class="mb-0">Remarks</h5>
+</div>
+
+<div class="card-body">
+
+<textarea
+name="remarks"
+rows="4"
+class="form-control"></textarea>
+
+<br>
+
+<button class="btn btn-success">
+💾 Save Member
+</button>
+
+<a href="{% url 'member_list' %}" class="btn btn-secondary">
+Cancel
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+{% endblock %}

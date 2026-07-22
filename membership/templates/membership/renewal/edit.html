@@ -1,0 +1,155 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Edit Renewal</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Renewal No</label>
+                        <input
+                            class="form-control"
+                            value="{{ renewal.renewal_no }}"
+                            readonly>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Renewal Date</label>
+                        <input
+                            type="date"
+                            name="renewal_date"
+                            class="form-control"
+                            value="{{ renewal.renewal_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Member</label>
+                        <input
+                            class="form-control"
+                            value="{{ renewal.member.owner_name }}"
+                            readonly>
+                    </div>
+
+                </div>
+
+   <div class="col-md-4">
+    <label>Membership No</label>
+    <input
+        type="text"
+        class="form-control"
+        value="{{ member.membership_no }}"
+        readonly
+    >
+</div>
+
+                <div class="col-md-4">
+    <label>Membership Type</label>
+
+    <select name="membership_type" class="form-select" required>
+        {% for mt in membership_types %}
+            <option
+                value="{{ mt.id }}"
+                {% if member.membership_type.id == mt.id %}selected{% endif %}>
+                {{ mt.name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Previous Valid Upto</label>
+                        <input
+                            class="form-control"
+                            value="{{ renewal.previous_valid_upto }}"
+                            readonly>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>New Valid Upto</label>
+                        <input
+                            class="form-control"
+                            value="{{ renewal.new_valid_upto }}"
+                            readonly>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Amount</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="amount"
+                            class="form-control"
+                            value="{{ renewal.amount }}">
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Payment Mode</label>
+
+                        <select
+                            name="payment_mode"
+                            class="form-select">
+
+                            {% for value,label in renewal.PAYMENT_CHOICES %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if renewal.payment_mode == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+
+                        <label>Remarks</label>
+
+                        <textarea
+                            name="remarks"
+                            class="form-control"
+                            rows="3">{{ renewal.remarks }}</textarea>
+
+                    </div>
+
+                </div>
+
+                <button class="btn btn-success">
+                    Update Renewal
+                </button>
+
+                <a href="{% url 'renewal_list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

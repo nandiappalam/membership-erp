@@ -1,0 +1,89 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Delete Receipt{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow border-danger">
+
+<div class="card-header bg-danger text-white">
+
+<h4 class="mb-0">
+
+Delete Receipt
+
+</h4>
+
+</div>
+
+<div class="card-body text-center">
+
+<h5 class="text-danger">
+
+Are you sure you want to delete this Receipt?
+
+</h5>
+
+<hr>
+
+<p>
+
+<strong>Receipt No :</strong>
+
+RC{{ receipt.receipt_no|stringformat:"06d" }}
+
+</p>
+
+<p>
+
+<strong>Date :</strong>
+
+{{ receipt.receipt_date }}
+
+</p>
+
+<p>
+
+<strong>Member :</strong>
+
+{{ receipt.member.company_name }}
+
+</p>
+
+<p>
+
+<strong>Total :</strong>
+
+₹ {{ receipt.total_amount }}
+
+</p>
+
+<form method="post">
+
+{% csrf_token %}
+
+<button type="submit"
+        class="btn btn-danger">
+
+🗑 Delete
+
+</button>
+
+<a href="{% url 'receipt_list' %}"
+   class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

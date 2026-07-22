@@ -1,0 +1,326 @@
+{% extends "membership/base.html" %}
+ 
+{% block title %}{% if voucher %}Edit Voucher{% else %}Create Voucher{% endif %}{% endblock %}
+ 
+{% block content %}
+ 
+<div class="container-fluid">
+ 
+<form method="post"
+      action="{% if voucher %}{% url 'voucher_update' voucher.pk %}{% else %}{% url 'voucher_create' %}{% endif %}">
+ 
+{% csrf_token %}
+ 
+<div class="card shadow">
+ 
+<div class="card-header bg-primary text-white">
+    <h4 class="mb-0">{% if voucher %}Edit Voucher{% else %}Create Voucher{% endif %}</h4>
+</div>
+ 
+<div class="card-body">
+ 
+<div class="row">
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher No</label>
+    <input type="text" id="voucher_no" name="voucher_no_display"
+           class="form-control" value="{{ voucher.voucher_no|default:'' }}" readonly>
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher Date</label>
+    <input type="date" name="voucher_date"
+           value="{% if voucher %}{{ voucher.voucher_date|date:'Y-m-d' }}{% else %}{{ today|date:'Y-m-d' }}{% endif %}"
+           class="form-control" required>
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Voucher Type</label>
+    <select name="voucher_type" id="voucher_type" class="form-select" required>
+        <option value="">Select</option>
+        <option value="RV" {% if voucher.voucher_type == "RV" %}selected{% endif %}>Receipt Voucher</option>
+        <option value="PV" {% if voucher.voucher_type == "PV" %}selected{% endif %}>Payment Voucher</option>
+        <option value="JV" {% if voucher.voucher_type == "JV" %}selected{% endif %}>Journal Voucher</option>
+        <option value="CV" {% if voucher.voucher_type == "CV" %}selected{% endif %}>Contra Voucher</option>
+    </select>
+    
+</div>
+ 
+<div class="col-md-3">
+    <label class="form-label">Status</label>
+    <input type="text" class="form-control" value="{{ voucher.status|default:'Active' }}" readonly>
+</div>
+ 
+</div>
+ 
+<div class="row mt-3">
+ 
+<div class="col-md-6">
+    <label class="form-label">Reference No</label>
+    <input type="text" name="reference_no" class="form-control"
+           value="{{ voucher.reference_no|default:'' }}"
+           placeholder="Cheque / UTR / Ref No">
+</div>
+ 
+<div class="col-md-6">
+    <label class="form-label">Created By</label>
+    <input type="text" class="form-control"
+           value="{{ voucher.created_by.username|default:request.user.username }}" readonly>
+</div>
+ 
+</div>
+ 
+<div class="row mt-3">
+<div class="col-md-12">
+    <label class="form-label">Narration</label>
+    <textarea name="narration" rows="4" class="form-control"
+              placeholder="Enter narration...">{{ voucher.narration|default:'' }}</textarea>
+</div>
+</div>
+ 
+<hr>
+ 
+<div class="d-flex justify-content-end gap-2">
+    <button type="submit" class="btn btn-success">💾 Save Voucher</button>
+    <a href="{% url 'voucher_list' %}" class="btn btn-secondary">Cancel</a>
+</div>
+ 
+</div>
+</div>
+ 
+<div class="card mt-3 shadow">
+ 
+<div class="card-header bg-secondary text-white">
+    <h5 class="mb-0">Voucher Entries</h5>
+</div>
+ 
+<div class="card-body">
+ 
+<div class="table-responsive">
+<table class="table table-bordered table-hover align-middle" id="entryTable">
+ 
+<thead class="table-dark">
+<tr>
+    <th width="60">Sl</th>
+    <th>Ledger Account</th>
+    <th width="160">Debit</th>
+    <th width="160">Credit</th>
+    <th>Narration</th>
+    <th width="60"></th>
+</tr>
+</thead>
+ 
+<tbody id="tbody">
+ 
+{% if voucher %}
+    {% for entry in voucher.entries.all %}
+    <tr>
+        <td class="sl">{{ forloop.counter }}</td>
+        <td>
+            <select name="ledger[]" class="form-select ledger-select">
+                <option value="">Select Ledger</option>
+                {% for ledger in ledgers %}
+                <option value="{{ ledger.id }}"
+                    data-cashbank="{% if ledger.is_cash_or_bank %}1{% else %}0{% endif %}"
+                    {% if ledger.id == entry.ledger_id %}selected{% endif %}>
+                    {{ ledger.ledger_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="number" step="0.01" name="debit[]" class="form-control debit" value="{{ entry.debit }}"></td>
+        <td><input type="number" step="0.01" name="credit[]" class="form-control credit" value="{{ entry.credit }}"></td>
+        <td><input type="text" name="line_narration[]" class="form-control" value="{{ entry.line_narration|default:'' }}"></td>
+        <td><button type="button" class="btn btn-danger remove">×</button></td>
+    </tr>
+    {% endfor %}
+{% else %}
+    <tr>
+        <td class="sl">1</td>
+        <td>
+            <select name="ledger[]" class="form-select ledger-select">
+                <option value="">Select Ledger</option>
+                {% for ledger in ledgers %}
+                <option value="{{ ledger.id }}"
+                    data-cashbank="{% if ledger.is_cash_or_bank %}1{% else %}0{% endif %}">
+                    {{ ledger.ledger_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="number" step="0.01" name="debit[]" class="form-control debit"></td>
+        <td><input type="number" step="0.01" name="credit[]" class="form-control credit"></td>
+        <td><input type="text" name="line_narration[]" class="form-control"></td>
+        <td><button type="button" class="btn btn-danger remove">×</button></td>
+    </tr>
+{% endif %}
+ 
+</tbody>
+ 
+</table>
+</div>
+ 
+<button type="button" id="addRow" class="btn btn-primary">+ Add Row</button>
+ 
+</div>
+</div>
+ 
+<div class="row mt-3">
+ 
+<div class="col-md-3 offset-md-6">
+    <label>Total Debit</label>
+    <input type="text" id="totalDebit" class="form-control text-end" value="0.00" readonly>
+</div>
+ 
+<div class="col-md-3">
+    <label>Total Credit</label>
+    <input type="text" id="totalCredit" class="form-control text-end" value="0.00" readonly>
+</div>
+ 
+</div>
+ 
+<script>
+const voucherUrl = "{% url 'get_voucher_number' %}";
+const isEditMode = {% if voucher %}true{% else %}false{% endif %};
+ 
+/* ---------- Voucher number auto-fetch ---------- */
+document.getElementById("voucher_type").addEventListener("change", function () {
+ 
+    const type = this.value;
+ 
+    // In edit mode, don't silently overwrite the existing voucher number
+    // just because the user is browsing the dropdown — only refetch if
+    // there's currently no number (shouldn't normally happen in edit mode).
+    if (type && !(isEditMode && document.getElementById("voucher_no").value)) {
+        fetch(`${voucherUrl}?type=${encodeURIComponent(type)}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("voucher_no").value = data.voucher_no;
+            });
+    }
+ 
+    // Re-apply auto CR/DR to every existing row whenever the voucher type changes
+    document.querySelectorAll("#tbody tr").forEach(applyAutoCrDr);
+});
+ 
+/* ---------- Row helpers ---------- */
+function updateSerial(){
+    document.querySelectorAll("#tbody tr").forEach(function(row,index){
+        row.querySelector(".sl").innerHTML = index + 1;
+    });
+}
+ 
+function updateTotal(){
+    let debit = 0;
+    let credit = 0;
+ 
+    document.querySelectorAll(".debit").forEach(function(input){
+        debit += parseFloat(input.value || 0);
+    });
+    document.querySelectorAll(".credit").forEach(function(input){
+        credit += parseFloat(input.value || 0);
+    });
+ 
+    document.getElementById("totalDebit").value = debit.toFixed(2);
+    document.getElementById("totalCredit").value = credit.toFixed(2);
+}
+ 
+/* ---------- Auto CR / DR engine ----------
+   Receipt Voucher (RV): Cash/Bank ledger -> Debit side (money coming in)
+                          Other ledger     -> Credit side
+   Payment Voucher (PV): Cash/Bank ledger -> Credit side (money going out)
+                          Other ledger     -> Debit side
+   Journal (JV) / Contra (CV): fully manual, both sides editable.
+------------------------------------------------- */
+function applyAutoCrDr(row){
+    const type = document.getElementById("voucher_type").value;
+    const select = row.querySelector(".ledger-select");
+    const debitInput = row.querySelector(".debit");
+    const creditInput = row.querySelector(".credit");
+ 
+    // reset to fully editable first
+    debitInput.readOnly = false;
+    creditInput.readOnly = false;
+    debitInput.classList.remove("bg-light");
+    creditInput.classList.remove("bg-light");
+ 
+    if (!type || !select.value) return;
+ 
+    const selectedOption = select.options[select.selectedIndex];
+    const isCashBank = selectedOption.dataset.cashbank === "1";
+ 
+    if (type === "RV") {
+        if (isCashBank) {
+            creditInput.value = "0.00";
+            creditInput.readOnly = true;
+            creditInput.classList.add("bg-light");
+        } else {
+            debitInput.value = "0.00";
+            debitInput.readOnly = true;
+            debitInput.classList.add("bg-light");
+        }
+    } else if (type === "PV") {
+        if (isCashBank) {
+            debitInput.value = "0.00";
+            debitInput.readOnly = true;
+            debitInput.classList.add("bg-light");
+        } else {
+            creditInput.value = "0.00";
+            creditInput.readOnly = true;
+            creditInput.classList.add("bg-light");
+        }
+    }
+    // JV / CV: no restriction — both fields remain editable
+ 
+    updateTotal();
+}
+ 
+/* Run whenever a ledger is picked/changed on any row */
+document.addEventListener("change", function(e){
+    if (e.target.classList.contains("ledger-select")) {
+        applyAutoCrDr(e.target.closest("tr"));
+    }
+});
+ 
+/* ---------- Add / remove rows ---------- */
+document.getElementById("addRow").onclick = function(){
+    let row = document.querySelector("#tbody tr").cloneNode(true);
+    row.querySelector("select").selectedIndex = 0;
+    row.querySelectorAll("input").forEach(function(input){
+        input.value = "";
+        input.readOnly = false;
+        input.classList.remove("bg-light");
+    });
+    document.getElementById("tbody").appendChild(row);
+    updateSerial();
+};
+ 
+document.addEventListener("click", function(e){
+    if (e.target.classList.contains("remove")) {
+        let rows = document.querySelectorAll("#tbody tr");
+        if (rows.length > 1) {
+            e.target.closest("tr").remove();
+            updateSerial();
+            updateTotal();
+        }
+    }
+});
+ 
+document.addEventListener("input", function(e){
+    if (e.target.classList.contains("debit") || e.target.classList.contains("credit")) {
+        updateTotal();
+    }
+});
+ 
+/* ---------- Init ---------- */
+updateSerial();
+updateTotal();
+document.querySelectorAll("#tbody tr").forEach(applyAutoCrDr);
+</script>
+ 
+</form>
+ 
+</div>
+ 
+{% endblock %}
+ 

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Voucher {{ voucher.voucher_no }}</title>
+<style>
+ 
+@page{
+    size:A5 portrait;
+    margin:8mm;
+}
+*{
+    box-sizing:border-box;
+}
+ 
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#222;
+    background:#e9edf2;
+}
+ 
+/* ---------- Screen-only toolbar, hidden on print ---------- */
+ 
+.no-print{
+    text-align:center;
+    padding:6mm 0;
+}
+ 
+.no-print button, .no-print a{
+    display:inline-block;
+    padding:2.2mm 6mm;
+    margin:0 2mm;
+    font-size:13px;
+    border:none;
+    border-radius:1.5mm;
+    cursor:pointer;
+    text-decoration:none;
+}
+ 
+.btn-print{
+    background:#0b3f92;
+    color:#fff;
+}
+ 
+.btn-back{
+    background:#ddd;
+    color:#333;
+}
+ 
+@media print{
+    .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .voucher-sheet{ box-shadow:none !important; border:1px solid #000 !important; }
+}
+ 
+/* ---------- Voucher sheet ---------- */
+ 
+.voucher-sheet{
+    width:100%;
+    margin:0 auto 10mm;
+    background:#fff;
+    border:1px solid #333;
+    padding:8mm;
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+ 
+.letterhead{
+    display:flex;
+    align-items:center;
+    border-bottom:2px solid #0b3f92;
+    padding-bottom:2mm;
+    margin-bottom:2mm;
+}
+ 
+.letterhead img{
+    width:18mm;
+    height:18mm;
+    object-fit:contain;
+    margin-right:4mm;
+}
+ 
+.org-name{
+    font-size:17px;
+    font-weight:bold;
+    color:#0b3f92;
+    text-transform:uppercase;
+    letter-spacing:0.3px;
+}
+ 
+.org-sub{
+    font-size:14px;
+    color:#666;
+    margin-top:0.8mm;
+}
+ 
+.voucher-title-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:4mm 0 ;
+}
+ 
+.voucher-type-badge{
+    font-size:15px;
+    font-weight:bold;
+    padding:2mm 7mm;
+    border:2px solid #0b3f92;
+    border-radius:2mm;
+    color:#0b3f92;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
+ 
+.voucher-meta{
+    text-align:right;
+    font-size:14px;
+    line-height:1.6;
+    margin-right: 5px;
+}
+ 
+table.meta-table{
+    width:100%;
+    font-size:12px;
+    border-collapse:collapse;
+    margin-bottom:2mm;
+}
+ 
+table.meta-table td{
+    padding:1.5mm 2mm;
+    border-bottom:1px dashed #ddd;
+}
+ 
+table.meta-table td.label{
+    font-weight:bold;
+    color:#555;
+    width:22%;
+}
+ 
+table.entries{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+    margin-top:2mm;
+}
+ 
+table.entries th{
+    background:#0b3f92;
+    color:#fff;
+    padding:1.5mm;
+    text-align:left;
+    font-size:14px;
+    font-weight: bold;
+}
+ 
+table.entries td{
+    border:1px solid #ccc;
+    padding:1.2mm 2mm;
+}
+ 
+table.entries td.amount{
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+}
+ 
+table.entries tr.total-row td{
+    font-weight:bold;
+    border-top:2px solid #333;
+    background:#f3f5f8;
+}
+ 
+.amount-words{
+    margin-top:3mm;
+    font-size:12px;
+    font-style:italic;
+    color:#333;
+}
+ 
+.narration-box{
+    margin-top:2mm;
+    font-size:12px;
+    padding:2.5mm 0;
+    border-top:1px dashed #ddd;
+}
+ 
+.signature-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8mm;
+}
+ 
+.signature-box{
+    width:45mm;
+    text-align:center;
+    font-size:11px;
+    color:#333;
+}
+ 
+.sign-line{
+    border-top:1px solid #333;
+    margin-top:6mm;
+    margin-bottom:1.5mm;
+}
+ 
+.footer-note{
+    margin-top:4mm;
+    font-size:12px;
+    color:black;
+    text-align:center;
+}
+ 
+</style>
+</head>
+ 
+<body>
+ 
+<div class="no-print">
+    <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <a class="btn-back" href="{% url 'voucher_list' %}">⬅ Back to Vouchers</a>
+</div>
+ 
+<div class="voucher-sheet">
+ 
+    <div class="letterhead">
+        {% if organisation.logo %}
+        <img src="{{ organisation.logo.url }}">
+        {% endif %}
+        <div>
+            <div class="org-name">{{ organisation.organisation_name }}</div>
+            <div class="org-sub">
+                {{ organisation.address|default:"" }}
+                {% if organisation.phone %} &nbsp;|&nbsp; Ph: {{ organisation.phone }}{% endif %}
+                {% if organisation.email %} &nbsp;|&nbsp; {{ organisation.email }}{% endif %}
+            </div>
+        </div>
+    </div>
+ 
+    <div class="voucher-title-row">
+        <div class="voucher-type-badge">{{ voucher.get_voucher_type_display }}</div>
+        <div class="voucher-meta">
+            <div><b>Voucher No:</b> {{ voucher.voucher_no }}</div>
+            <div><b>Date:</b> {{ voucher.voucher_date|date:"d-m-Y" }}</div>
+        </div>
+    </div>
+ 
+    <table class="meta-table">
+        <tr>
+            <td class="label">Reference No</td>
+            <td>{{ voucher.reference_no|default:"-" }}</td>
+            <td class="label">Prepared By</td>
+            <td>{{ voucher.created_by.username|default:"-" }}</td>
+        </tr>
+    </table>
+ 
+    <table class="entries" id="entriesTable">
+        <thead>
+        <tr>
+            <th width="50">Type</th>
+            <th>Particulars</th>
+            <th width="95">Debit</th>
+            <th width="95">Credit</th>
+            <th>Remarks</th>
+        </tr>
+        </thead>
+        <tbody>
+ 
+        {% for e in voucher.entries.all %}
+        <tr>
+            <td>{% if e.debit > 0 %}Dr{% else %}Cr{% endif %}</td>
+            <td>{{ e.ledger.ledger_name }}</td>
+            <td class="amount debit-cell">{% if e.debit > 0 %}{{ e.debit|floatformat:2 }}{% endif %}</td>
+            <td class="amount credit-cell">{% if e.credit > 0 %}{{ e.credit|floatformat:2 }}{% endif %}</td>
+            <td>{{ e.line_narration|default:"" }}</td>
+        </tr>
+        {% endfor %}
+ 
+        <tr class="total-row">
+            <td colspan="2" style="text-align:right;">Total</td>
+            <td class="amount" id="totalDebitCell">0.00</td>
+            <td class="amount" id="totalCreditCell">0.00</td>
+            <td></td>
+        </tr>
+ 
+        </tbody>
+    </table>
+ 
+    <div class="amount-words">
+        Amount in Words: <span id="amountWords">-</span>
+    </div>
+ 
+    <div class="narration-box">
+        <b>Narration:</b> {{ voucher.narration|default:"-" }}
+    </div>
+ 
+    <div class="signature-row">
+        <div class="signature-box">
+            <div class="sign-line"></div>
+            Prepared By
+        </div>
+        <div class="signature-box">
+            <div class="sign-line"></div>
+            President/Secretary Sign
+        </div>
+        <div class="signature-box">
+            <div class="sign-line"></div>
+            Treasurer Sign
+        </div>
+    </div>
+ 
+    <div class="footer-note">
+        This is a computer-generated voucher. Designed by BVC Infotech 9842693420.
+    </div>
+ 
+</div>
+ 
+<script>
+/* Totals and amount-in-words are computed from the rendered rows themselves,
+   so this page never depends on the view passing pre-calculated totals. */
+ 
+function sumCells(selector){
+    let total = 0;
+    document.querySelectorAll(selector).forEach(function(cell){
+        total += parseFloat(cell.textContent || 0) || 0;
+    });
+    return total;
+}
+ 
+const totalDebit = sumCells(".debit-cell");
+const totalCredit = sumCells(".credit-cell");
+ 
+document.getElementById("totalDebitCell").textContent = totalDebit.toFixed(2);
+document.getElementById("totalCreditCell").textContent = totalCredit.toFixed(2);
+ 
+/* ---------- Number to words (Indian numbering: Lakh / Crore) ---------- */
+ 
+function numberToWordsIndian(num){
+    num = Math.round(num * 100) / 100;
+ 
+    const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                  "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+                  "Seventeen", "Eighteen", "Nineteen"];
+    const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+ 
+    function twoDigits(n){
+        if (n < 20) return ones[n];
+        return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+    }
+ 
+    function threeDigits(n){
+        if (n < 100) return twoDigits(n);
+        return ones[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + twoDigits(n % 100) : "");
+    }
+ 
+    function integerToWords(n){
+        if (n === 0) return "Zero";
+ 
+        let crore = Math.floor(n / 10000000); n %= 10000000;
+        let lakh = Math.floor(n / 100000); n %= 100000;
+        let thousand = Math.floor(n / 1000); n %= 1000;
+        let hundred = n;
+ 
+        let parts = [];
+        if (crore) parts.push(threeDigits(crore) + " Crore");
+        if (lakh) parts.push(threeDigits(lakh) + " Lakh");
+        if (thousand) parts.push(threeDigits(thousand) + " Thousand");
+        if (hundred) parts.push(threeDigits(hundred));
+ 
+        return parts.join(" ");
+    }
+ 
+    const rupees = Math.floor(num);
+    const paise = Math.round((num - rupees) * 100);
+ 
+    let words = "Rupees " + integerToWords(rupees);
+    if (paise > 0) {
+        words += " and " + integerToWords(paise) + " Paise";
+    }
+    return words + " Only";
+}
+ 
+document.getElementById("amountWords").textContent = numberToWordsIndian(totalDebit);
+ 
+/* Optional: auto-open print dialog when arriving with ?autoprint=1 in the URL */
+if (new URLSearchParams(window.location.search).get("autoprint") === "1") {
+    window.onload = function(){ window.print(); };
+}
+</script>
+ 
+</body>
+</html>

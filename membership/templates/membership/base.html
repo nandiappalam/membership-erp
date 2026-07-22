@@ -1,0 +1,470 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Membership Management{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'membership/css/style.css' %}">
+</head>
+
+<style>
+
+    .menu-title{
+    color:#9ca3af;
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin:20px 15px 8px;
+    letter-spacing:1px;
+}
+
+@media print {
+
+    /* Hide everything except content */
+
+    .sidebar,
+    .topbar,
+    .btn,
+    form,
+    nav {
+        display: none !important;
+    }
+
+    /* Use full page */
+
+    .wrapper,
+    .content,
+    .container-fluid {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+
+    body {
+        background: #fff !important;
+    }
+
+}
+
+
+</style>
+<body>
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+    <h3>Membership</h3>
+
+    <ul class="list-unstyled">
+
+        <!-- Dashboard -->
+        <li>
+            <a href="{% url 'dashboard' %}">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <!-- Masters -->
+        <li class="menu-title">Masters</li>
+
+        <li>
+            <a href="{% url 'organisation_list' %}">
+                <i class="fa-solid fa-building"></i>
+                Organisation
+            </a>
+        </li>
+
+        <li class="nav-item">
+
+<a class="nav-link collapsed"
+href="#"
+data-bs-toggle="collapse"
+data-bs-target="#membershipTypeMenu">
+
+<i class="fa-solid fa-id-card"></i>
+
+<span>Membership Type</span>
+
+</a>
+
+<div id="membershipTypeMenu" class="collapse">
+
+<ul class="btn-toggle-nav list-unstyled fw-normal small">
+
+<li>
+
+<a href="{% url 'members_type_list' %}" class="nav-link">
+
+Membership Type List
+
+</a>
+
+</li>
+
+<li>
+
+<a href="{% url 'members_type_create' %}" class="nav-link">
+
+Create Membership Type
+
+</a>
+
+</li>
+
+</ul>
+
+</div>
+
+</li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-calendar-days"></i>
+                Assessment Year
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-layer-group"></i>
+                Membership Type
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'member_list' %}">
+                <i class="fa-solid fa-address-card"></i>
+                Members
+            </a>
+        </li>
+        <li class="nav-item">
+
+<a class="nav-link"
+   href="{% url 'fee_master_list' %}">
+
+<i class="fas fa-money-bill-wave"></i>
+
+Fee Master
+
+</a>
+
+</li>
+
+<li>
+    <a class="dropdown-item"
+       href="{% url 'payment_mode_list' %}">
+        <i class="bi bi-credit-card"></i>
+        Payment Mode
+    </a>
+</li>
+
+    <li class="nav-item dropdown">
+
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       data-bs-toggle="dropdown">
+
+        Transactions
+
+    </a>
+
+    <ul class="dropdown-menu">
+
+        <li>
+            <a class="dropdown-item"
+               href="{% url 'receipt_list' %}">
+                Receipt Voucher
+            </a>
+        </li>
+
+    </ul>
+
+</li>
+
+<li>
+    <a href="{% url 'renewal_list' %}">
+        <i class="fas fa-sync-alt"></i>
+        Membership Renewal
+    </a>
+</li>
+
+<a href="{% url 'expiry_report' %}">
+Membership Expiry Report
+</a>
+
+<!-- =========================
+     ACCOUNTS
+========================= -->
+
+<li class="nav-item">
+
+    <a class="nav-link collapsed"
+       data-bs-toggle="collapse"
+       href="#accountsMenu">
+
+        <i class="bi bi-calculator"></i>
+
+        <span>Accounts</span>
+
+    </a>
+
+    <div id="accountsMenu"
+         class="collapse">
+
+        <ul class="nav flex-column ms-3">
+
+            <!-- Masters -->
+
+            <li class="nav-item">
+
+                <span class="nav-link text-muted fw-bold">
+                    Masters
+                </span>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'accountgroup_list' %}">
+
+                    <i class="bi bi-diagram-3"></i>
+
+                    Account Groups
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'ledger_list' %}">
+
+                    <i class="bi bi-journal-bookmark"></i>
+
+                    Ledger
+
+                </a>
+
+            </li>
+
+            <hr>
+
+            <!-- Vouchers -->
+
+            <li class="nav-item">
+
+                <span class="nav-link text-muted fw-bold">
+                    Vouchers
+                </span>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'voucher_list' %}">
+
+                    <i class="bi bi-card-list"></i>
+
+                    Voucher 
+
+                </a>
+
+            </li>
+            <hr>
+
+            <!-- Books -->
+
+            <li class="nav-item">
+
+                <span class="nav-link text-muted fw-bold">
+                    Books
+                </span>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Day Book
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Cash Book
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Bank Book
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Ledger Book
+
+                </a>
+
+            </li>
+
+            <hr>
+
+            <!-- Reports -->
+
+            <li class="nav-item">
+
+                <span class="nav-link text-muted fw-bold">
+                    Reports
+                </span>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Trial Balance
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Profit & Loss
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Balance Sheet
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</li>
+
+
+        <!-- Reports -->
+        <li class="menu-title">Reports</li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-file-lines"></i>
+                Documents
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-id-card"></i>
+                ID Card
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-certificate"></i>
+                Certificate
+            </a>
+        </li>
+
+        <!-- Administration -->
+        <li class="menu-title">Administration</li>
+
+        <li>
+            <a href="{% url 'user_list' %}">
+                <i class="fa-solid fa-users"></i>
+                Users
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+    <!-- Main -->
+    <main class="content">
+
+       <nav class="topbar d-flex justify-content-between">
+
+<h4>Membership Management System</h4>
+
+<a href="{% url 'logout' %}" class="btn btn-danger">
+
+Logout
+
+</a>
+
+</nav>
+
+        <div class="container-fluid mt-4">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</body>
+</html>

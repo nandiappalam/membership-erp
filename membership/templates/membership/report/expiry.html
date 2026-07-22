@@ -1,0 +1,379 @@
+{% extends "membership/base.html" %}
+
+
+{% block content %}
+
+
+<h3>
+Membership Expiry Report
+</h3>
+
+<div class="row mb-4">
+
+
+<div class="col-md-2">
+ <a href="{% url 'expiry_report' %}"
+       class="text-decoration-none">
+
+<div class="card text-white bg-primary">
+
+<div class="card-body text-center">
+
+<h4>
+{{total_members}}
+</h4>
+
+<p>
+Total Members
+</p>
+
+</div>
+
+</div>
+  </a>
+  
+</div>
+
+
+
+<div class="col-md-2">
+<a href="{% url 'expiry_report' %}?status=active"
+   class="text-decoration-none">
+<div class="card text-white bg-success">
+
+<div class="card-body text-center">
+
+<h4>
+{{active_members}}
+</h4>
+
+<p>
+Active
+</p>
+
+</div>
+
+</div>
+</a>
+</div>
+
+
+
+<div class="col-md-2">
+<a href="{% url 'expiry_report' %}?status=expired"
+   class="text-decoration-none">
+<div class="card text-white bg-danger">
+
+<div class="card-body text-center">
+
+<h4>
+{{expired_members}}
+</h4>
+
+<p>
+Expired
+</p>
+
+</div>
+
+</div>
+</a>
+</div>
+
+
+
+<div class="col-md-2">
+<a href="{% url 'expiry_report' %}?status=renewed"
+   class="text-decoration-none">
+<div class="card text-white bg-warning">
+
+<div class="card-body text-center">
+
+<h4>{{renewed_members}}</h4>
+<p>Renewed</p>
+
+
+</div>
+
+</div>
+</a>
+</div>
+
+
+
+<div class="col-md-2">
+<a href="{% url 'expiry_report' %}?status=pending"
+   class="text-decoration-none">
+<div class="card text-white bg-info">
+
+<div class="card-body text-center">
+
+<h4>{{renewal_pending}}</h4>
+<p>Renewal Pending</p>
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<form method="get" class="row mb-3">
+
+
+<div class="col-md-3">
+
+<input 
+type="text"
+name="search"
+class="form-control"
+placeholder="Member Name / Mobile">
+
+</div>
+
+
+<div class="col-md-3">
+
+<select name="status"
+class="form-select">
+
+
+<option value="">
+All
+
+</option>
+
+
+<option value="expired">
+Expired
+</option>
+
+
+<option value="30">
+Renewed
+</option>
+
+
+<option value="60">
+Renewal
+</option>
+
+
+</select>
+
+</div>
+
+
+<div class="col-md-2">
+
+<button class="btn btn-primary">
+Search
+</button>
+
+</div>
+
+
+</form>
+
+
+<!-- Add the heading HERE -->
+<h5 class="mb-3">
+    {% if request.GET.status == "active" %}
+        Active Members
+    {% elif request.GET.status == "expired" %}
+        Expired Members
+    {% elif request.GET.status == "renewed" %}
+        Renewed Members
+    {% elif request.GET.status == "pending" %}
+        Renewal Pending Members
+    {% else %}
+        All Members
+    {% endif %}
+</h5>
+
+<form method="post" action="{% url 'whatsapp_reminder' %}">
+
+    {% csrf_token %}
+
+    <div class="mb-3">
+
+        <strong>
+            Selected Members :
+            <span id="selected-count">0</span>
+        </strong>
+
+        <button
+            type="submit"
+            class="btn btn-success ms-3">
+
+            <i class="fa fa-whatsapp"></i>
+
+            WhatsApp Selected
+
+        </button>
+
+    </div>
+
+<table class="table table-bordered">
+
+
+<tr>
+<th width="40">
+    <input type="checkbox" id="select-all">
+</th>
+<th>Member</th>
+<th>Mobile</th>
+<th>Valid Upto</th>
+<th>Days Left</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+
+
+{% for m in members %}
+
+<tr>
+<td>
+
+<input
+    type="checkbox"
+    class="member-check"
+    name="members"
+    value="{{ m.id }}">
+
+</td>
+
+<td>
+{{m.owner_name}}
+</td>
+
+
+<td>
+{{m.mobile}}
+</td>
+
+
+<td>
+{{m.membership_valid_upto|date:"d-m-Y"}}
+</td>
+
+
+
+<td>
+
+{% if m.membership_valid_upto < today %}
+
+<span class="text-danger">
+Expired
+</span>
+
+
+{% else %}
+
+{{m.membership_valid_upto|timeuntil}}
+
+{% endif %}
+
+
+</td>
+
+
+
+<td>
+
+{% if m.membership_valid_upto < today %}
+
+<span class="badge bg-danger">
+Expired
+</span>
+
+
+{% else %}
+
+<span class="badge bg-success">
+Active
+</span>
+
+
+{% endif %}
+
+</td>
+
+
+<td>
+
+<a href="{% url 'renewal_create' %}?member={{m.id}}"
+class="btn btn-sm btn-primary">
+
+Renew
+
+</a>
+
+</td>
+
+
+
+</tr>
+
+
+{% empty %}
+
+<tr>
+<td colspan="6">
+No Members Found
+</td>
+</tr>
+
+{% endfor %}
+
+
+</table>
+</form>
+<script>
+
+const selectAll = document.getElementById("select-all");
+const checkboxes = document.querySelectorAll(".member-check");
+const countSpan = document.getElementById("selected-count");
+
+function updateCount(){
+
+    let total = 0;
+
+    checkboxes.forEach(function(cb){
+
+        if(cb.checked){
+            total++;
+        }
+
+    });
+
+    countSpan.innerHTML = total;
+
+}
+
+selectAll.addEventListener("click", function(){
+
+    checkboxes.forEach(function(cb){
+
+        cb.checked = selectAll.checked;
+
+    });
+
+    updateCount();
+
+});
+
+checkboxes.forEach(function(cb){
+
+    cb.addEventListener("change", updateCount);
+
+});
+
+</script>
+
+
+{% endblock %}

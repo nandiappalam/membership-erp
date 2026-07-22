@@ -1,0 +1,141 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<h3>Ledger Master</h3>
+
+
+<a href="{% url 'ledger_create' %}"
+   class="btn btn-primary mb-3">
+
+    + New Ledger
+
+</a>
+
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>Code</th>
+
+<th>Ledger Name</th>
+
+<th>Group</th>
+
+<th>Opening Balance</th>
+
+<th>Type</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+{% for l in ledgers %}
+
+<tr>
+
+<td>
+{{ l.ledger_code }}
+</td>
+
+
+<td>
+  <a href="{% url 'ledger_book' l.id %}"
+       class="text-decoration-none fw-bold">
+        {{ l.ledger_name }}
+    </a>
+</td>
+
+
+<td>
+{{ l.group.name }}
+</td>
+
+
+<td class="text-end">
+{{ l.opening_balance }}
+</td>
+
+
+<td>
+{{ l.opening_type }}
+</td>
+
+
+<td>
+
+{% if l.is_active %}
+
+<span class="badge bg-success">
+Active
+</span>
+
+{% else %}
+
+<span class="badge bg-secondary">
+Inactive
+</span>
+
+{% endif %}
+
+</td>
+
+
+<td>
+
+<a href="{% url 'ledger_edit' l.id %}"
+   class="btn btn-sm btn-warning">
+
+Edit
+
+</a>
+
+
+<a href="{% url 'ledger_delete' l.id %}"
+   class="btn btn-sm btn-danger"
+   onclick="return confirm('Delete this ledger?')">
+
+Delete
+
+</a>
+
+
+</td>
+
+
+</tr>
+
+
+{% empty %}
+
+<tr>
+
+<td colspan="7"
+    class="text-center">
+
+No Ledger Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+
+</tbody>
+
+</table>
+
+
+{% endblock %}

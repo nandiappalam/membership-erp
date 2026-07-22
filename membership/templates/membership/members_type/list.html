@@ -1,0 +1,108 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Membership Types{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white d-flex justify-content-between">
+
+<h4>Membership Types</h4>
+
+<a href="{% url 'members_type_create' %}" class="btn btn-light">
+New Membership Type
+</a>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Fee</th>
+<th>Validity</th>
+<th>Status</th>
+<th width="180">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for membership in membership_types %}
+
+<tr>
+
+<td>{{ membership.id }}</td>
+
+<td>{{ membership.name }}</td>
+
+<td>{{ membership.fee }}</td>
+
+<td>{{ membership.validity_years }} Year(s)</td>
+
+<td>
+
+{% if membership.is_active %}
+
+<span class="badge bg-success">Active</span>
+
+{% else %}
+
+<span class="badge bg-danger">Inactive</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="{% url 'members_type_edit' membership.id %}"
+class="btn btn-warning btn-sm">
+
+<i class="fa fa-edit"></i>
+
+</a>
+
+<a href="{% url 'members_type_delete' membership.id %}"
+class="btn btn-danger btn-sm">
+
+<i class="fa fa-trash"></i>
+
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="6" class="text-center">
+
+No Membership Types Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

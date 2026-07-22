@@ -1,0 +1,173 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Member List{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+        <h4 class="mb-0">
+            Member List
+        </h4>
+
+        <a href="{% url 'member_create' %}" class="btn btn-light">
+            <i class="fa fa-plus"></i>
+            New Member
+        </a>
+
+    </div>
+
+    <div class="card-body table-responsive">
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Photo</th>
+
+                    <th>Member No</th>
+
+                    <th>Membership No</th>
+
+                    <th>Company</th>
+
+                    <th>Owner</th>
+
+                    <th>Membership</th>
+
+                    <th>Mobile</th>
+
+                    <th>Valid Upto</th>
+
+                    <th>Status</th>
+
+                    <th width="180">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for member in members %}
+
+                <tr>
+
+                    <td width="70">
+
+                        {% if member.photo %}
+                            <img src="{{ member.photo.url }}"
+                                 width="50"
+                                 height="50"
+                                 class="rounded-circle">
+                        {% else %}
+                            <span class="text-muted">No Photo</span>
+                        {% endif %}
+
+                    </td>
+
+                    <td>{{ member.member_no }}</td>
+
+                    <td>{{ member.membership_no }}</td>
+
+                    <td>{{ member.company_name }}</td>
+
+                    <td>{{ member.owner_name }}</td>
+
+                    <td>{{ member.membership_type }}</td>
+
+                    <td>{{ member.mobile }}</td>
+
+                    <td>{{ member.membership_valid_upto }}</td>
+
+                    <td>
+
+                        {% if member.status == "ACTIVE" %}
+                            <span class="badge bg-success">Active</span>
+
+                        {% elif member.status == "INACTIVE" %}
+                            <span class="badge bg-secondary">Inactive</span>
+
+                        {% else %}
+                            <span class="badge bg-danger">Suspended</span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'member_edit' member.id %}"
+                           class="btn btn-warning btn-sm">
+
+                            <i class="fa fa-edit"></i>
+
+                        </a>
+
+                        <a href="{% url 'member_delete' member.id %}"
+                           class="btn btn-danger btn-sm">
+
+                            <i class="fa fa-trash"></i>
+
+                        <a href="{% url 'receipt_print' member.id %}"
+   target="_blank"
+   class="btn btn-sm btn-warning">
+    Receipt
+</a>
+    
+                        <a href="{% url 'member_id_card' member.id %}"
+   class="btn btn-info btn-sm">
+    ID Card
+</a>
+                        <a href="{% url 'member_id_card_back' member.id %}"
+       target="_blank"
+       class="btn btn-sm btn-info">
+        ID Back
+    </a>
+
+    
+
+    <a href="{% url 'member_certificate' member.id %}"
+       target="_blank"
+       class="btn btn-sm btn-danger">
+        Certificate
+    </a>
+
+    <a href="{% url 'member_id_card_print' member.id %}"
+   target="_blank"
+   class="btn btn-success btn-sm">
+    Print ID
+</a>
+
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="10" class="text-center">
+
+                        No Members Found
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

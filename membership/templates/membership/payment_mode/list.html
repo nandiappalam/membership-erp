@@ -1,0 +1,150 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Payment Mode{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="d-flex justify-content-between mb-3">
+
+<h3>Payment Mode</h3>
+
+<a href="{% url 'payment_mode_create' %}"
+class="btn btn-primary">
+
++ Add Payment Mode
+
+</a>
+
+</div>
+
+<form method="get" class="row mb-3">
+
+<div class="col-md-4">
+
+<input
+type="text"
+name="search"
+value="{{ request.GET.search }}"
+class="form-control"
+placeholder="Search">
+
+</div>
+
+<div class="col-md-2">
+
+<button class="btn btn-success">
+
+Search
+
+</button>
+
+</div>
+
+</form>
+
+<div class="card shadow">
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+
+<th>Payment Mode</th>
+
+<th>Description</th>
+
+<th>Status</th>
+
+<th width="150">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for payment in payment_modes %}
+
+<tr>
+
+<td>{{ payment.id }}</td>
+
+<td>{{ payment.name }}</td>
+
+<td>{{ payment.description }}</td>
+
+<td>
+
+{% if payment.is_active %}
+
+<span class="badge bg-success">
+
+Active
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Inactive
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="{% url 'payment_mode_edit' payment.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{% url 'payment_mode_delete' payment.id %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5"
+class="text-center">
+
+No Records Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

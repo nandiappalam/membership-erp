@@ -1,0 +1,66 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Delete Payment Mode{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+<form method="post">
+
+{% csrf_token %}
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h5 class="mb-0">Delete Payment Mode</h5>
+
+</div>
+
+<div class="card-body text-center">
+
+<h4>
+
+Are you sure you want to delete
+
+</h4>
+
+<h3 class="text-danger">
+
+{{ payment.name }}
+
+</h3>
+
+<p>
+
+This action cannot be undone.
+
+</p>
+
+</div>
+
+<div class="card-footer text-center">
+
+<button class="btn btn-danger">
+
+🗑 Delete
+
+</button>
+
+<a href="{% url 'payment_mode_list' %}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+{% endblock %}

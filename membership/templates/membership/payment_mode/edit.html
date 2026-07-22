@@ -1,0 +1,117 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Edit Payment Mode{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+<form method="post">
+
+{% csrf_token %}
+
+<div class="card shadow">
+
+<div class="card-header bg-warning">
+
+<h5 class="mb-0">Edit Payment Mode</h5>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<label>Organisation</label>
+
+<select name="organisation" class="form-select">
+
+{% for org in organisations %}
+
+<option value="{{ org.id }}"
+{% if payment.organisation.id == org.id %}selected{% endif %}>
+
+{{ org.name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-6">
+
+<label>Payment Mode</label>
+
+<input
+type="text"
+name="name"
+value="{{ payment.name }}"
+class="form-control"
+required>
+
+</div>
+
+<div class="col-md-12 mt-3">
+
+<label>Description</label>
+
+<textarea
+name="description"
+rows="4"
+class="form-control">{{ payment.description }}</textarea>
+
+</div>
+
+<div class="col-md-12 mt-3">
+
+<div class="form-check">
+
+<input
+type="checkbox"
+name="is_active"
+class="form-check-input"
+{% if payment.is_active %}checked{% endif %}>
+
+<label class="form-check-label">
+
+Active
+
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button class="btn btn-success">
+
+💾 Update
+
+</button>
+
+<a href="{% url 'payment_mode_list' %}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Delete Organisation{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h4>Delete Organisation</h4>
+
+</div>
+
+<div class="card-body">
+
+<h5>
+
+Are you sure you want to delete
+
+<b>{{ organisation.organisation_name }}</b>?
+
+</h5>
+
+<form method="post">
+
+{% csrf_token %}
+
+<button class="btn btn-danger">
+
+Yes Delete
+
+</button>
+
+<a href="{% url 'organisation_list' %}" class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}
