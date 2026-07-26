@@ -281,7 +281,7 @@ def search_member(request):
     })
 
 
-@login_required(login_url="login")
+
 def coupon_print(request, id):
 
     coupon = get_object_or_404(
@@ -340,26 +340,42 @@ def agm_entry(request, event_id):
 
         if member:
 
-            # Check duplicate attendance
             attendance, created = EventAttendance.objects.get_or_create(
                 event=event,
                 member=member,
                 defaults={
-                    "entry_type":"MEMBER",
-                    "checkin_method":"QR",
-                    "check_in_time":timezone.now(),
+                    "entry_type": "MEMBER",
+                    "checkin_method": "QR",
+                    "check_in_time": timezone.now(),
                 }
             )
 
+            # Already has a coupon?
+            coupon = EventCoupon.objects.filter(
+                attendance=attendance
+            ).first()
 
-            return render(
-                request,
-                "events/member_entry_success.html",
-                {
-                    "event":event,
-                    "member":member,
-                    "attendance":attendance
-                }
+            # Create coupon if it doesn't exist
+            if not coupon:
+
+                next_no = EventCoupon.objects.filter(
+                    event=event
+                ).count() + 1
+
+                coupon = EventCoupon.objects.create(
+                    event=event,
+                    attendance=attendance,
+                    coupon_no=f"C{next_no:04d}",
+                    lucky_draw_no=f"{next_no:04d}",
+                )
+
+                attendance.coupon_issued = True
+                attendance.save()
+
+            # Print coupon
+            return redirect(
+                "coupon_print",
+                id=coupon.id
             )
 
 
@@ -451,7 +467,7 @@ def event_qr_print(request, id):
 
     event = get_object_or_404(Event, id=id)
 
-    url = f"http://192.168.1.30:8000/events/agm-entry/{event.id}/"
+    url = f"https://membership-erp.onrender.com/events/agm-entry/{event.id}/"
 
     img = qrcode.make(url)
 
