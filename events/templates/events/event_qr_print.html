@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AGM Entry QR</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    margin:30px;
+}
+
+img{
+    width:300px;
+}
+
+@media print{
+
+button{
+    display:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>{{ event.organisation.organisation_name }}</h2>
+
+<h3>{{ event.event_name }}</h3>
+
+<h4>Scan Here for AGM Entry</h4>
+
+<img src="data:image/png;base64,{{ qr }}">
+
+<p>{{ url }}</p>
+
+<button onclick="window.print()">
+Print QR
+</button>
+
+</body>
+</html>

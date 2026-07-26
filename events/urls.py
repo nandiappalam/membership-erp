@@ -57,12 +57,25 @@ path(
     name="coupon_print",
 ),
 
+
+
 path(
-    "coupon/<int:id>/print/",
-    views.print_coupon,
-    name="print_coupon"
+    "agm-entry/<int:event_id>/",
+    views.agm_entry,
+    name="agm_entry"
 ),
 
+path(
+    "visitor-save/<int:event_id>/",
+    views.visitor_save,
+    name="visitor_save"
+),
+
+path(
+    "qr/<int:id>/",
+    views.event_qr_print,
+    name="event_qr_print",
+),
 
 
 

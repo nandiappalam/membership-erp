@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Visitor Registration</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    padding:20px;
+}
+
+input{
+    width:90%;
+    padding:12px;
+    margin:5px;
+    font-size:16px;
+}
+
+button{
+    padding:12px 30px;
+    font-size:18px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h2>
+{{event.organisation.organisation_name}}
+</h2>
+
+
+<h3>
+AGM Visitor Registration
+</h3>
+
+
+<form method="POST"
+action="{% url 'visitor_save' event.id %}">
+
+{% csrf_token %}
+
+
+<input
+name="visitor_name"
+placeholder="Visitor Name"
+required>
+
+
+<input
+name="mobile"
+value="{{mobile}}"
+placeholder="Mobile Number"
+required>
+
+
+<input
+name="company"
+placeholder="Company Name">
+
+
+<input
+name="city"
+placeholder="City">
+
+
+<input
+name="email"
+placeholder="Email">
+
+
+<input
+name="referred_by"
+placeholder="Referred By">
+
+
+<button>
+SAVE ENTRY
+</button>
+
+
+</form>
+
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AGM Entry</title>
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    padding:20px;
+}
+
+
+input{
+    width:90%;
+    padding:12px;
+    font-size:18px;
+}
+
+
+button{
+    margin-top:20px;
+    padding:12px 30px;
+    font-size:18px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h2>
+{{event.organisation.organisation_name}}
+</h2>
+
+
+<h3>
+{{event.event_name}}
+</h3>
+
+
+<hr>
+
+
+<h3>
+Member / Visitor Entry
+</h3>
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<input
+type="text"
+name="search_no"
+placeholder="Mobile No / Membership No"
+autofocus
+required>
+
+
+<br>
+
+
+<button>
+ENTER
+</button>
+
+
+</form>
+
+
+</body>
+
+</html>

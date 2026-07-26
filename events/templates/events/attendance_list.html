@@ -62,13 +62,19 @@
 
             <td>
 
-<a href="{% url 'print_coupon' row.id %}"
-   target="_blank"
-   class="btn btn-primary btn-sm">
+{% if attendance.coupon_issued %}
 
-    🖨 Print Coupon
-
+<a href="{% url 'coupon_print' attendance.coupon.id %}">
+    Print Coupon
 </a>
+
+{% else %}
+
+<span>
+No Coupon
+</span>
+
+{% endif %}
 
 </td>
 

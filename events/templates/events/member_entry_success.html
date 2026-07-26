@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Member Entry Success</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    padding:30px;
+}
+
+.card{
+
+    border:1px solid #ccc;
+    padding:20px;
+    border-radius:10px;
+
+}
+
+button{
+
+    padding:12px 25px;
+    font-size:18px;
+    margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<h2>
+Entry Successful
+</h2>
+
+
+<h3>
+{{ member.owner_name }}
+</h3>
+
+
+<p>
+Membership No:
+<strong>
+{{ member.membership_no }}
+</strong>
+</p>
+
+
+<p>
+AGM:
+{{ event.event_name }}
+</p>
+
+
+<p>
+Attendance ID:
+{{ attendance.id }}
+</p>
+
+
+<a href="{% url 'coupon_print' attendance.id %}">
+
+<button onclick="location.reload()">
+DONE
+</button>
+
+</a>
+
+
+</div>
+
+
+</body>
+
+</html>

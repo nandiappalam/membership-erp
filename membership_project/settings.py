@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     ".onrender.com",
+    "192.168.1.30",
 ]
 
 
@@ -150,3 +151,6 @@ STATICFILES_DIRS = [
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
+
+
+SITE_URL = "http://127.0.0.1:8000"

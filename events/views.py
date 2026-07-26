@@ -5,6 +5,12 @@ from .models import *
 from .forms import EventForm
 from django.http import JsonResponse
 from django.db.models import Q
+from membership.models import *
+from django.utils import timezone
+import qrcode
+import base64
+from io import BytesIO
+from django.conf import settings
 
 
 
@@ -307,5 +313,160 @@ def print_coupon(request, id):
         {
             "registration": registration
         }
+    )
+
+
+def agm_entry(request, event_id):
+
+    event = get_object_or_404(
+        Event,
+        id=event_id
+    )
+
+
+    if request.method == "POST":
+
+        search_no = request.POST.get(
+            "search_no"
+        ).strip()
+
+
+        # Search Member
+        member = Member.objects.filter(
+            Q(membership_no=search_no) |
+            Q(mobile=search_no)
+        ).first()
+
+
+        if member:
+
+            # Check duplicate attendance
+            attendance, created = EventAttendance.objects.get_or_create(
+                event=event,
+                member=member,
+                defaults={
+                    "entry_type":"MEMBER",
+                    "checkin_method":"QR",
+                    "check_in_time":timezone.now(),
+                }
+            )
+
+
+            return render(
+                request,
+                "events/member_entry_success.html",
+                {
+                    "event":event,
+                    "member":member,
+                    "attendance":attendance
+                }
+            )
+
+
+        else:
+
+            if request.POST.get("visitor_name"):
+
+                pass
+            return render(
+                request,
+                "events/visitor_register.html",
+                {
+                    "event":event,
+                    "mobile":search_no
+                }
+            )
+
+
+    return render(
+        request,
+        "events/agm_entry.html",
+        {
+            "event":event
+        }
+    )
+
+
+def visitor_save(request,event_id):
+
+    event=get_object_or_404(
+        Event,
+        id=event_id
+    )
+
+
+    if request.method=="POST":
+
+
+        attendance=EventAttendance.objects.create(
+            event=event,
+            member=None,
+            entry_type="VISITOR",
+            checkin_method="QR",
+            check_in_time=timezone.now()
+        )
+
+
+        visitor=EventVisitor.objects.create(
+
+            event=event,
+
+            visitor_name=request.POST.get(
+                "visitor_name"
+            ),
+
+            mobile=request.POST.get(
+                "mobile"
+            ),
+
+            company=request.POST.get(
+                "company"
+            ),
+
+            city=request.POST.get(
+                "city"
+            ),
+
+            email=request.POST.get(
+                "email"
+            ),
+
+            referred_by=None,
+
+            attendance=attendance
+        )
+
+
+        return render(
+            request,
+            "events/visitor_success.html",
+            {
+                "visitor":visitor
+            }
+        )
+
+
+@login_required(login_url="login")
+def event_qr_print(request, id):
+
+    event = get_object_or_404(Event, id=id)
+
+    url = f"http://192.168.1.30:8000/events/agm-entry/{event.id}/"
+
+    img = qrcode.make(url)
+
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+
+    qr = base64.b64encode(buffer.getvalue()).decode()
+
+    return render(
+        request,
+        "events/event_qr_print.html",
+        {
+            "event": event,
+            "qr": qr,
+            "url": url,
+        },
     )
 

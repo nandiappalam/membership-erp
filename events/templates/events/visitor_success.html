@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Visitor Entry Success</title>
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    padding:30px;
+}
+
+.card{
+
+    border:1px solid #ccc;
+    padding:20px;
+    border-radius:10px;
+
+}
+
+button{
+
+    padding:12px 25px;
+    font-size:18px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<h2>
+Entry Successful
+</h2>
+
+
+<h3>
+{{visitor.visitor_name}}
+</h3>
+
+
+<p>
+Mobile:
+{{visitor.mobile}}
+</p>
+
+
+<p>
+Visitor ID:
+{{visitor.id}}
+</p>
+
+
+<p>
+Thank You
+</p>
+
+
+<button onclick="window.print()">
+Print Visitor Pass
+</button>
+
+
+</div>
+
+
+</body>
+
+</html>
