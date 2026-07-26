@@ -1,0 +1,309 @@
+{% extends "membership/base.html" %}
+{% load static %}
+
+{% block title %}Member Check-In{% endblock %}
+
+{% block content %}
+
+<form id="attendanceForm">
+    {% csrf_token %}
+
+<div class="container-fluid mt-3">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                AGM Member Check-In
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+
+                    <label>Event</label>
+
+                    <select class="form-control" id="event">
+
+                        {% for e in events %}
+
+                        <option value="{{ e.id }}">
+                            {{ e.event_name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label>Membership No / Mobile</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="search"
+                        placeholder="Enter Membership No or Mobile">
+
+                    <input type="hidden" id="member_id" name="member">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label>&nbsp;</label>
+
+                    <button
+    type="button"
+    class="btn btn-primary w-100"
+    id="searchBtn">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="row">
+
+                <!-- Photo -->
+
+                <div class="col-md-3 text-center">
+
+                    <img
+                        id="memberPhoto"
+                        src="{% static 'img/no-photo.png' %}"
+                        class="img-thumbnail"
+                        style="width:220px;height:220px;object-fit:cover;">
+
+                </div>
+
+                <!-- Details -->
+
+                <div class="col-md-9">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th width="200">Membership No</th>
+                            <td id="membershipNo">-</td>
+                        </tr>
+
+                        <tr>
+                            <th>Name</th>
+                            <td id="memberName">-</td>
+                        </tr>
+
+                        <tr>
+                            <th>Company</th>
+                            <td id="memberCompany">-</td>
+                        </tr>
+
+                        <tr>
+                            <th>Mobile</th>
+                            <td id="memberMobile">-</td>
+                        </tr>
+
+                        <tr>
+                            <th>Valid Upto</th>
+                            <td id="memberValid">-</td>
+                        </tr>
+
+                        <tr>
+                            <th>Status</th>
+                            <td id="attendanceStatus">
+
+                                <span class="badge bg-secondary">
+
+                                    Search Member
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                    <button
+    type="button"
+    class="btn btn-success btn-lg"
+    id="checkInBtn"
+    disabled>
+
+                        ✔ CHECK IN
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div id="messageArea">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</form>
+
+<script>
+const attendanceSaveURL = "{% url 'attendance_save' %}";
+</script>
+<script>
+
+$("#searchBtn").click(function(e){
+
+    e.preventDefault();
+
+    var keyword = $("#search").val();
+
+    if(keyword==""){
+        alert("Enter Membership No or Mobile");
+        return;
+    }
+
+    $.get(
+        "/events/api/member-search/",
+        {
+            search: keyword,
+            event: $("#event").val()
+        },
+
+        function(data){
+
+            if(data.status){
+                $("#member_id").val(data.id);
+
+                $("#memberPhoto").attr("src", data.photo);
+
+                $("#membershipNo").text(data.membership_no);
+
+                $("#memberName").text(data.name);
+
+                $("#memberCompany").text(data.company);
+
+                $("#memberMobile").text(data.mobile);
+
+                $("#memberValid").text(data.valid_upto);
+
+                if(data.attended){
+
+                    $("#attendanceStatus").html(
+                        '<span class="badge bg-danger">Already Checked In</span>'
+                    );
+
+                    $("#checkInBtn").prop("disabled", true);
+
+                }else{
+
+                    $("#attendanceStatus").html(
+                        '<span class="badge bg-success">Ready</span>'
+                    );
+
+                    $("#checkInBtn").prop("disabled", false);
+
+                }
+
+            }else{
+
+                alert("Member Not Found");
+
+            }
+
+        }
+
+    );
+
+});
+
+$("#checkInBtn").click(function(e){
+
+    e.preventDefault();
+
+    $.post(
+
+        attendanceSaveURL,
+
+        {
+
+            csrfmiddlewaretoken:$("input[name=csrfmiddlewaretoken]").val(),
+
+            event:$("#event").val(),
+
+            member:$("#member_id").val()
+
+        },
+
+        function(res){
+
+            if(res.status){
+
+                alert("✓ " + res.message);
+
+                if(res.coupon!=""){
+                    window.open(
+                        "/events/coupon/" + res.coupon_id + "/print/",
+                        "_blank"
+                    );
+                }
+
+                // Clear screen
+                $("#search").val("");
+                $("#member_id").val("");
+
+                $("#memberPhoto").attr(
+                    "src",
+                    "{% static 'img/no-photo.png' %}"
+                );
+
+                $("#membershipNo").text("-");
+                $("#memberName").text("-");
+                $("#memberCompany").text("-");
+                $("#memberMobile").text("-");
+                $("#memberValid").text("-");
+
+                $("#attendanceStatus").html(
+                    '<span class="badge bg-secondary">Search Member</span>'
+                );
+
+                $("#checkInBtn").prop("disabled", true);
+
+                $("#search").focus();
+
+            }
+
+            else{
+
+                alert(res.message);
+
+            }
+
+        }
+
+    );
+
+});
+
+
+
+</script>
+
+
+{% endblock %}

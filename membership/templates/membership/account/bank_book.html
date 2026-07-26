@@ -1,0 +1,347 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Cash Book{% endblock %}
+
+{% block content %}
+
+<style>
+
+.cash-table{
+    font-size:13px;
+}
+
+.cash-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.cash-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.cash-table td{
+    vertical-align:middle;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas, monospace;
+    font-weight:bold;
+}
+
+.receipt{
+    color:#198754;
+}
+
+.payment{
+    color:#dc3545;
+}
+
+.balance{
+    color:#0b3f92;
+    font-weight:bold;
+}
+
+.opening-row{
+    background:#fff8dc;
+    font-weight:bold;
+}
+
+.total-row{
+    background:#e7f5ff;
+    font-weight:bold;
+}
+
+.closing-row{
+    background:#d1e7dd;
+    font-weight:bold;
+}
+
+@media print{
+
+.btn,
+form,
+.no-print{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+    <div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Opening Bank</small>
+                <h4>
+                    {{ bank.opening_type }}
+                    {{ bank.opening_balance|floatformat:2 }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-success shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Receipts</small>
+                <h4 class="text-success">
+                    {{ receipt|floatformat:2 }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Payments</small>
+                <h4 class="text-danger">
+                    {{ payment|floatformat:2 }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-dark shadow-sm">
+            <div class="card-body text-center">
+                <small class="text-muted">Closing Bank</small>
+                <h4>
+                    {{ closing_type }}
+                    {{ closing|floatformat:2 }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h3 class="mb-3">
+Bank Book
+</h3>
+
+<form method="get">
+
+<div class="row mb-3">
+
+<div class="col-md-3">
+<label>From Date</label>
+<input type="date"
+       name="from_date"
+       class="form-control"
+       value="{{ from_date }}">
+</div>
+
+<div class="col-md-3">
+<label>To Date</label>
+<input type="date"
+       name="to_date"
+       class="form-control"
+       value="{{ to_date }}">
+</div>
+
+<div class="col-md-6 pt-4">
+
+<button class="btn btn-primary">
+Search
+</button>
+
+<a href="{% url 'bank_book' %}"
+   class="btn btn-secondary">
+    Reset
+</a>
+
+<button type="button"
+        onclick="window.print()"
+        class="btn btn-success">
+Print
+</button>
+
+</div>
+
+</div>
+
+</form>
+<table class="table table-bordered cash-table">
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Voucher No</th>
+
+<th>Type</th>
+
+<th>Particulars</th>
+
+<th class="text-end">
+Receipt
+</th>
+
+<th class="text-end">
+Payment
+</th>
+
+<th class="text-end">
+Balance
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr class="opening-row">
+
+<td colspan="6">
+
+Opening Balance
+
+</td>
+
+<td class="text-end">
+
+{{ bank.opening_type }}
+{{ bank.opening_balance|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% for r in rows %}
+
+<tr>
+
+<td>
+
+{{ r.entry.voucher.voucher_date|date:"d-m-Y" }}
+
+</td>
+
+<td>
+
+<a href="{% url 'voucher_print' r.entry.voucher.id %}"
+   class="text-decoration-none fw-bold">
+    {{ r.entry.voucher.voucher_no }}
+</a>
+
+</td>
+
+<td>
+
+{{ r.entry.voucher.get_voucher_type_display }}
+
+</td>
+
+<td>
+
+<b>{{ r.particulars }}</b>
+
+{% if r.entry.voucher.narration %}
+<br>
+<small class="text-muted">
+{{ r.entry.voucher.narration }}
+</small>
+{% endif %}
+
+</td>
+
+<td class="amount receipt">
+
+{{ r.entry.debit|floatformat:2 }}
+
+</td>
+
+<td class="amount payment">
+
+{{ r.entry.credit|floatformat:2 }}
+
+</td>
+
+<td class="amount balance">
+
+{{ r.type }}
+
+{{ r.balance|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="7" class="text-center">
+
+No Transactions Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td colspan="4" class="text-end">
+
+Total
+
+</td>
+
+<td class="text-end">
+
+{{ receipt|floatformat:2 }}
+
+</td>
+
+<td class="text-end">
+
+{{ payment|floatformat:2 }}
+
+</td>
+
+<td></td>
+
+</tr>
+
+<tr class="closing-row">
+
+<td colspan="6" class="text-end">
+
+Closing Balance
+
+</td>
+
+<td class="text-end">
+
+{{ closing_type }}
+
+{{ closing|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

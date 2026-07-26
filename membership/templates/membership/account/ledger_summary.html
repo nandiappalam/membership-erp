@@ -1,0 +1,349 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Ledger Summary{% endblock %}
+
+{% block content %}
+
+<style>
+
+.summary-table{
+    font-size:13px;
+}
+
+.summary-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.summary-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.summary-table td{
+    vertical-align:middle;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas, monospace;
+    font-weight:bold;
+}
+
+.dr{
+    color:#198754;
+}
+
+.cr{
+    color:#dc3545;
+}
+
+.total-row{
+    background:#e7f5ff;
+    font-weight:bold;
+}
+
+.card h4{
+    margin:0;
+}
+
+@media print{
+
+.btn,
+form,
+.no-print{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Ledger Summary
+</h3>
+
+<div class="row mb-3">
+
+<div class="col-md-4">
+<div class="card border-primary shadow-sm">
+<div class="card-body text-center">
+<small>Total Ledgers</small>
+<h4>{{ ledgers_count }}</h4>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card border-success shadow-sm">
+<div class="card-body text-center">
+<small>Total Debit</small>
+<h4 class="text-success">
+{{ grand_debit|floatformat:2 }}
+</h4>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card border-danger shadow-sm">
+<div class="card-body text-center">
+<small>Total Credit</small>
+<h4 class="text-danger">
+{{ grand_credit|floatformat:2 }}
+</h4>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="card mb-3">
+
+<div class="card-body">
+
+<form method="get">
+
+<div class="row">
+
+<div class="col-md-3">
+
+<label>From Date</label>
+
+<input
+    type="date"
+    name="from_date"
+    class="form-control"
+    value="{{ from_date }}">
+
+</div>
+
+<div class="col-md-3">
+
+<label>To Date</label>
+
+<input
+    type="date"
+    name="to_date"
+    class="form-control"
+    value="{{ to_date }}">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Search Ledger</label>
+
+<input
+    type="text"
+    name="search"
+    class="form-control"
+    placeholder="Ledger Name"
+    value="{{ search }}">
+
+</div>
+
+<div class="col-md-2 pt-4">
+
+<button class="btn btn-primary">
+Search
+</button>
+
+<a href="{% url 'ledger_summary' %}"
+class="btn btn-secondary">
+Reset
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div class="d-flex justify-content-end gap-2 mb-3">
+
+<button
+    onclick="window.print()"
+    class="btn btn-success">
+
+🖨 Print
+
+</button>
+
+<a href=""
+class="btn btn-danger">
+
+📄 PDF
+
+</a>
+
+<a href=""
+class="btn btn-primary">
+
+📊 Excel
+
+</a>
+
+</div>
+
+<table class="table table-bordered table-hover summary-table">
+
+<thead>
+
+<tr>
+
+<th>Ledger Code</th>
+
+<th>Ledger Name</th>
+
+<th>Group</th>
+
+<th class="text-end">Opening</th>
+
+<th class="text-end">Debit</th>
+
+<th class="text-end">Credit</th>
+
+<th class="text-end">Closing</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for group_name, group in grouped_rows.items %}
+
+<tr class="table-dark">
+    <td colspan="7">
+        <strong>{{ group_name }}</strong>
+    </td>
+</tr>
+
+{% for r in group.rows %}
+
+<tr>
+
+    <td>{{ r.ledger.ledger_code }}</td>
+
+    <td>
+        <a href="{% url 'ledger_book' r.ledger.id %}"
+           class="text-decoration-none fw-bold">
+            {{ r.ledger.ledger_name }}
+        </a>
+    </td>
+
+    <td>{{ r.ledger.group.name }}</td>
+
+    <td class="amount">
+        {{ r.opening_type }}
+        {{ r.opening|floatformat:2 }}
+    </td>
+
+    <td class="amount dr">
+        {{ r.debit|floatformat:2 }}
+    </td>
+
+    <td class="amount cr">
+        {{ r.credit|floatformat:2 }}
+    </td>
+
+    <td class="amount">
+
+        {% if r.closing_type == "Dr" %}
+
+            <span class="dr">
+                {{ r.closing_type }}
+                {{ r.closing|floatformat:2 }}
+            </span>
+
+        {% else %}
+
+            <span class="cr">
+                {{ r.closing_type }}
+                {{ r.closing|floatformat:2 }}
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="table-secondary">
+
+    <td colspan="4" class="text-end">
+
+        <strong>{{ group_name }} Total</strong>
+
+    </td>
+
+    <td class="text-end">
+
+        <strong>{{ group.debit|floatformat:2 }}</strong>
+
+    </td>
+
+    <td class="text-end">
+
+        <strong>{{ group.credit|floatformat:2 }}</strong>
+
+    </td>
+
+    <td></td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+    <td colspan="7" class="text-center">
+        No Ledgers Found
+    </td>
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+    <td colspan="3" class="text-end">
+        <strong>Grand Total</strong>
+    </td>
+
+    <td class="text-end">
+        <strong>{{ grand_opening|floatformat:2 }}</strong>
+    </td>
+
+    <td class="text-end">
+        <strong>{{ grand_debit|floatformat:2 }}</strong>
+    </td>
+
+    <td class="text-end">
+        <strong>{{ grand_credit|floatformat:2 }}</strong>
+    </td>
+
+    <td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

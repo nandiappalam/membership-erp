@@ -11,7 +11,7 @@ from .utils import *
 from datetime import date, datetime,timedelta
 from django.db import transaction
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Sum
 from num2words import num2words
 from django.http import JsonResponse,HttpResponse
 import re
@@ -31,6 +31,35 @@ from reportlab.platypus import (
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter
+from openpyxl import Workbook
+from openpyxl.styles import Border,Side
+from .accounting import create_receipt_voucher
+from collections import OrderedDict
+from decimal import Decimal
+from io import BytesIO
+
+from reportlab.lib import colors
+
+from reportlab.lib.pagesizes import A4
+
+from reportlab.lib.styles import getSampleStyleSheet
+
+from reportlab.lib.units import mm
+
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    Paragraph,
+    Spacer,
+)
+
+from reportlab.pdfbase import pdfmetrics
+
+from reportlab.pdfbase.ttfonts import TTFont
+
+
+
 
 
 def get_assessment_year(joining_date):
@@ -572,30 +601,27 @@ def member_create(request):
 
         ledger_name = member.company_name.strip().title()
 
-        if not Ledger.objects.filter(
+        ledger = Ledger.objects.filter(
             ledger_name__iexact=ledger_name
-        ).exists():
+        ).first()
 
-            # Change this group if you create a dedicated "Members" group
+        if ledger is None:
+
             group = AccountGroup.objects.get(
-                name="Current Assets"
+                name="Member Receivable"
             )
 
-            ledger = Ledger()
+            ledger = Ledger.objects.create(
+                ledger_code=get_next_ledger_code(group),
+                ledger_name=ledger_name,
+                group=group,
+                opening_balance=0,
+                opening_type="DEBIT",
+                remarks=f"Auto Created for Member : {member.membership_no}",
+            )
 
-            ledger.ledger_code = get_next_ledger_code(group)
-
-            ledger.ledger_name = ledger_name
-
-            ledger.group = group
-
-            ledger.opening_balance = 0
-
-            ledger.opening_type = "DEBIT"
-
-            ledger.remarks = f"Auto Created for Member : {member.membership_no}"
-
-            ledger.save()
+        member.ledger = ledger
+        member.save(update_fields=["ledger"])
 
         messages.success(request, "Member Created Successfully")
 
@@ -698,7 +724,613 @@ def member_edit(request, id):
 
 @login_required(login_url="login")
 def member_delete(request, id):
-    return HttpResponse(f"Delete Member {id}")
+
+    member = get_object_or_404(
+        Member,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        if member.ledger:
+
+            from .models import VoucherEntry
+
+            used = VoucherEntry.objects.filter(
+                ledger=member.ledger
+            ).exists()
+
+            if used:
+                messages.error(
+                    request,
+                    "Cannot delete member. Ledger transactions exist."
+                )
+                return redirect("member_list")
+
+
+        member.delete()
+
+        messages.success(
+            request,
+            "Member deleted successfully"
+        )
+
+        return redirect("member_list")
+
+
+    return render(
+        request,
+        "membership/member/delete.html",
+        {
+            "member":member
+        }
+    )
+
+@login_required(login_url="login")
+def member_statement(request):
+
+    members = Member.objects.all().order_by("owner_name")
+
+    member_id = request.GET.get("member")
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    export = request.GET.get("export")
+
+    if export == "pdf":
+        return member_statement_pdf(request)
+    if export == "excel":
+        return member_statement_excel(request)
+
+    selected_member = None
+    transactions = []
+
+    balance = Decimal("0.00")
+    total_debit = Decimal("0.00")
+    total_credit = Decimal("0.00")
+
+    if member_id:
+
+        selected_member = get_object_or_404(Member, id=member_id)
+
+        receipts = (
+            Receipt.objects
+            .filter(member=selected_member)
+            .prefetch_related("details__fee_master")
+        )
+
+        if from_date:
+            receipts = receipts.filter(receipt_date__gte=from_date)
+
+        if to_date:
+            receipts = receipts.filter(receipt_date__lte=to_date)
+
+        receipts = receipts.order_by(
+            "receipt_date",
+            "receipt_no"
+        )
+
+        for receipt in receipts:
+
+            for detail in receipt.details.all():
+
+                transactions.append({
+
+                    "date": receipt.receipt_date,
+
+                    "document": f"RC{receipt.receipt_no:05d}",
+
+                    "particulars": detail.fee_master.fee_name,
+
+                    "debit": Decimal("0.00"),
+
+                    "credit": detail.amount,
+
+                })
+
+        transactions.sort(
+            key=lambda x: (
+                x["date"],
+                x["document"],
+            )
+        )
+
+        for t in transactions:
+
+            total_debit += t["debit"]
+            total_credit += t["credit"]
+
+            balance += t["debit"]
+            balance -= t["credit"]
+
+            t["balance"] = abs(balance)
+            t["balance_type"] = "Dr" if balance >= 0 else "Cr"
+
+    context = {
+
+        "members": members,
+
+        "selected_member": selected_member,
+
+        "transactions": transactions,
+
+        "total_debit": total_debit,
+
+        "total_credit": total_credit,
+
+        "closing_balance": abs(balance),
+
+        "closing_type": "Dr" if balance >= 0 else "Cr",
+
+        "from_date": from_date,
+
+        "to_date": to_date,
+    }
+
+
+    try:
+        pdfmetrics.registerFont(
+            TTFont(
+                "Arial",
+                r"C:\Windows\Fonts\arial.ttf"
+            )
+        )
+
+        FONT = "Arial"
+
+    except:
+        FONT = "Helvetica"
+
+    return render(
+        request,
+        "membership/report/member_statement.html",
+        context,
+    )
+
+@login_required(login_url="login")
+def member_statement_pdf(request):
+    try:
+        pdfmetrics.registerFont(
+            TTFont(
+                "Arial",
+                r"C:\Windows\Fonts\arial.ttf"
+            )
+        )
+        FONT = "Arial"
+    except:
+        FONT = "Helvetica"
+
+    member_id = request.GET.get("member")
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if not member_id:
+        messages.error(request, "Please select a member.")
+        return redirect("member_statement")
+
+    member = get_object_or_404(Member, id=member_id)
+
+    transactions = []
+
+    receipts = (
+        Receipt.objects
+        .filter(member=member)
+        .prefetch_related("details__fee_master")
+    )
+
+    if from_date:
+        receipts = receipts.filter(receipt_date__gte=from_date)
+
+    if to_date:
+        receipts = receipts.filter(receipt_date__lte=to_date)
+
+    receipts = receipts.order_by(
+        "receipt_date",
+        "receipt_no"
+    )
+
+    for receipt in receipts:
+
+        for detail in receipt.details.all():
+
+            transactions.append({
+
+                "date": receipt.receipt_date,
+
+                "document": f"RC{receipt.receipt_no:05d}",
+
+                "particulars": detail.fee_master.fee_name,
+
+                "debit": Decimal("0.00"),
+
+                "credit": detail.amount,
+
+            })
+
+    renewals = (
+        MemberRenewal.objects
+        .filter(member=member)
+        .order_by("renewal_date", "renewal_no")
+    )
+
+    if from_date:
+        renewals = renewals.filter(renewal_date__gte=from_date)
+
+    if to_date:
+        renewals = renewals.filter(renewal_date__lte=to_date)
+
+    for renewal in renewals:
+
+        transactions.append({
+
+            "date": renewal.renewal_date,
+
+            "document": renewal.renewal_no,
+
+            "particulars": "Membership Renewal",
+
+            "debit": Decimal("0.00"),
+
+            "credit": renewal.amount,
+
+        })
+
+    transactions.sort(
+        key=lambda x: (
+            x["date"],
+            x["document"]
+        )
+    )
+
+    balance = Decimal("0.00")
+    total_debit = Decimal("0.00")
+    total_credit = Decimal("0.00")
+
+    for t in transactions:
+
+        total_debit += t["debit"]
+        total_credit += t["credit"]
+
+        balance += t["debit"]
+        balance -= t["credit"]
+
+        t["balance"] = abs(balance)
+        t["balance_type"] = "Dr" if balance >= 0 else "Cr"
+
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=15,
+        leftMargin=15,
+        topMargin=20,
+        bottomMargin=20,
+    )
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    elements.append(
+        Paragraph(
+            "<b>MEMBER STATEMENT</b>",
+            styles["Title"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"<b>Member :</b> {member.owner_name}",
+            styles["Normal"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"<b>Membership No :</b> {member.membership_no}",
+            styles["Normal"]
+        )
+    )
+
+    elements.append(Spacer(1, 10))
+
+    data = [
+
+    [
+        "Date",
+        "Document",
+        "Particulars",
+        "Debit",
+        "Credit",
+        "Balance",
+    ]
+
+]
+
+    for t in transactions:
+
+        data.append([
+
+            t["date"].strftime("%d-%m-%Y"),
+
+            t["document"],
+
+            t["particulars"],
+
+            f"{t['debit']:.2f}",
+
+            f"{t['credit']:.2f}",
+
+            f"{t['balance']:.2f} {t['balance_type']}",
+
+        ])
+
+    data.append([
+
+        "",
+
+        "",
+
+        "TOTAL",
+
+        f"{total_debit:.2f}",
+
+        f"{total_credit:.2f}",
+
+        f"{abs(balance):.2f} {'Dr' if balance >= 0 else 'Cr'}",
+
+    ])
+
+    table = Table(
+        data,
+        colWidths=[
+            25*mm,
+            30*mm,
+            65*mm,
+            22*mm,
+            22*mm,
+            28*mm,
+        ]
+    )
+
+    table.setStyle(
+
+        TableStyle([
+
+            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+
+            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#0d6efd")),
+
+            ("TEXTCOLOR", (0,0), (-1,0), colors.white),
+
+            ("FONTNAME", (0,0), (-1,0), FONT),
+
+            ("FONTNAME", (0,1), (-1,-1), FONT),
+
+            ("FONTSIZE", (0,0), (-1,-1), 9),
+
+            ("ALIGN", (3,1), (-1,-1), "RIGHT"),
+
+            ("BACKGROUND", (0,-1), (-1,-1), colors.lightgrey),
+
+            ("FONTNAME", (0,-1), (-1,-1), FONT),
+
+        ])
+
+    )
+
+    elements.append(table)
+
+    doc.build(elements)
+
+    pdf = buffer.getvalue()
+
+    buffer.close()
+
+    response = HttpResponse(
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = (
+        f'inline; filename="Member_Statement_{member.membership_no}.pdf"'
+    )
+
+    response.write(pdf)
+
+    return response
+
+
+@login_required(login_url="login")
+def member_statement_excel(request):
+    
+
+    member_id = request.GET.get("member")
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if not member_id:
+        messages.error(request, "Please select a member.")
+        return redirect("member_statement")
+
+    member = get_object_or_404(Member, id=member_id)
+
+    transactions = []
+
+    receipts = (
+        Receipt.objects
+        .filter(member=member)
+        .prefetch_related("details__fee_master")
+    )
+
+    if from_date:
+        receipts = receipts.filter(receipt_date__gte=from_date)
+
+    if to_date:
+        receipts = receipts.filter(receipt_date__lte=to_date)
+
+    receipts = receipts.order_by(
+        "receipt_date",
+        "receipt_no"
+    )
+
+    for receipt in receipts:
+
+        for detail in receipt.details.all():
+
+            transactions.append({
+
+                "date": receipt.receipt_date,
+
+                "document": f"RC{receipt.receipt_no:05d}",
+
+                "particulars": detail.fee_master.fee_name,
+
+                "debit": Decimal("0.00"),
+
+                "credit": detail.amount,
+
+            })
+
+    transactions.sort(
+        key=lambda x: (
+            x["date"],
+            x["document"],
+        )
+    )
+
+    wb = Workbook()
+
+    ws = wb.active
+
+    ws.merge_cells("A1:G1")
+
+    title = ws["A1"]
+
+    title.value = "MEMBER STATEMENT"
+
+    title.font = Font(
+        bold=True,
+        size=16
+    )
+
+    title.alignment = Alignment(
+        horizontal="center"
+    )
+
+    ws["A2"] = "Member Name"
+    ws["B2"] = member.owner_name
+
+    ws["D2"] = "Membership No"
+    ws["E2"] = member.membership_no
+
+    ws["A3"] = "Mobile"
+    ws["B3"] = member.mobile or ""
+
+    ws["D3"] = "Membership Type"
+    ws["E3"] = str(member.membership_type)
+
+    ws["A4"] = "Valid Upto"
+    ws["B4"] = (
+        member.membership_valid_upto.strftime("%d-%m-%Y")
+        if member.membership_valid_upto else ""
+    )
+    for cell in ["A2", "D2", "A3", "D3", "A4", "D4"]:
+        ws[cell].font = Font(bold=True)
+
+    if from_date or to_date:
+        ws["D4"] = "Period"
+        ws["E4"] = f"{from_date or ''} To {to_date or ''}"
+
+    row = 5
+
+    headers = [
+        "Date",
+        "Document",
+        "Particulars",
+        "Debit",
+        "Credit",
+        "Balance",
+        "Type",
+    ]
+
+    fill = PatternFill(
+        fill_type="solid",
+        fgColor="4F81BD"
+    )
+
+    thin = Side(style="thin")
+
+    for col, head in enumerate(headers, 1):
+
+        cell = ws.cell(row=row, column=col)
+
+        cell.value = head
+
+        cell.font = Font(
+            bold=True,
+            color="FFFFFF"
+        )
+
+        cell.fill = fill
+
+        cell.alignment = Alignment(horizontal="center")
+
+        cell.border = Border(
+            left=thin,
+            right=thin,
+            top=thin,
+            bottom=thin,
+        )
+
+    balance = Decimal("0")
+
+    total_debit = Decimal("0")
+    total_credit = Decimal("0")
+
+    row += 1
+
+    for t in transactions:
+
+        balance += t["debit"]
+        balance -= t["credit"]
+
+        total_debit += t["debit"]
+        total_credit += t["credit"]
+
+        ws.cell(row,1).value = t["date"].strftime("%d-%m-%Y")
+        ws.cell(row,2).value = t["document"]
+        ws.cell(row,3).value = t["particulars"]
+        ws.cell(row,4).value = float(t["debit"])
+        ws.cell(row,5).value = float(t["credit"])
+        ws.cell(row,6).value = float(abs(balance))
+        ws.cell(row,7).value = "Dr" if balance >= 0 else "Cr"
+
+        row += 1
+
+    ws.cell(row,3).value = "TOTAL"
+
+    ws.cell(row,4).value = float(total_debit)
+
+    ws.cell(row,5).value = float(total_credit)
+
+    ws.cell(row,6).value = float(abs(balance))
+
+    ws.cell(row,7).value = "Dr" if balance >= 0 else "Cr"
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="MemberStatement_{member.membership_no}.xlsx"'
+    )
+
+    wb.save(response)
+
+    return response
+
+
 
 @login_required(login_url="login")
 def member_view(request, id):
@@ -731,6 +1363,8 @@ def fee_master_create(request):
 
     organisations = Organisation.objects.all()
 
+    ledgers = Ledger.objects.filter(is_active=True)
+
     if request.method == "POST":
 
         fee = FeeMaster()
@@ -744,6 +1378,9 @@ def fee_master_create(request):
         fee.default_amount = request.POST.get("default_amount")
         fee.description = request.POST.get("description")
 
+        fee.ledger = Ledger.objects.get(
+            id=request.POST.get("ledger")
+        )
         fee.is_active = bool(
             request.POST.get("is_active")
         )
@@ -763,6 +1400,7 @@ def fee_master_create(request):
         {
             "organisations": organisations,
             "fee_types": FeeMaster.FEE_TYPES,
+            "ledgers": ledgers,
         },
     )
 
@@ -776,6 +1414,7 @@ def fee_master_edit(request, id):
     )
 
     organisations = Organisation.objects.all()
+    ledgers = Ledger.objects.filter(is_active=True)
 
     if request.method == "POST":
 
@@ -787,11 +1426,15 @@ def fee_master_edit(request, id):
         fee.fee_type = request.POST.get("fee_type")
         fee.default_amount = request.POST.get("default_amount")
         fee.description = request.POST.get("description")
+        fee.ledger = Ledger.objects.get(
+            id=request.POST.get("ledger")
+        )
 
         fee.is_active = bool(
             request.POST.get("is_active")
         )
-
+        print(request.POST)
+        print("Ledger POST =", request.POST.get("ledger"))
         fee.save()
 
         messages.success(
@@ -808,6 +1451,7 @@ def fee_master_edit(request, id):
             "fee": fee,
             "organisations": organisations,
             "fee_types": FeeMaster.FEE_TYPES,
+            "ledgers": ledgers,
         },
     )
 
@@ -863,6 +1507,8 @@ def payment_mode_create(request):
 
     organisations = Organisation.objects.all()
 
+    ledgers = Ledger.objects.filter(is_active=True)
+
     if request.method == "POST":
 
         payment = PaymentMode()
@@ -872,6 +1518,11 @@ def payment_mode_create(request):
         )
 
         payment.name = request.POST.get("name")
+
+        payment.ledger = Ledger.objects.get(
+            id=request.POST.get("ledger")
+        )
+
         payment.description = request.POST.get("description")
 
         payment.is_active = (
@@ -892,6 +1543,7 @@ def payment_mode_create(request):
         "membership/payment_mode/create.html",
         {
             "organisations": organisations,
+            "ledgers": ledgers,
         },
     )
 
@@ -905,6 +1557,8 @@ def payment_mode_edit(request, id):
 
     organisations = Organisation.objects.all()
 
+    ledgers = Ledger.objects.filter(is_active=True)
+
     if request.method == "POST":
 
         payment.organisation = Organisation.objects.get(
@@ -916,6 +1570,10 @@ def payment_mode_edit(request, id):
 
         payment.is_active = (
             request.POST.get("is_active") == "on"
+        )
+
+        payment.ledger = Ledger.objects.get(
+            id=request.POST.get("ledger")
         )
 
         payment.save()
@@ -933,6 +1591,7 @@ def payment_mode_edit(request, id):
         {
             "payment": payment,
             "organisations": organisations,
+             "ledgers": ledgers,
         },
     )
 
@@ -1037,7 +1696,12 @@ def receipt_create(request):
 
         receipt.total_amount = total
         receipt.save()
-
+        print("Receipt Saved:", receipt.id)
+        create_receipt_voucher(
+            receipt,
+            request.user
+        )
+        print("Voucher Created")
         messages.success(
             request,
             "Receipt Saved Successfully."
@@ -1179,6 +1843,10 @@ def receipt_delete(request, id):
     receipt = get_object_or_404(Receipt, id=id)
 
     if request.method == "POST":
+        Voucher.objects.filter(
+            reference_no=str(receipt.receipt_no),
+            voucher_type="RV"
+        ).delete()
 
         receipt.delete()
 
@@ -1193,6 +1861,8 @@ def receipt_delete(request, id):
             "receipt": receipt,
         },
     )
+
+
 @login_required(login_url="login")
 def receipt_print(request, id):
 
@@ -1882,7 +2552,6 @@ def ledger_create(request):
             remarks=request.POST.get("remarks")
 
         )
-        print("CREATED =", ledger.id)
         return redirect("ledger_list")
 
     return render(
@@ -1892,6 +2561,9 @@ def ledger_create(request):
             "groups": groups
         }
     )
+
+
+
 @login_required(login_url="login")
 def ledger_edit(request,id):
 
@@ -1905,9 +2577,7 @@ def ledger_edit(request,id):
 
     if request.method=="POST":
 
-        ledger.ledger_code=request.POST.get(
-            "ledger_code"
-        )
+        
 
         ledger.ledger_name=request.POST.get(
             "ledger_name"
@@ -1944,6 +2614,8 @@ def ledger_edit(request,id):
             "groups":groups
         }
     )
+
+
 
 @login_required(login_url="login")
 def ledger_delete(request,id):
@@ -2016,6 +2688,61 @@ def get_next_ledger_code(group):
     return str(start + 1)
 
 @login_required(login_url="login")
+def ledger_detail(request, id):
+    import inspect
+
+    print(inspect.getsource(ledger_detail))
+    print("=" * 50)
+    print("LEDGER DETAIL VIEW")
+    print("Ledger:", ledger.ledger_name)
+    print("Entries Count:", entries.count())
+
+    for e in entries:
+        print(
+            e.voucher.voucher_no,
+            e.voucher.status,
+            e.debit,
+            e.credit
+        )
+
+    print("=" * 50)
+
+    ledger = get_object_or_404(
+        Ledger,
+        id=id
+    )
+
+    entries = VoucherEntry.objects.filter(
+        ledger=ledger,
+        voucher__status="ACTIVE"
+    ).select_related(
+        "voucher"
+    ).order_by(
+        "voucher__voucher_date",
+        "id"
+    )
+
+
+    balance = 0
+
+    for e in entries:
+
+        balance += e.debit
+        balance -= e.credit
+
+
+    return render(
+        request,
+        "membership/account/ledger_detail.html",
+        {
+            "ledger": ledger,
+            "entries": entries,
+            "balance": balance
+        }
+    )
+
+
+@login_required(login_url="login")
 def voucher_list(request):
 
     vouchers = Voucher.objects.all()
@@ -2043,6 +2770,7 @@ def voucher_create(request):
         reference_no=request.POST.get("reference_no"),
         created_by=request.user,
     )
+    
 
         ledger_ids = request.POST.getlist("ledger_id[]")
         debits = request.POST.getlist("debit[]")
@@ -2192,7 +2920,8 @@ def ledger_book(request, id):
     ledger = get_object_or_404(Ledger, id=id)
 
     entries = VoucherEntry.objects.filter(
-        ledger=ledger
+        ledger=ledger,
+        voucher__status="ACTIVE"
     ).select_related(
         "voucher",
         "ledger"
@@ -2271,6 +3000,21 @@ def ledger_book(request, id):
 
     if request.GET.get("export") == "pdf":
         return ledger_pdf(request, id)
+    print("========== LEDGER BOOK DEBUG ==========")
+    print("Ledger:", ledger.id, ledger.ledger_name)
+    print("Entries Query Count:", entries.count())
+    print("Rows Count:", len(rows))
+
+    for r in rows:
+        print(
+            r["entry"].voucher.voucher_no,
+            r["entry"].ledger.ledger_name,
+            r["entry"].debit,
+            r["entry"].credit
+        )
+
+    print("======================================")
+        
 
     return render(
         request,
@@ -2708,3 +3452,726 @@ def ledger_excel(request, id):
     wb.save(response)
 
     return response
+
+
+@login_required
+def cash_book(request):
+
+    cash = get_object_or_404(
+        Ledger,
+        ledger_name="Cash"
+    )
+
+    entries = (
+        VoucherEntry.objects
+        .filter(
+            ledger=cash,
+            voucher__status="ACTIVE"
+        )
+        .select_related("voucher")
+        .order_by(
+            "voucher__voucher_date",
+            "voucher__voucher_no"
+        )
+    )
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if from_date:
+        entries = entries.filter(
+            voucher__voucher_date__gte=from_date
+        )
+
+    if to_date:
+        entries = entries.filter(
+            voucher__voucher_date__lte=to_date
+        )
+
+    opening = cash.opening_balance or 0
+
+    if cash.opening_type == "DR":
+        balance = opening
+    else:
+        balance = -opening
+
+    rows = []
+
+    total_receipt = 0
+    total_payment = 0
+
+    for e in entries:
+
+        total_receipt += e.debit
+        total_payment += e.credit
+
+        balance += e.debit
+        balance -= e.credit
+
+        other_entry = (
+            VoucherEntry.objects
+            .filter(
+                voucher=e.voucher,
+                voucher__status="ACTIVE"
+            )
+            .exclude(id=e.id)
+            .first()
+        )
+
+        particulars = ""
+
+        if other_entry:
+            particulars = other_entry.ledger.ledger_name
+
+        rows.append({
+            "entry": e,
+            "particulars": particulars,
+            "balance": abs(balance),
+            "type": "Dr" if balance >= 0 else "Cr",
+        })
+
+    return render(
+        request,
+        "membership/account/cash_book.html",
+        {
+            "cash": cash,
+            "rows": rows,
+            "receipt": total_receipt,
+            "payment": total_payment,
+            "closing": abs(balance),
+            "closing_type": "Dr" if balance >= 0 else "Cr",
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+    )
+
+
+@login_required
+def bank_book(request):
+
+    bank = get_object_or_404(
+        Ledger,
+        ledger_name="Bank"
+    )
+
+    entries = (
+        VoucherEntry.objects
+        .filter(
+            ledger=bank,
+            voucher__status="ACTIVE"
+        )
+        .select_related("voucher")
+        .order_by(
+            "voucher__voucher_date",
+            "id"
+        )
+    )
+
+    balance = bank.opening_balance
+
+    if bank.opening_type == "Cr":
+        balance *= -1
+
+    rows = []
+
+    total_receipt = 0
+    total_payment = 0
+
+    for e in entries:
+
+        other_entry = (
+            VoucherEntry.objects
+            .filter(
+                voucher=e.voucher,
+                voucher__status="ACTIVE"
+            )
+            .exclude(id=e.id)
+            .first()
+        )
+
+        particulars = ""
+
+        if other_entry:
+            particulars = other_entry.ledger.ledger_name
+
+        balance += e.debit
+        balance -= e.credit
+
+        total_receipt += e.debit
+        total_payment += e.credit
+
+        rows.append({
+            "entry": e,
+            "particulars": particulars,
+            "balance": abs(balance),
+            "type": "Dr" if balance >= 0 else "Cr",
+        })
+
+    context = {
+        "bank": bank,
+        "rows": rows,
+        "receipt": total_receipt,
+        "payment": total_payment,
+        "closing": abs(balance),
+        "closing_type": "Dr" if balance >= 0 else "Cr",
+    }
+
+    return render(
+        request,
+        "membership/account/bank_book.html",
+        context,
+    )
+
+@login_required
+def day_book(request):
+
+    vouchers = (
+        Voucher.objects.filter(
+            status="ACTIVE"
+        )
+        .prefetch_related(
+            "entries__ledger"
+        )
+        .order_by(
+            "voucher_date",
+            "voucher_no"
+        )
+    )
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if from_date:
+        vouchers = vouchers.filter(voucher_date__gte=from_date)
+
+    if to_date:
+        vouchers = vouchers.filter(voucher_date__lte=to_date)
+
+    return render(
+        request,
+        "membership/account/day_book.html",
+        {
+            "vouchers": vouchers,
+            "from_date": from_date,
+            "to_date": to_date,
+        },
+    )
+
+@login_required
+def journal_register(request):
+
+    entries = (
+        VoucherEntry.objects.filter(
+            voucher__status="ACTIVE"
+        )
+        .select_related(
+            "voucher",
+            "ledger"
+        )
+        .order_by(
+            "voucher__voucher_date",
+            "voucher__voucher_no",
+            "id"
+        )
+    )
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if from_date:
+        entries = entries.filter(
+            voucher__voucher_date__gte=from_date
+        )
+
+    if to_date:
+        entries = entries.filter(
+            voucher__voucher_date__lte=to_date
+        )
+
+    total_debit = sum(e.debit for e in entries)
+    total_credit = sum(e.credit for e in entries)
+
+    print("=" * 50)
+    print("Journal Entries:", entries.count())
+
+    for e in entries:
+        print(
+            e.voucher.voucher_no,
+            e.ledger.ledger_name,
+            e.debit,
+            e.credit
+        )
+
+    print("=" * 50)
+
+    return render(
+        request,
+        "membership/account/journal_register.html",
+        {
+            "entries": entries,
+            "from_date": from_date,
+            "to_date": to_date,
+            "total_debit": total_debit,
+            "total_credit": total_credit,
+        },
+    )
+
+
+
+@login_required
+def ledger_summary(request):
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+    search = request.GET.get("search")
+
+    ledgers = (
+        Ledger.objects
+        .select_related("group")
+    )
+
+    if search:
+        ledgers = ledgers.filter(
+            Q(ledger_name__icontains=search) |
+            Q(ledger_code__icontains=search) |
+            Q(group__name__icontains=search)
+        )
+
+    ledgers = ledgers.order_by(
+        "group__name",
+        "ledger_name"
+    )
+
+    rows = []
+
+    grand_opening = Decimal("0.00")
+    grand_debit = Decimal("0.00")
+    grand_credit = Decimal("0.00")
+
+    for ledger in ledgers:
+
+        debit_entries = VoucherEntry.objects.filter(
+                            ledger=ledger,
+                            voucher__status="ACTIVE"
+                        )
+
+        credit_entries = VoucherEntry.objects.filter(
+                                ledger=ledger,
+                                voucher__status="ACTIVE"
+                            )
+
+        if from_date:
+            debit_entries = debit_entries.filter(
+                voucher__voucher_date__gte=from_date
+            )
+            credit_entries = credit_entries.filter(
+                voucher__voucher_date__gte=from_date
+            )
+
+        if to_date:
+            debit_entries = debit_entries.filter(
+                voucher__voucher_date__lte=to_date
+            )
+            credit_entries = credit_entries.filter(
+                voucher__voucher_date__lte=to_date
+            )
+
+        debit = debit_entries.aggregate(
+            total=Sum("debit")
+        )["total"] or Decimal("0.00")
+
+        credit = credit_entries.aggregate(
+            total=Sum("credit")
+        )["total"] or Decimal("0.00")
+
+        opening = ledger.opening_balance or Decimal("0.00")
+
+        balance = opening
+
+        if ledger.opening_type.upper() in ["CR", "CREDIT"]:
+            balance *= -1
+
+        balance += debit
+        balance -= credit
+
+        rows.append({
+            "ledger": ledger,
+            "opening": opening,
+            "opening_type": ledger.opening_type,
+            "debit": debit,
+            "credit": credit,
+            "closing": abs(balance),
+            "closing_type": "Dr" if balance >= 0 else "Cr",
+        })
+
+        grand_opening += opening
+        grand_debit += debit
+        grand_credit += credit
+
+    grouped_rows = OrderedDict()
+
+    for row in rows:
+
+        group_name = row["ledger"].group.name
+
+        if group_name not in grouped_rows:
+
+            grouped_rows[group_name] = {
+                "rows": [],
+                "debit": Decimal("0.00"),
+                "credit": Decimal("0.00"),
+            }
+
+        grouped_rows[group_name]["rows"].append(row)
+
+        grouped_rows[group_name]["debit"] += row["debit"]
+        grouped_rows[group_name]["credit"] += row["credit"]
+
+    
+
+    context = {
+        "grouped_rows": grouped_rows,
+        "ledgers_count": len(rows),
+        "grand_opening": grand_opening,
+        "grand_debit": grand_debit,
+        "grand_credit": grand_credit,
+        "from_date": from_date,
+        "to_date": to_date,
+        "search": search,
+    }
+    return render(
+        request,
+        "membership/account/ledger_summary.html",
+        context,
+    )
+
+@login_required
+def outstanding_report(request):
+
+    search = request.GET.get("search", "")
+    balance_type = request.GET.get("type", "")
+
+    ledgers = Ledger.objects.select_related("group")
+
+    if search:
+        ledgers = ledgers.filter(
+            Q(ledger_name__icontains=search) |
+            Q(ledger_code__icontains=search) |
+            Q(group__name__icontains=search)
+        )
+
+    rows = []
+
+    total_dr = Decimal("0.00")
+    total_cr = Decimal("0.00")
+
+    for ledger in ledgers:
+
+        debit = (
+            VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            )
+            .aggregate(total=Sum("debit"))["total"]
+            or Decimal("0.00")
+        )
+
+        credit = (
+            VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            )
+            .aggregate(total=Sum("credit"))["total"]
+            or Decimal("0.00")
+        )
+
+        balance = ledger.opening_balance or Decimal("0.00")
+
+        if ledger.opening_type.upper() in ["CR", "CREDIT"]:
+            balance *= -1
+
+        balance += debit
+        balance -= credit
+
+        if balance >= 0:
+            typ = "Dr"
+            amt = balance
+            total_dr += amt
+        else:
+            typ = "Cr"
+            amt = abs(balance)
+            total_cr += amt
+
+        if balance_type and typ != balance_type:
+            continue
+
+        rows.append({
+            "ledger": ledger,
+            "balance": amt,
+            "type": typ,
+        })
+
+    rows.sort(key=lambda x: (
+        x["ledger"].group.name,
+        x["ledger"].ledger_name
+    ))
+
+    context = {
+        "rows": rows,
+        "search": search,
+        "type": balance_type,
+        "total_dr": total_dr,
+        "total_cr": total_cr,
+    }
+
+    return render(
+        request,
+        "membership/account/outstanding_report.html",
+        context,
+    )
+
+
+@login_required
+def trial_balance(request):
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+    search = request.GET.get("search")
+
+    ledgers = (
+        Ledger.objects
+        .select_related("group")
+        .order_by("group__name", "ledger_name")
+    )
+
+    if search:
+        ledgers = ledgers.filter(
+            Q(ledger_name__icontains=search) |
+            Q(ledger_code__icontains=search) |
+            Q(group__name__icontains=search)
+        )
+
+    rows = []
+
+    total_debit = Decimal("0.00")
+    total_credit = Decimal("0.00")
+
+    for ledger in ledgers:
+
+        entries = VoucherEntry.objects.filter(
+            ledger=ledger,
+            voucher__status="ACTIVE"
+        )
+
+        if from_date:
+            entries = entries.filter(
+                voucher__voucher_date__gte=from_date
+            )
+
+        if to_date:
+            entries = entries.filter(
+                voucher__voucher_date__lte=to_date
+            )
+
+        debit = (
+            entries.aggregate(total=Sum("debit"))["total"]
+            or Decimal("0.00")
+        )
+
+        credit = (
+            entries.aggregate(total=Sum("credit"))["total"]
+            or Decimal("0.00")
+        )
+
+        balance = ledger.opening_balance or Decimal("0.00")
+
+        if ledger.opening_type.upper() in ["CR", "CREDIT"]:
+            balance *= -1
+
+        balance += debit
+        balance -= credit
+
+        if balance >= 0:
+            balance_type = "Dr"
+            total_debit += balance
+        else:
+            balance_type = "Cr"
+            total_credit += abs(balance)
+
+        rows.append({
+            "ledger": ledger,
+            "balance": abs(balance),
+            "type": balance_type,
+        })
+
+    context = {
+        "rows": rows,
+        "total_debit": total_debit,
+        "total_credit": total_credit,
+        "from_date": from_date,
+        "to_date": to_date,
+        "search": search,
+    }
+
+    return render(
+        request,
+        "membership/account/trial_balance.html",
+        context,
+    )
+
+@login_required
+def balance_sheet(request):
+
+    assets = []
+    liabilities = []
+
+    total_assets = Decimal("0.00")
+    total_liabilities = Decimal("0.00")
+
+    ledgers = (
+        Ledger.objects
+        .select_related("group")
+        .order_by("group__name", "ledger_name")
+    )
+
+    for ledger in ledgers:
+
+        debit = (
+           VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            ).aggregate(
+                total=Sum("debit")
+            )["total"] or Decimal("0.00")
+        )
+
+        credit = (
+            VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            ).aggregate(
+                total=Sum("credit")
+            )["total"] or Decimal("0.00")
+        )
+
+        balance = ledger.opening_balance or Decimal("0.00")
+
+        if ledger.opening_type.upper() in ["CR", "CREDIT"]:
+            balance *= -1
+
+        balance += debit
+        balance -= credit
+
+        row = {
+            "ledger": ledger,
+            "balance": abs(balance),
+        }
+
+        group = ledger.group.name.lower()
+
+        if "asset" in group:
+            assets.append(row)
+            total_assets += abs(balance)
+
+        elif (
+            "liability" in group or
+            "capital" in group or
+            "fund" in group
+        ):
+            liabilities.append(row)
+            total_liabilities += abs(balance)
+
+    context = {
+        "assets": assets,
+        "liabilities": liabilities,
+        "total_assets": total_assets,
+        "total_liabilities": total_liabilities,
+    }
+
+    return render(
+        request,
+        "membership/account/balance_sheet.html",
+        context,
+    )
+
+@login_required
+def income_expenditure(request):
+
+    incomes = []
+    expenses = []
+
+    total_income = Decimal("0.00")
+    total_expense = Decimal("0.00")
+
+    ledgers = (
+        Ledger.objects
+        .select_related("group")
+        .order_by("group__name", "ledger_name")
+    )
+
+    for ledger in ledgers:
+
+        debit = (
+            VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            ).aggregate(
+                total=Sum("debit")
+            )["total"] or Decimal("0.00")
+        )
+
+        credit = (
+            VoucherEntry.objects.filter(
+                ledger=ledger,
+                voucher__status="ACTIVE"
+            ).aggregate(
+                total=Sum("credit")
+            )["total"] or Decimal("0.00")
+        )
+
+        group_name = ledger.group.name.lower()
+
+        # Income Ledger
+        if "income" in group_name:
+
+            amount = credit - debit
+
+            incomes.append({
+                "ledger": ledger,
+                "amount": amount,
+            })
+
+            total_income += amount
+
+        # Expense Ledger
+        elif (
+            "expense" in group_name or
+            "expenses" in group_name
+        ):
+
+            amount = debit - credit
+
+            expenses.append({
+                "ledger": ledger,
+                "amount": amount,
+            })
+
+            total_expense += amount
+
+    surplus = total_income - total_expense
+
+    context = {
+        "incomes": incomes,
+        "expenses": expenses,
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "surplus": surplus,
+    }
+
+    return render(
+        request,
+        "membership/account/income_expenditure.html",
+        context,
+    )
+
+

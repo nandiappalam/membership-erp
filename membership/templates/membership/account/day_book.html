@@ -1,0 +1,242 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Day Book{% endblock %}
+
+{% block content %}
+
+<style>
+
+.day-table{
+    font-size:13px;
+}
+
+.day-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.day-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas;
+    font-weight:bold;
+}
+
+.badge-rv{
+    background:#198754;
+    color:#fff;
+}
+
+.badge-pv{
+    background:#dc3545;
+    color:#fff;
+}
+
+.badge-jv{
+    background:#0d6efd;
+    color:#fff;
+}
+
+@media print{
+
+.btn,
+form,
+.no-print{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Day Book
+</h3>
+
+<form method="get">
+
+<div class="row mb-3">
+
+<div class="col-md-3">
+<label>From Date</label>
+
+<input
+type="date"
+name="from_date"
+class="form-control"
+value="{{ from_date }}">
+</div>
+
+<div class="col-md-3">
+
+<label>To Date</label>
+
+<input
+type="date"
+name="to_date"
+class="form-control"
+value="{{ to_date }}">
+
+</div>
+
+<div class="col-md-6 pt-4">
+
+<button class="btn btn-primary">
+Search
+</button>
+
+<a href="{% url 'day_book' %}"
+class="btn btn-secondary">
+Reset
+</a>
+
+<button
+type="button"
+onclick="window.print()"
+class="btn btn-success">
+Print
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<table class="table table-bordered table-hover day-table">
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Voucher No</th>
+
+<th>Type</th>
+
+<th>Narration</th>
+
+<th>Particulars</th>
+
+<th class="text-end">
+Amount
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for v in vouchers %}
+
+<tr>
+
+<td>
+{{ v.voucher_date|date:"d-m-Y" }}
+</td>
+
+<td>
+
+<a href="{% url 'voucher_print' v.id %}"
+class="fw-bold text-decoration-none">
+
+{{ v.voucher_no }}
+
+</a>
+
+</td>
+
+<td>
+
+{% if v.voucher_type == "RV" %}
+<span class="badge badge-rv">
+Receipt
+</span>
+
+{% elif v.voucher_type == "PV" %}
+
+<span class="badge badge-pv">
+Payment
+</span>
+
+{% else %}
+
+<span class="badge badge-jv">
+Journal
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ v.narration }}
+
+</td>
+
+<td>
+
+{% for e in v.voucherentry_set.all %}
+
+{{ e.ledger.ledger_name }}
+
+{% if not forloop.last %}
+<br>
+{% endif %}
+
+{% endfor %}
+
+</td>
+
+<td class="amount">
+
+{% for e in v.entries.all %}
+
+{% if e.debit > 0 %}
+
+{{ e.debit|floatformat:2 }}
+
+{% endif %}
+
+{% endfor %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="6"
+class="text-center">
+
+No Voucher Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

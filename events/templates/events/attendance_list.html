@@ -1,0 +1,98 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<div class="container mt-3">
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <h3>Attendance Register</h3>
+
+        <a href="{% url 'attendance_add' %}"
+   class="btn btn-success">
+
+            + Check In
+
+        </a>
+
+    </div>
+
+    <table class="table table-bordered table-striped">
+
+        <thead>
+
+            <tr>
+
+                <th>Time</th>
+                <th>Event</th>
+                <th>Member</th>
+                <th>Mobile</th>
+                <th>Method</th>
+                <th>Coupon</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for row in attendances %}
+
+        <tr>
+
+            <td>{{ row.check_in_time }}</td>
+
+            <td>{{ row.event }}</td>
+
+            <td>{{ row.member.owner_name }}</td>
+
+            <td>{{ row.member.mobile }}</td>
+
+            <td>{{ row.checkin_method }}</td>
+
+            <td>
+
+                {% if row.coupon_issued %}
+                    ✅
+                {% else %}
+                    ❌
+                {% endif %}
+
+            </td>
+
+            <td>
+
+<a href="{% url 'print_coupon' row.id %}"
+   target="_blank"
+   class="btn btn-primary btn-sm">
+
+    🖨 Print Coupon
+
+</a>
+
+</td>
+
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="6" class="text-center">
+
+                No attendance found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

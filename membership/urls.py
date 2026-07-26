@@ -268,6 +268,73 @@ path(
     name="ledger_excel",
 ),
 
+path(
+    "ledger/<int:id>/",
+    views.ledger_detail,
+    name="ledger_detail"
+),
+
+path(
+    "cash-book/",
+    views.cash_book,
+    name="cash_book",
+),
+
+path(
+    "bank-book/",
+    views.bank_book,
+    name="bank_book",
+),
+
+path(
+    "day-book/",
+    views.day_book,
+    name="day_book",
+),
+
+path(
+    "journal-register/",
+    views.journal_register,
+    name="journal_register",
+),
+
+path(
+    "ledger-summary/",
+    views.ledger_summary,
+    name="ledger_summary",
+),
+
+path(
+    "outstanding-report/",
+    views.outstanding_report,
+    name="outstanding_report",
+),
+
+path(
+    "trial-balance/",
+    views.trial_balance,
+    name="trial_balance",
+),
+
+path(
+    "balance-sheet/",
+    views.balance_sheet,
+    name="balance_sheet",
+),
+
+path(
+    "income-expenditure/",
+    views.income_expenditure,
+    name="income_expenditure",
+),
+
+path(
+    "member-statement/",
+    views.member_statement,
+    name="member_statement",
+),
+
+path("events/", include("events.urls")), 
 
 
 ]

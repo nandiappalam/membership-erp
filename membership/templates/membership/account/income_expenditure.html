@@ -1,0 +1,277 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Income & Expenditure{% endblock %}
+
+{% block content %}
+
+<style>
+
+.ie-table{
+    font-size:13px;
+}
+
+.ie-table th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+.ie-table td{
+    vertical-align:middle;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas,monospace;
+    font-weight:bold;
+}
+
+.total-row{
+    background:#e7f5ff;
+    font-weight:bold;
+}
+
+.surplus{
+    color:green;
+    font-weight:bold;
+}
+
+.deficit{
+    color:red;
+    font-weight:bold;
+}
+
+@media print{
+
+.btn,
+form{
+    display:none !important;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Income & Expenditure Account
+</h3>
+
+<div class="mb-3">
+
+<button
+onclick="window.print()"
+class="btn btn-success">
+
+🖨 Print
+
+</button>
+
+<a href=""
+class="btn btn-danger">
+
+PDF
+
+</a>
+
+<a href=""
+class="btn btn-primary">
+
+Excel
+
+</a>
+
+</div>
+
+<div class="row">
+
+<!-- EXPENDITURE -->
+
+<div class="col-md-6">
+
+<table class="table table-bordered ie-table">
+
+<thead>
+
+<tr>
+
+<th colspan="2">
+
+EXPENDITURE
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in expenses %}
+
+<tr>
+
+<td>
+
+{{ row.ledger.ledger_name }}
+
+</td>
+
+<td class="amount">
+
+{{ row.amount|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="2" class="text-center">
+
+No Expenses
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td>
+
+Total Expenditure
+
+</td>
+
+<td class="amount">
+
+{{ total_expense|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- INCOME -->
+
+<div class="col-md-6">
+
+<table class="table table-bordered ie-table">
+
+<thead>
+
+<tr>
+
+<th colspan="2">
+
+INCOME
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in incomes %}
+
+<tr>
+
+<td>
+
+{{ row.ledger.ledger_name }}
+
+</td>
+
+<td class="amount">
+
+{{ row.amount|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="2" class="text-center">
+
+No Income
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td>
+
+Total Income
+
+</td>
+
+<td class="amount">
+
+{{ total_income|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="card mt-4">
+
+<div class="card-body text-center">
+
+<h4>
+
+{% if surplus >= 0 %}
+
+<span class="surplus">
+
+Surplus :
+{{ surplus|floatformat:2 }}
+
+</span>
+
+{% else %}
+
+<span class="deficit">
+
+Deficit :
+{{ surplus|floatformat:2 }}
+
+</span>
+
+{% endif %}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

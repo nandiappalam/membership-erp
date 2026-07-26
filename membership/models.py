@@ -5,6 +5,7 @@ from io import BytesIO
 from django.core.files import File
 from PIL import Image
 from django.utils import timezone
+
 class Organisation(models.Model):
     organisation_name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=50)
@@ -142,6 +143,33 @@ class Member(models.Model):
         ("SUSPENDED", "Suspended"),
     )
 
+    def save(self, *args, **kwargs):
+
+        is_new = self.pk is None
+
+        super().save(*args, **kwargs)
+
+        # Auto create member ledger
+        if is_new and self.ledger is None:
+
+            from .models import Ledger, AccountGroup
+
+            group = AccountGroup.objects.get(
+                name="Member Receivable"
+            )
+
+            ledger = Ledger.objects.create(
+                ledger_code=f"MEM-{self.id:05d}",
+                ledger_name=self.company_name.strip(),
+                group=group,
+                opening_balance=0,
+                opening_type="Dr",
+                remarks="Auto created Member Ledger"
+            )
+
+            self.ledger = ledger
+            super().save(update_fields=["ledger"])
+
     # =========================
     # Membership
     # =========================
@@ -191,7 +219,13 @@ class Member(models.Model):
     email = models.EmailField(blank=True)
 
     website = models.URLField(blank=True)
-
+    ledger = models.ForeignKey(
+        "Ledger",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="member",
+    )
     # =========================
     # Address
     # =========================
@@ -343,7 +377,14 @@ class FeeMaster(models.Model):
         choices=FEE_TYPES,
         default="OTHER",
     )
-
+    ledger = models.ForeignKey(
+        "Ledger",
+        on_delete=models.PROTECT,
+        related_name="fee_masters",
+        null=True,
+        blank=True,
+    )
+            
     default_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -374,6 +415,14 @@ class PaymentMode(models.Model):
 
     name = models.CharField(max_length=50)
 
+    ledger = models.ForeignKey(
+        "Ledger",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="payment_modes"
+    )
+
     description = models.TextField(
         blank=True,
         null=True
@@ -385,7 +434,9 @@ class PaymentMode(models.Model):
 
     class Meta:
         ordering = ["name"]
-        unique_together = ("organisation", "name")
+        unique_together = ("organisation", "name", "ledger",
+            "description",
+            "is_active",)
 
     def __str__(self):
         return self.name
@@ -395,6 +446,18 @@ class Receipt(models.Model):
     receipt_no = models.PositiveIntegerField()
 
     receipt_date = models.DateField()
+
+    receipt_type = models.CharField(
+        max_length=50,
+        choices=[
+            ("MEMBERSHIP", "Membership Fee"),
+            ("ADMISSION", "Admission Fee"),
+            ("RENEWAL", "Renewal Fee"),
+            ("OTHER", "Other Income"),
+        ],
+        default="MEMBERSHIP"
+    )
+    
 
     organisation = models.ForeignKey(
         Organisation,
@@ -432,6 +495,7 @@ class Receipt(models.Model):
         decimal_places=2,
         default=0
     )
+    
 
     created_at = models.DateTimeField(
         auto_now_add=True

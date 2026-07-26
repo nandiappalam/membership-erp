@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'membership',
     "django.contrib.humanize",
+    'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [

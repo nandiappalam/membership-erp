@@ -1,0 +1,114 @@
+{% extends "membership/base.html" %}
+{% load static %}
+
+{% block title %}Event Master{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-3">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                Event Master
+            </h4>
+
+            <a href="{% url 'event_create' %}" class="btn btn-light">
+                + New Event
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Status</th>
+                        <th width="170">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for event in events %}
+
+                    <tr>
+
+                        <td>{{ event.event_code }}</td>
+
+                        <td>{{ event.event_name }}</td>
+
+                        <td>{{ event.event_type }}</td>
+
+                        <td>{{ event.event_date }}</td>
+
+                        <td>{{ event.venue }}</td>
+
+                        <td>{{ event.status }}</td>
+
+                        <td>
+
+                            <a href="{% url 'event_edit' event.id %}"
+                               class="btn btn-warning btn-sm">
+
+                                Edit
+
+                            </a>
+
+                            <a href="{% url 'event_delete' event.id %}"
+                               class="btn btn-danger btn-sm">
+
+                                Delete
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center">
+
+                            No Events Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

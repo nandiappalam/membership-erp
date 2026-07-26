@@ -1,0 +1,33 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<h2>Journal Register</h2>
+
+<p>Total Entries: {{ entries|length }}</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Date</th>
+        <th>Voucher</th>
+        <th>Ledger</th>
+        <th>Debit</th>
+        <th>Credit</th>
+    </tr>
+
+    {% for e in entries %}
+    <tr>
+        <td>{{ e.voucher.voucher_date }}</td>
+        <td>{{ e.voucher.voucher_no }}</td>
+        <td>{{ e.ledger.ledger_name }}</td>
+        <td>{{ e.debit }}</td>
+        <td>{{ e.credit }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">No Entries Found</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

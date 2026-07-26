@@ -1,0 +1,291 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Balance Sheet{% endblock %}
+
+{% block content %}
+
+<style>
+
+.bs-table{
+    font-size:13px;
+}
+
+.bs-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+.bs-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas,monospace;
+    font-weight:bold;
+}
+
+.group-row{
+    background:#f8f9fa;
+    font-weight:bold;
+}
+
+.total-row{
+    background:#d9edf7;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.card h4{
+    margin:0;
+}
+
+@media print{
+
+.btn,
+form{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Balance Sheet
+</h3>
+
+<div class="row mb-3">
+
+<div class="col-md-6">
+
+<div class="card border-primary shadow-sm">
+
+<div class="card-body text-center">
+
+<small>Total Assets</small>
+
+<h4 class="text-primary">
+
+{{ total_assets|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card border-danger shadow-sm">
+
+<div class="card-body text-center">
+
+<small>Total Liabilities</small>
+
+<h4 class="text-danger">
+
+{{ total_liabilities|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mb-3">
+
+<button
+onclick="window.print()"
+class="btn btn-success">
+
+🖨 Print
+
+</button>
+
+<a href=""
+class="btn btn-danger">
+
+PDF
+
+</a>
+
+<a href=""
+class="btn btn-primary">
+
+Excel
+
+</a>
+
+</div>
+
+<div class="row">
+
+<!-- ================= LIABILITIES ================= -->
+
+<div class="col-md-6">
+
+<table class="table table-bordered bs-table">
+
+<thead>
+
+<tr>
+
+<th colspan="2">
+
+LIABILITIES
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in liabilities %}
+
+<tr>
+
+<td>
+
+{{ r.ledger.ledger_name }}
+
+</td>
+
+<td class="amount">
+
+{{ r.balance|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="2" class="text-center">
+
+No Liabilities
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td>
+
+Total Liabilities
+
+</td>
+
+<td class="amount">
+
+{{ total_liabilities|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- ================= ASSETS ================= -->
+
+<div class="col-md-6">
+
+<table class="table table-bordered bs-table">
+
+<thead>
+
+<tr>
+
+<th colspan="2">
+
+ASSETS
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in assets %}
+
+<tr>
+
+<td>
+
+{{ r.ledger.ledger_name }}
+
+</td>
+
+<td class="amount">
+
+{{ r.balance|floatformat:2 }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="2" class="text-center">
+
+No Assets
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td>
+
+Total Assets
+
+</td>
+
+<td class="amount">
+
+{{ total_assets|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

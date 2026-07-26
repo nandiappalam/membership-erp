@@ -62,14 +62,19 @@ Account Group
 
 <select name="group" class="form-select" required>
 
-    <option value="">
-        Select Account Group
-    </option>
+    <option value="">Select Account Group</option>
 
     {% for g in groups %}
 
-        <option value="{{ g.id }}">
-            {{ g.parent.name }} → {{ g.name }}
+        <option value="{{ g.id }}"
+            {% if ledger.group_id == g.id %}selected{% endif %}>
+
+            {% if g.parent %}
+                {{ g.parent.name }} →
+            {% endif %}
+
+            {{ g.name }}
+
         </option>
 
     {% endfor %}

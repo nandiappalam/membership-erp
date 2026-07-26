@@ -1,0 +1,50 @@
+{% extends "membership/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+    Delete Member
+</div>
+
+<div class="card-body">
+
+<h5>
+Are you sure you want to delete?
+</h5>
+
+<p>
+<b>{{ member.company_name }}</b>
+<br>
+Owner: {{ member.owner_name }}
+</p>
+
+
+<form method="post">
+
+{% csrf_token %}
+
+<button class="btn btn-danger">
+    Yes, Delete
+</button>
+
+
+<a href="{% url 'member_list' %}"
+   class="btn btn-secondary">
+    Cancel
+</a>
+
+
+</form>
+
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

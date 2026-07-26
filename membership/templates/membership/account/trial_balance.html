@@ -1,0 +1,347 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Trial Balance{% endblock %}
+
+{% block content %}
+
+<style>
+
+.tb-table{
+    font-size:13px;
+}
+
+.tb-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+.tb-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas,monospace;
+    font-weight:bold;
+}
+
+.dr{
+    color:#198754;
+}
+
+.cr{
+    color:#dc3545;
+}
+
+.total-row{
+    background:#d9edf7;
+    font-weight:bold;
+}
+
+.card h4{
+    margin:0;
+}
+
+@media print{
+
+.btn,
+form{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Trial Balance
+</h3>
+
+<div class="row mb-3">
+
+<div class="col-md-4">
+
+<div class="card border-primary shadow-sm">
+
+<div class="card-body text-center">
+
+<small>Total Ledgers</small>
+
+<h4>{{ rows|length }}</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card border-success shadow-sm">
+
+<div class="card-body text-center">
+
+<small>Total Debit</small>
+
+<h4 class="text-success">
+
+{{ total_debit|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card border-danger shadow-sm">
+
+<div class="card-body text-center">
+
+<small>Total Credit</small>
+
+<h4 class="text-danger">
+
+{{ total_credit|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<form method="get" class="card mb-3">
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-3">
+
+<label>From Date</label>
+
+<input
+type="date"
+name="from_date"
+class="form-control"
+value="{{ from_date }}">
+
+</div>
+
+<div class="col-md-3">
+
+<label>To Date</label>
+
+<input
+type="date"
+name="to_date"
+class="form-control"
+value="{{ to_date }}">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Search Ledger</label>
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Ledger Name"
+value="{{ search }}">
+
+</div>
+
+<div class="col-md-2 pt-4">
+
+<button class="btn btn-primary">
+
+Search
+
+</button>
+
+<a href="{% url 'trial_balance' %}"
+class="btn btn-secondary">
+
+Reset
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</form>
+
+<div class="mb-3">
+
+<button
+onclick="window.print()"
+class="btn btn-success">
+
+🖨 Print
+
+</button>
+
+<a href=""
+class="btn btn-danger">
+
+PDF
+
+</a>
+
+<a href=""
+class="btn btn-primary">
+
+Excel
+
+</a>
+
+</div>
+
+<table class="table table-bordered table-hover tb-table">
+
+<thead>
+
+<tr>
+
+<th>Ledger Code</th>
+
+<th>Ledger Name</th>
+
+<th>Group</th>
+
+<th class="text-end">
+
+Debit
+
+</th>
+
+<th class="text-end">
+
+Credit
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in rows %}
+
+<tr>
+
+<td>
+
+{{ r.ledger.ledger_code }}
+
+</td>
+
+<td>
+
+<a href="{% url 'ledger_book' r.ledger.id %}">
+
+{{ r.ledger.ledger_name }}
+
+</a>
+
+</td>
+
+<td>
+
+{{ r.ledger.group.name }}
+
+</td>
+
+<td class="amount">
+
+{% if r.type == "Dr" %}
+
+<span class="dr">
+
+{{ r.balance|floatformat:2 }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td class="amount">
+
+{% if r.type == "Cr" %}
+
+<span class="cr">
+
+{{ r.balance|floatformat:2 }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5" class="text-center">
+
+No Records Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td colspan="3" class="text-end">
+
+Grand Total
+
+</td>
+
+<td class="text-end">
+
+{{ total_debit|floatformat:2 }}
+
+</td>
+
+<td class="text-end">
+
+{{ total_credit|floatformat:2 }}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

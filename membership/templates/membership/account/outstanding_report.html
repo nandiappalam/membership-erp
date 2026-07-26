@@ -1,0 +1,348 @@
+{% extends "membership/base.html" %}
+
+{% block title %}Outstanding Report{% endblock %}
+
+{% block content %}
+
+<style>
+
+.report-table{
+    font-size:13px;
+}
+
+.report-table thead th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+.report-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.amount{
+    text-align:right;
+    font-family:Consolas,monospace;
+    font-weight:bold;
+}
+
+.dr{
+    color:#198754;
+}
+
+.cr{
+    color:#dc3545;
+}
+
+.total-row{
+    background:#e9f5ff;
+    font-weight:bold;
+}
+
+.card h4{
+    margin:0;
+}
+
+@media print{
+
+.btn,
+form{
+    display:none !important;
+}
+
+body{
+    background:#fff;
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-3">
+Outstanding Report
+</h3>
+
+<div class="row mb-3">
+
+<div class="col-md-4">
+
+<div class="card border-primary">
+
+<div class="card-body text-center">
+
+<small>Total Ledgers</small>
+
+<h4>{{ rows|length }}</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card border-success">
+
+<div class="card-body text-center">
+
+<small>Total Debit Outstanding</small>
+
+<h4 class="text-success">
+
+{{ total_dr|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card border-danger">
+
+<div class="card-body text-center">
+
+<small>Total Credit Outstanding</small>
+
+<h4 class="text-danger">
+
+{{ total_cr|floatformat:2 }}
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<form method="get" class="card mb-3">
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<label>Search Ledger</label>
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Ledger Name"
+value="{{ search }}">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Balance Type</label>
+
+<select
+name="type"
+class="form-control">
+
+<option value="">All</option>
+
+<option value="Dr"
+{% if type == "Dr" %}selected{% endif %}>
+Debit Only
+</option>
+
+<option value="Cr"
+{% if type == "Cr" %}selected{% endif %}>
+Credit Only
+</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4 pt-4">
+
+<button class="btn btn-primary">
+
+Search
+
+</button>
+
+<a href="{% url 'outstanding_report' %}"
+class="btn btn-secondary">
+
+Reset
+
+</a>
+
+<button
+type="button"
+onclick="window.print()"
+class="btn btn-success">
+
+Print
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</form>
+
+<table class="table table-bordered table-hover report-table">
+
+<thead>
+
+<tr>
+
+<th>Ledger Code</th>
+
+<th>Ledger Name</th>
+
+<th>Group</th>
+
+<th>Debit Outstanding</th>
+
+<th>Credit Outstanding</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in rows %}
+
+<tr>
+
+<td>
+
+{{ r.ledger.ledger_code }}
+
+</td>
+
+<td>
+
+<a href="{% url 'ledger_book' r.ledger.id %}">
+
+{{ r.ledger.ledger_name }}
+
+</a>
+
+</td>
+
+<td>
+
+{{ r.ledger.group.name }}
+
+</td>
+
+<td class="amount">
+
+{% if r.type == "Dr" %}
+
+<span class="dr">
+
+{{ r.balance|floatformat:2 }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td class="amount">
+
+{% if r.type == "Cr" %}
+
+<span class="cr">
+
+{{ r.balance|floatformat:2 }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if r.type == "Dr" %}
+
+<span class="badge bg-success">
+
+Debit
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Credit
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="6" class="text-center">
+
+No Outstanding Ledgers
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+<tr class="total-row">
+
+<td colspan="3" class="text-end">
+
+Grand Total
+
+</td>
+
+<td class="text-end">
+
+{{ total_dr|floatformat:2 }}
+
+</td>
+
+<td class="text-end">
+
+{{ total_cr|floatformat:2 }}
+
+</td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

@@ -56,6 +56,20 @@ required>
 
 </div>
 
+<div class="col-md-6">
+    <label>Ledger</label>
+    <select name="ledger" class="form-control" required>
+    <option value="">Select Ledger</option>
+
+    {% for ledger in ledgers %}
+        <option value="{{ ledger.id }}"
+            {% if payment.ledger.id == ledger.id %}selected{% endif %}>
+            {{ ledger.ledger_name }}
+        </option>
+    {% endfor %}
+</select>
+</div>
+
 <div class="col-md-12 mt-3">
 
 <label>Description</label>
