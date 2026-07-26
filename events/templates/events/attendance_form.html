@@ -258,10 +258,8 @@ $("#checkInBtn").click(function(e){
                 alert("✓ " + res.message);
 
                 if(res.coupon!=""){
-                    window.open(
-                        "/events/coupon/" + res.coupon_id + "/print/",
-                        "_blank"
-                    );
+                    window.location.href =
+                    "/events/coupon/" + res.coupon_id + "/print/";
                 }
 
                 // Clear screen

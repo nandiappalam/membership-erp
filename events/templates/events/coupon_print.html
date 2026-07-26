@@ -107,6 +107,24 @@ td{
 
 }
 
+.print-btn{
+
+    margin-top:10px;
+    padding:8px 20px;
+    font-size:14px;
+
+}
+
+
+@media print{
+
+    .print-btn{
+        display:none;
+    }
+
+}
+
+
 </style>
 
 </head>
@@ -220,19 +238,17 @@ Designed by :
 </div>
 
 </div>
+<button onclick="printPage()" class="print-btn">
+    🖨 Print Coupon
+</button>
+
 <script>
 
-window.onload = function(){
+function printPage(){
 
     window.print();
 
-    window.onafterprint = function(){
-
-        window.close();
-
-    };
-
-};
+}
 
 </script>
 
