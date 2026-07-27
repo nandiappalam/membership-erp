@@ -76,9 +76,12 @@ button{
 {% csrf_token %}
 
 <input
-type="text"
+type="tel"
 name="search_no"
-placeholder="Mobile No / Membership No"
+placeholder="Enter Mobile Number"
+inputmode="numeric"
+maxlength="10"
+pattern="[0-9]{10}"
 autofocus
 required>
 
