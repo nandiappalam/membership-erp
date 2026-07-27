@@ -57,7 +57,7 @@ from reportlab.platypus import (
 from reportlab.pdfbase import pdfmetrics
 
 from reportlab.pdfbase.ttfonts import TTFont
-
+from events.models import *
 
 
 
@@ -215,10 +215,60 @@ def login_view(request):
 
     return render(request, "membership/login.html")
 
-
 @login_required(login_url="login")
 def dashboard(request):
-    return render(request, "membership/dashboard.html")
+
+    today = date.today()
+
+    total_members = Member.objects.count()
+
+    active_members = Member.objects.filter(
+        membership_valid_upto__gte=today
+    ).count()
+
+    expired_members = Member.objects.filter(
+        membership_valid_upto__lt=today
+    ).count()
+
+    renewal_due = Member.objects.filter(
+        membership_valid_upto__range=(
+            today,
+            today + timedelta(days=30)
+        )
+    ).count()
+
+    total_events = Event.objects.count()
+
+    total_attendance = EventAttendance.objects.filter(
+        member__isnull=False
+    ).count()
+
+    total_visitors = EventVisitor.objects.count()
+
+    context = {
+
+        "total_members": total_members,
+
+        "active_members": active_members,
+
+        "expired_members": expired_members,
+
+        "renewal_due": renewal_due,
+
+        "total_events": total_events,
+
+        "total_attendance": total_attendance,
+
+        "total_visitors": total_visitors,
+
+    }
+
+    return render(
+        request,
+        "membership/dashboard.html",
+        context
+    )
+
 
 
 def logout_view(request):

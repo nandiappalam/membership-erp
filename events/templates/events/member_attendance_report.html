@@ -1,0 +1,258 @@
+{% extends "membership/base.html" %}
+{% load static %}
+
+{% block title %}Member Attendance Report{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'member_attendance_print' %}"
+   class="btn btn-dark">
+    <i class="fas fa-print"></i> Print
+</a>
+
+
+<div class="container-fluid mt-3">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                <i class="fas fa-users"></i>
+                Member Attendance Report
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- Search -->
+
+            <form method="get" class="row g-2 mb-3">
+
+                <div class="col-md-4">
+
+                    <select name="event" class="form-select">
+
+                        <option value="">All Events</option>
+
+                        {% for e in events %}
+
+                        <option value="{{ e.id }}"
+                        {% if selected_event == e.id|stringformat:"s" %}
+                        selected
+                        {% endif %}>
+
+                            {{ e.event_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Membership No / Name / Mobile"
+                        value="{{ search }}">
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+
+                    <a href="{% url 'member_attendance_report' %}"
+                       class="btn btn-secondary">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+            </form>
+
+            <!-- Summary -->
+
+            <div class="row mb-3">
+
+                <div class="col-md-3">
+
+                    <div class="card bg-primary text-white">
+
+                        <div class="card-body text-center">
+
+                            <h3>{{ members.count }}</h3>
+
+                            Total Members
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="card bg-success text-white">
+
+                        <div class="card-body text-center">
+
+                            <h3>
+                                {{ members|length }}
+                            </h3>
+
+                            Showing
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Table -->
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover table-striped">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Photo</th>
+                            <th>Membership No</th>
+                            <th>Member Name</th>
+                            <th>Company</th>
+                            <th>Address</th>
+                            <th>Mobile</th>
+                            <th>Coupon No</th>
+                            <th>Lucky Draw</th>
+                            <th>Entry Time</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for c in members %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <td class="text-center">
+                                {% if c.attendance.member.photo %}
+                                    <img src="{{ c.attendance.member.photo.url }}"
+                                        width="45"
+                                        height="55"
+                                        style="object-fit:cover;border-radius:4px;border:1px solid #ccc;">
+                                {% else %}
+                                    <img src="{% static 'images/no-photo.png' %}"
+                                        width="45"
+                                        height="55">
+                                {% endif %}
+                            </td>
+
+                            <td>{{ c.attendance.member.membership_no }}</td>
+
+                            <td>{{ c.attendance.member.owner_name }}</td>
+
+                            <td>{{ c.attendance.member.company_name }}</td>
+
+                            <td>{{ c.attendance.member.address }}</td>
+
+                            <td>{{ c.attendance.member.mobile }}</td>
+
+                            <td>
+
+                                <span class="badge bg-primary">
+
+                                    {{ c.coupon_no }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-warning text-dark">
+
+                                    {{ c.lucky_draw_no }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {{ c.attendance.check_in_time|date:"d-m-Y H:i" }}
+
+                            </td>
+
+                            <td>
+
+                                {% if c.printed %}
+
+                                    <span class="badge bg-success">
+
+                                        Printed
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Waiting
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="10" class="text-center text-danger">
+
+                                No Member Attendance Found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

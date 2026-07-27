@@ -1,0 +1,145 @@
+{% extends "membership/base.html" %}
+{% load static %}
+
+{% block title %}Visitor Report{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'visitor_report_print' %}"
+   target="_blank"
+   class="btn btn-dark">
+    <i class="fas fa-print"></i>
+    Print
+</a>
+
+
+<div class="container-fluid mt-3">
+
+<div class="card shadow">
+
+<div class="card-header bg-success text-white">
+<h4 class="mb-0">
+<i class="fas fa-user-friends"></i>
+Visitor Report
+</h4>
+</div>
+
+<div class="card-body">
+
+<form method="get" class="row g-2 mb-3">
+
+<div class="col-md-4">
+<select name="event" class="form-select">
+
+<option value="">All Events</option>
+
+{% for e in events %}
+<option value="{{ e.id }}"
+{% if selected_event == e.id|stringformat:"s" %}selected{% endif %}>
+{{ e.event_name }}
+</option>
+{% endfor %}
+
+</select>
+</div>
+
+<div class="col-md-5">
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Name / Mobile / Company / City"
+value="{{ search }}">
+</div>
+
+<div class="col-md-3">
+<button class="btn btn-success">
+<i class="fas fa-search"></i>
+Search
+</button>
+
+<a href="{% url 'visitor_report' %}"
+class="btn btn-secondary">
+Reset
+</a>
+</div>
+
+</form>
+
+<div class="row mb-3">
+
+<div class="col-md-3">
+<div class="card bg-success text-white">
+<div class="card-body text-center">
+<h3>{{ visitors.count }}</h3>
+Total Visitors
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-striped table-hover">
+
+<thead class="table-dark">
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>Company</th>
+<th>City</th>
+<th>Email</th>
+<th>Entry Time</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for v in visitors %}
+
+<tr>
+
+<td>{{ forloop.counter }}</td>
+<td>{{ v.visitor_name }}</td>
+<td>{{ v.mobile }}</td>
+<td>{{ v.company }}</td>
+<td>{{ v.city }}</td>
+<td>{{ v.email }}</td>
+<td>{{ v.attendance.check_in_time|date:"d-m-Y H:i" }}</td>
+
+<td>
+{% if v.printed %}
+<span class="badge bg-success">Printed</span>
+{% else %}
+<span class="badge bg-danger">Waiting</span>
+{% endif %}
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="8" class="text-center text-danger">
+No Visitors Found.
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

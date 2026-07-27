@@ -91,5 +91,37 @@ path(
     name="visitor_pass_print",
 ),
 
+path(
+    "reports/",
+    views.agm_reports,
+    name="agm_reports",
+),
+
+path(
+    "reports/members/",
+    views.member_attendance_report,
+    name="member_attendance_report",
+),
+
+
+path(
+    "reports/visitors/",
+    views.visitor_report,
+    name="visitor_report",
+),
+
+path(
+    "reports/members/print/",
+    views.member_attendance_print,
+    name="member_attendance_print",
+),
+
+path(
+    "reports/visitors/print/",
+    views.visitor_report_print,
+    name="visitor_report_print",
+),
+
+
 
 ]

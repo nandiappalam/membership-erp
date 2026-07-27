@@ -11,7 +11,7 @@ import qrcode
 import base64
 from io import BytesIO
 from django.conf import settings
-
+from events.models import *
 
 
 
@@ -569,6 +569,163 @@ def visitor_pass_print(request, id):
         "events/visitor_pass_print.html",
         {
             "visitor": visitor
+        }
+    )
+
+
+
+@login_required(login_url="login")
+def agm_reports(request):
+
+    total_events = Event.objects.count()
+
+    total_members = EventAttendance.objects.filter(
+        entry_type="MEMBER"
+    ).count()
+
+    total_visitors = EventAttendance.objects.filter(
+        entry_type="VISITOR"
+    ).count()
+
+    total_attendance = EventAttendance.objects.count()
+
+    member_printed = EventCoupon.objects.filter(
+        printed=True
+    ).count()
+
+    member_waiting = EventCoupon.objects.filter(
+        printed=False
+    ).count()
+
+    visitor_printed = EventVisitor.objects.filter(
+        printed=True
+    ).count()
+
+    visitor_waiting = EventVisitor.objects.filter(
+        printed=False
+    ).count()
+
+    context = {
+        "total_events": total_events,
+        "total_members": total_members,
+        "total_visitors": total_visitors,
+        "total_attendance": total_attendance,
+        "member_printed": member_printed,
+        "member_waiting": member_waiting,
+        "visitor_printed": visitor_printed,
+        "visitor_waiting": visitor_waiting,
+    }
+
+    return render(
+        request,
+        "events/agm_reports.html",
+        context
+    )
+
+
+@login_required(login_url="login")
+def member_attendance_report(request):
+
+    members = EventCoupon.objects.select_related(
+        "attendance__member",
+        "event"
+    ).order_by("-issued_at")
+
+    events = Event.objects.all().order_by("-event_date")
+
+    event = request.GET.get("event")
+    search = request.GET.get("search")
+
+    # Event Filter
+    if event:
+        members = members.filter(event_id=event)
+
+    # Search Filter
+    if search:
+        members = members.filter(
+            Q(attendance__member__membership_no__icontains=search) |
+            Q(attendance__member__owner_name__icontains=search) |
+            Q(attendance__member__mobile__icontains=search)
+        )
+
+    context = {
+        "members": members,
+        "events": events,
+        "selected_event": event,
+        "search": search,
+    }
+
+    return render(
+        request,
+        "events/member_attendance_report.html",
+        context,
+    )
+
+@login_required(login_url="login")
+def visitor_report(request):
+
+    visitors = EventVisitor.objects.select_related(
+        "event"
+    ).order_by("-created_at")
+
+    events = Event.objects.all().order_by("-event_date")
+
+    event = request.GET.get("event")
+    search = request.GET.get("search")
+
+    if event:
+        visitors = visitors.filter(event_id=event)
+
+    if search:
+        visitors = visitors.filter(
+            Q(visitor_name__icontains=search) |
+            Q(mobile__icontains=search) |
+            Q(company__icontains=search) |
+            Q(city__icontains=search)
+        )
+
+    return render(
+        request,
+        "events/visitor_report.html",
+        {
+            "visitors": visitors,
+            "events": events,
+            "selected_event": event,
+            "search": search,
+        },
+    )
+
+
+@login_required(login_url="login")
+def member_attendance_print(request):
+
+    members = EventCoupon.objects.select_related(
+        "attendance__member",
+        "event"
+    ).order_by("-issued_at")
+
+    return render(
+        request,
+        "events/member_attendance_print.html",
+        {
+            "members": members,
+        },
+    )
+
+
+@login_required(login_url="login")
+def visitor_report_print(request):
+
+    visitors = EventVisitor.objects.select_related(
+        "event",
+        "attendance"
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "events/visitor_report_print.html",
+        {
+            "visitors": visitors,
         }
     )
 

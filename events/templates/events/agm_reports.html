@@ -1,0 +1,198 @@
+{% extends "membership/base.html" %}
+
+{% block title %}AGM Reports{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-3">
+
+<h3 class="mb-3">
+    AGM Reports Dashboard
+</h3>
+
+<div class="row">
+
+<div class="col-md-3 mb-3">
+<div class="card bg-primary text-white shadow">
+<div class="card-body text-center">
+<h2>{{ total_events }}</h2>
+Events
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card bg-success text-white shadow">
+<div class="card-body text-center">
+<h2>{{ total_members }}</h2>
+Members
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card bg-info text-white shadow">
+<div class="card-body text-center">
+<h2>{{ total_visitors }}</h2>
+Visitors
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card bg-dark text-white shadow">
+<div class="card-body text-center">
+<h2>{{ total_attendance }}</h2>
+Attendance
+</div>
+</div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-md-3 mb-3">
+<div class="card border-success shadow">
+<div class="card-body text-center">
+<h2 class="text-success">
+{{ coupons_printed }}
+</h2>
+Coupons Printed
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card border-danger shadow">
+<div class="card-body text-center">
+<h2 class="text-danger">
+{{ coupons_waiting }}
+</h2>
+Coupons Waiting
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card border-primary shadow">
+<div class="card-body text-center">
+<h2 class="text-primary">
+{{ visitor_printed }}
+</h2>
+Visitor Pass Printed
+</div>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="card border-warning shadow">
+<div class="card-body text-center">
+<h2 class="text-warning">
+{{ visitor_waiting }}
+</h2>
+Visitor Pass Waiting
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-header bg-success text-white">
+
+Latest Member Entries
+
+</div>
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Coupon</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for c in latest_members %}
+
+<tr>
+
+<td>{{ c.attendance.member.owner_name }}</td>
+
+<td>{{ c.coupon_no }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+Latest Visitors
+
+</div>
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Mobile</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for v in latest_visitors %}
+
+<tr>
+
+<td>{{ v.visitor_name }}</td>
+
+<td>{{ v.mobile }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
