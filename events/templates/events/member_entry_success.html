@@ -72,11 +72,14 @@ Attendance ID:
 {{ attendance.id }}
 </p>
 
+<hr>
 
-<a href="{% url 'coupon_print' attendance.id %}">
+<h3 style="color:#0d6efd;">
+Please collect your coupon from the Registration Desk.
+</h3>
 
-<button onclick="location.reload()">
-DONE
+<button onclick="window.location.href='/events/agm-entry/{{ event.id }}/';">
+    DONE
 </button>
 
 </a>
