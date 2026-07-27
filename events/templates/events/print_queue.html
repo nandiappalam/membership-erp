@@ -1,0 +1,255 @@
+{% extends "membership/base.html" %}
+{% load static %}
+
+{% block title %}Print Queue{% endblock %}
+
+{% block content %}
+
+<style>
+    .sticky-dashboard{
+
+    position:sticky;
+
+    top:10px;
+
+    z-index:999;
+
+    background:#fff;
+
+    padding:10px;
+
+    margin-bottom:20px;
+
+    border-radius:8px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+
+}
+</style>
+
+ <div class="sticky-dashboard">
+
+    <div class="row g-3">
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <h2>{{ members.count }}</h2>
+                    <small>Member Coupons</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <h2>{{ visitors.count }}</h2>
+                    <small>Visitors</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center">
+                    <h2>{{ waiting_count }}</h2>
+                    <small>Waiting</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body text-center">
+                    <h2>{{ printed_count }}</h2>
+                    <small>Printed</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="container-fluid mt-3">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                <i class="fas fa-print"></i>
+                AGM Print Queue
+            </h4>
+
+        </div>
+
+       
+
+
+        <div class="card-body">
+
+            <h5 class="text-success">Member Coupons</h5>
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Coupon No</th>
+                        <th>Member</th>
+                        <th>Mobile</th>
+                        <th>Print</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for coupon in members %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ coupon.issued_at|date:"d-m-Y H:i" }}</td>
+
+                        <td>{{ coupon.coupon_no }}</td>
+
+                        <td>{{ coupon.attendance.member.owner_name }}</td>
+
+                        <td>{{ coupon.attendance.member.mobile }}</td>
+
+                        <td>
+
+                            <a href="{% url 'coupon_print' coupon.id %}"
+                               target="_blank"
+                               class="btn btn-success btn-sm">
+
+                                <i class="fas fa-print"></i> Print
+
+                            </a>
+
+                        </td>
+                        
+                        <td>
+                            {% if coupon.printed %}
+                                <span class="badge bg-success">Printed</span>
+                            {% else %}
+                                <span class="badge bg-danger">Waiting</span>
+                            {% endif %}
+                            </td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No member coupons.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <h5 class="text-primary">Visitors</h5>
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Company</th>
+                        <th>Print</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for visitor in visitors %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ coupon.issued_at|date:"d-m-Y H:i" }}</td>
+
+                        <td>{{ visitor.visitor_name }}</td>
+
+                        <td>{{ visitor.mobile }}</td>
+
+                        <td>{{ visitor.company }}</td>
+
+                        <td>
+
+                            <a href="{% url 'visitor_pass_print' visitor.id %}"
+   target="_blank"
+   class="btn btn-primary btn-sm">
+    <i class="fas fa-print"></i> Print
+</a>
+
+                        </td>
+                        
+                        <td>
+{% if visitor.printed %}
+    <span class="badge bg-success">Printed</span>
+{% else %}
+    <span class="badge bg-danger">Waiting</span>
+{% endif %}
+</td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No visitors.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+setTimeout(function () {
+    location.reload();
+}, 5000);
+</script>
+
+{% endblock %}

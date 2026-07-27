@@ -292,6 +292,10 @@ def coupon_print(request, id):
         id=id,
     )
 
+    coupon.printed = True
+    coupon.printed_at = timezone.now()
+    coupon.save()
+
     return render(
         request,
         "events/coupon_print.html",
@@ -381,15 +385,17 @@ def agm_entry(request, event_id):
 
         else:
 
-            if request.POST.get("visitor_name"):
+            messages.warning(
+                request,
+                "Mobile Number / Membership Number not found. Please fill in the visitor details below."
+            )
 
-                pass
             return render(
                 request,
                 "events/visitor_register.html",
                 {
-                    "event":event,
-                    "mobile":search_no
+                    "event": event,
+                    "mobile": search_no
                 }
             )
 
@@ -453,12 +459,9 @@ def visitor_save(request,event_id):
         )
 
 
-        return render(
-            request,
-            "events/visitor_success.html",
-            {
-                "visitor":visitor
-            }
+        return redirect(
+            "visitor_pass_print",
+            id=visitor.id
         )
 
 
@@ -485,4 +488,53 @@ def event_qr_print(request, id):
             "url": url,
         },
     )
+
+
+@login_required(login_url="login")
+def print_queue(request):
+
+    members = EventCoupon.objects.select_related(
+        "attendance__member"
+    ).order_by("-issued_at")
+
+    visitors = EventVisitor.objects.order_by("-created_at")
+
+    waiting_count = EventCoupon.objects.filter(
+        printed=False
+    ).count()
+
+    printed_count = EventCoupon.objects.filter(
+        printed=True
+    ).count()
+
+    return render(
+        request,
+        "events/print_queue.html",
+        {
+            "members": members,
+            "visitors": visitors,
+            "waiting_count": waiting_count,
+            "printed_count": printed_count,
+        }
+    )
+
+@login_required(login_url="login")
+def visitor_pass_print(request, id):
+
+    visitor = get_object_or_404(
+        EventVisitor.objects.select_related(
+            "event",
+            "attendance"
+        ),
+        id=id
+    )
+
+    return render(
+        request,
+        "events/visitor_pass_print.html",
+        {
+            "visitor": visitor
+        }
+    )
+
 

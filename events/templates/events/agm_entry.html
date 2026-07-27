@@ -51,15 +51,29 @@ button{
 <hr>
 
 
-<h3>
-Member / Visitor Entry
-</h3>
+<hr>
 
+<h3>Member / Visitor Entry</h3>
+
+{% if messages %}
+    {% for message in messages %}
+        <div style="
+            background:#fff3cd;
+            border:1px solid #ffeeba;
+            color:#856404;
+            padding:10px;
+            margin:15px auto;
+            width:90%;
+            border-radius:5px;
+        ">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <form method="POST">
 
 {% csrf_token %}
-
 
 <input
 type="text"
@@ -68,17 +82,13 @@ placeholder="Mobile No / Membership No"
 autofocus
 required>
 
-
 <br>
 
-
-<button>
+<button type="submit">
 ENTER
 </button>
 
-
 </form>
-
 
 </body>
 

@@ -34,7 +34,21 @@ button{
 
 
 <body>
-
+{% if messages %}
+    {% for message in messages %}
+        <div style="
+            background:#fff3cd;
+            color:#856404;
+            border:1px solid #ffeeba;
+            padding:12px;
+            margin:15px 0;
+            border-radius:5px;
+            text-align:center;
+        ">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <h2>
 {{event.organisation.organisation_name}}

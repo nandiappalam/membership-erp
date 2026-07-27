@@ -78,5 +78,18 @@ path(
 ),
 
 
+path(
+    "print-queue/",
+    views.print_queue,
+    name="print_queue",
+),
+
+
+path(
+    "visitor-pass/<int:id>/print/",
+    views.visitor_pass_print,
+    name="visitor_pass_print",
+),
+
 
 ]

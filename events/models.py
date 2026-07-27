@@ -227,6 +227,14 @@ class EventVisitor(models.Model):
         blank=True
     )
 
+    printed = models.BooleanField(
+        default=False
+    )
+
+    printed_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -281,6 +289,15 @@ class EventCoupon(models.Model):
 
     prize_name = models.CharField(
         max_length=200,
+        blank=True
+    )
+
+    printed = models.BooleanField(
+        default=False
+    )
+
+    printed_at = models.DateTimeField(
+        null=True,
         blank=True
     )
 
