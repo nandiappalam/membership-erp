@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Visitor Entry Pass</title>
+
+<style>
+
+@page{
+    size:80mm auto;
+    margin:3mm;
+}
+
+body{
+    width:74mm;
+    margin:auto;
+    font-family:Arial;
+    text-align:center;
+    color:#000;
+}
+
+.logo{
+    width:70px;
+    height:70px;
+    object-fit:contain;
+}
+
+.line{
+    border-top:1px dashed #000;
+    margin:8px 0;
+}
+
+h2{
+    margin:5px 0;
+    font-size:15px;
+}
+
+h3{
+    margin:5px 0;
+    font-size:14px;
+}
+
+table{
+    width:100%;
+    font-size:13px;
+}
+
+td{
+    padding:4px;
+}
+
+.footer{
+    margin-top:10px;
+    font-size:11px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+{% if visitor.event.organisation.logo %}
+<img src="{{ visitor.event.organisation.logo.url }}" class="logo">
+{% endif %}
+
+<h2>{{ visitor.event.organisation.organisation_name }}</h2>
+
+<h3>{{ visitor.event.event_name }}</h3>
+
+<div class="line"></div>
+
+<h2>VISITOR ENTRY PASS</h2>
+
+<div class="line"></div>
+
+<table>
+
+<tr>
+<td><strong>Name</strong></td>
+<td>{{ visitor.visitor_name }}</td>
+</tr>
+
+<tr>
+<td><strong>Mobile</strong></td>
+<td>{{ visitor.mobile }}</td>
+</tr>
+
+<tr>
+<td><strong>Company</strong></td>
+<td>{{ visitor.company }}</td>
+</tr>
+
+<tr>
+<td><strong>City</strong></td>
+<td>{{ visitor.city }}</td>
+</tr>
+
+<tr>
+<td><strong>Entry Time</strong></td>
+<td>{{ visitor.created_at|date:"d-m-Y H:i" }}</td>
+</tr>
+
+<tr>
+<td><strong>Visitor ID</strong></td>
+<td>V{{ visitor.id|stringformat:"04d" }}</td>
+</tr>
+
+</table>
+
+<div class="line"></div>
+
+<div class="footer">
+
+Thank You<br>
+Welcome to AGM
+
+<br><br>
+
+Designed by<br>
+
+<strong>BVC Infotech</strong><br>
+
+9842693420
+
+</div>
+
+<script>
+
+window.onload = function(){
+
+    window.print();
+
+    window.onafterprint = function(){
+
+        window.close();
+
+    };
+
+};
+
+</script>
+
+</body>
+</html>

@@ -282,6 +282,7 @@ def search_member(request):
 
 
 
+@login_required(login_url="login")
 def coupon_print(request, id):
 
     coupon = get_object_or_404(
@@ -292,9 +293,11 @@ def coupon_print(request, id):
         id=id,
     )
 
-    coupon.printed = True
-    coupon.printed_at = timezone.now()
-    coupon.save()
+    # Mark as printed only the first time
+    if not coupon.printed:
+        coupon.printed = True
+        coupon.printed_at = timezone.now()
+        coupon.save(update_fields=["printed", "printed_at"])
 
     return render(
         request,
@@ -377,9 +380,19 @@ def agm_entry(request, event_id):
                 attendance.save()
 
             # Print coupon
-            return redirect(
-                "coupon_print",
-                id=coupon.id
+            messages.success(
+                request,
+                "Check-in successful. Please collect your coupon from the registration desk."
+            )
+
+            return render(
+                request,
+                "events/member_entry_success.html",
+                {
+                    "event": event,
+                    "member": member,
+                    "attendance": attendance,
+                }
             )
 
 
@@ -459,9 +472,17 @@ def visitor_save(request,event_id):
         )
 
 
-        return redirect(
-            "visitor_pass_print",
-            id=visitor.id
+        messages.success(
+            request,
+            "Registration successful. Please collect your visitor pass from the registration desk."
+        )
+
+        return render(
+            request,
+            "events/visitor_success.html",
+            {
+                "visitor": visitor,
+            }
         )
 
 
@@ -520,6 +541,7 @@ def print_queue(request):
 
 @login_required(login_url="login")
 def visitor_pass_print(request, id):
+    print("Visitor ID:", id)
 
     visitor = get_object_or_404(
         EventVisitor.objects.select_related(
@@ -528,6 +550,7 @@ def visitor_pass_print(request, id):
         ),
         id=id
     )
+    print(visitor.visitor_name)
 
     return render(
         request,
