@@ -238,19 +238,22 @@ Designed by :
 </div>
 
 </div>
-<button onclick="printPage()" class="print-btn">
-    🖨 Print Coupon
-</button>
 
+{% if request.GET.autoprint %}
 <script>
 
-function printPage(){
+
+window.onload = function () {
 
     window.print();
 
-}
+    window.onafterprint = function () {
+        window.close();
+    };
 
+};
 </script>
 
+{% endif %}
 </body>
 </html>

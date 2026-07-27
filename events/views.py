@@ -470,6 +470,13 @@ def visitor_save(request,event_id):
 
             attendance=attendance
         )
+        print("=" * 50)
+        print("VISITOR SAVED")
+        print("ID:", visitor.id)
+        print("Name:", visitor.visitor_name)
+        print("Mobile:", visitor.mobile)
+        print("Total Visitors:", EventVisitor.objects.count())
+        print("=" * 50)
 
 
         messages.success(
@@ -520,13 +527,15 @@ def print_queue(request):
 
     visitors = EventVisitor.objects.order_by("-created_at")
 
-    waiting_count = EventCoupon.objects.filter(
-        printed=False
-    ).count()
+    member_waiting = EventCoupon.objects.filter(printed=False).count()
+    visitor_waiting = EventVisitor.objects.filter(printed=False).count()
 
-    printed_count = EventCoupon.objects.filter(
-        printed=True
-    ).count()
+    waiting_count = member_waiting + visitor_waiting
+
+    member_printed = EventCoupon.objects.filter(printed=True).count()
+    visitor_printed = EventVisitor.objects.filter(printed=True).count()
+
+    printed_count = member_printed + visitor_printed
 
     return render(
         request,
@@ -538,10 +547,8 @@ def print_queue(request):
             "printed_count": printed_count,
         }
     )
-
 @login_required(login_url="login")
 def visitor_pass_print(request, id):
-    print("Visitor ID:", id)
 
     visitor = get_object_or_404(
         EventVisitor.objects.select_related(
@@ -550,7 +557,12 @@ def visitor_pass_print(request, id):
         ),
         id=id
     )
-    print(visitor.visitor_name)
+
+    # Mark as printed
+    if not visitor.printed:
+        visitor.printed = True
+        visitor.printed_at = timezone.now()
+        visitor.save(update_fields=["printed", "printed_at"])
 
     return render(
         request,
