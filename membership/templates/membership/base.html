@@ -198,42 +198,51 @@ Fee Master
     </a>
 </li>
 
-    <li class="nav-item dropdown">
+    <li class="nav-item">
 
-    <a class="nav-link dropdown-toggle"
+    <a class="nav-link collapsed"
        href="#"
-       data-bs-toggle="dropdown">
+       data-bs-toggle="collapse"
+       data-bs-target="#transactionMenu">
 
-        Transactions
+        <i class="fas fa-exchange-alt"></i>
+
+        <span>Transactions</span>
 
     </a>
 
-    <ul class="dropdown-menu">
+    <div id="transactionMenu" class="collapse">
 
-        <li>
-            <a class="dropdown-item"
-               href="{% url 'receipt_list' %}">
-                Receipt Voucher
-            </a>
-        </li>
+        <ul class="btn-toggle-nav list-unstyled fw-normal small">
 
-    </ul>
+            <li>
+                <a href="{% url 'receipt_list' %}" class="nav-link">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Receipt Voucher
+                </a>
+            </li>
 
-</li>
+            <li>
+                <a href="{% url 'renewal_list' %}" class="nav-link">
+                    <i class="fas fa-sync-alt"></i>
+                    Membership Renewal
+                </a>
+            </li>
 
-<li>
-    <a href="{% url 'renewal_list' %}">
-        <i class="fas fa-sync-alt"></i>
-        Membership Renewal
-    </a>
-</li>
-
-<li>
+            <li>
     <a href="{% url 'expiry_report' %}">
         <i class="fas fa-clock"></i>
         Membership Expiry Report
     </a>
 </li>
+
+        </ul>
+
+    </div>
+
+</li>
+
+
 <!-- =========================
         EVENTS
 ========================= -->
