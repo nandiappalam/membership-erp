@@ -638,12 +638,17 @@ def member_create(request):
       
 
         if request.FILES.get("photo"):
-            member.photo = request.FILES.get("photo")
+            print("PHOTO RECEIVED:", request.FILES["photo"].name)
+            member.photo = request.FILES["photo"]
+        else:
+            print("NO PHOTO RECEIVED")
 
         if request.FILES.get("company_logo"):
             member.company_logo = request.FILES.get("company_logo")
 
         member.save()
+        print("Saved:", member.photo.name)
+        print("URL:", member.photo.url)
 
         # ===============================
         # AUTO CREATE LEDGER
@@ -750,13 +755,17 @@ def member_edit(request, id):
             member.membership_valid_upto = date(valid_year, 3, 31)
 
         if request.FILES.get("photo"):
+            print("PHOTO RECEIVED:", request.FILES["photo"].name)
             member.photo = request.FILES["photo"]
+        else:
+            print("NO PHOTO RECEIVED")
 
         if request.FILES.get("company_logo"):
             member.company_logo = request.FILES["company_logo"]
 
         member.save()
-        
+        print("Saved:", member.photo.name)
+        print("URL:", member.photo.url)
 
         messages.success(request, "Member Updated Successfully")
 
