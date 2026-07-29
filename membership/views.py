@@ -647,8 +647,7 @@ def member_create(request):
             member.company_logo = request.FILES.get("company_logo")
 
         member.save()
-        print("Saved:", member.photo.name)
-        print("URL:", member.photo.url)
+         
 
         # ===============================
         # AUTO CREATE LEDGER
@@ -764,8 +763,7 @@ def member_edit(request, id):
             member.company_logo = request.FILES["company_logo"]
 
         member.save()
-        print("Saved:", member.photo.name)
-        print("URL:", member.photo.url)
+        
 
         messages.success(request, "Member Updated Successfully")
 

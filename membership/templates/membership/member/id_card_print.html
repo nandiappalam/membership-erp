@@ -456,7 +456,9 @@ body{
  
         <div class="photo">
             {% if member.photo %}
-            <img src="{{ member.photo.url }}">
+            <div class="photo">
+                <img src="{{ member.photo.url }}" alt="Member Photo">
+            </div>
             {% endif %}
         </div>
  
