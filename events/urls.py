@@ -122,6 +122,6 @@ path(
     name="visitor_report_print",
 ),
 
-
+path("db-check/", views.db_check, name="db_check"),
 
 ]

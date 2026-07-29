@@ -336,7 +336,6 @@ path(
 
 path("events/", include("events.urls")), 
 
-path("db-check/", views.db_check, name="db_check"),
 
 ]
 
