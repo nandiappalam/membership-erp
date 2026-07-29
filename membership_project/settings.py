@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rdez4=d&*s!c&@-ordz8l*onflc_@fx_opyhzmv$xfwy$x2+r9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("RENDER") is None
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -90,10 +90,12 @@ WSGI_APPLICATION = 'membership_project.wsgi.application'
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.config(
-            conn_max_age=600,
+            conn_max_age=0,
             ssl_require=True,
         )
     }
+
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
 else:
     DATABASES = {
         "default": {
@@ -101,8 +103,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -150,9 +150,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]

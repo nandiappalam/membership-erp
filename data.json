@@ -1,413 +1,3126 @@
 [
 {
-    "model": "membership.assessmentyear",
-    "pk": 1,
-    "fields": {
-        "organisation": 1,
-        "start_year": 2026,
-        "end_year": 2027,
-        "is_active": true,
-        "created_at": "2026-07-18T06:48:22.694Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
 },
 {
-    "model": "membership.membershiptype",
-    "pk": 2,
-    "fields": {
-        "name": "Annual",
-        "type": "ANNUAL",
-        "fee": "1500.00",
-        "description": "Test\r\n",
-        "is_active": true
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
 },
 {
-    "model": "membership.membershiptype",
-    "pk": 4,
-    "fields": {
-        "name": "LifeTime",
-        "type": "LIFETIME",
-        "fee": "15000.00",
-        "description": "lilfetime  member",
-        "is_active": true
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
 },
 {
-    "model": "membership.feemaster",
-    "pk": 1,
-    "fields": {
-        "organisation": 1,
-        "fee_name": "Admission Fee",
-        "fee_type": "ADMISSION",
-        "default_amount": "500.00",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:14:39.039Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
 },
 {
-    "model": "membership.feemaster",
-    "pk": 2,
-    "fields": {
-        "organisation": 1,
-        "fee_name": "membership fee",
-        "fee_type": "MEMBERSHIP",
-        "default_amount": "500.00",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:15:04.676Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
 },
 {
-    "model": "membership.feemaster",
-    "pk": 3,
-    "fields": {
-        "organisation": 1,
-        "fee_name": "Processing Fee",
-        "fee_type": "OTHER",
-        "default_amount": "200.00",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:16:32.871Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
 },
 {
-    "model": "membership.feemaster",
-    "pk": 4,
-    "fields": {
-        "organisation": 1,
-        "fee_name": "Welfare Fund",
-        "fee_type": "WELFARE",
-        "default_amount": "300.00",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:17:42.186Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "assessmentyear"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 1,
-    "fields": {
-        "organisation": 1,
-        "name": "Cash",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:37:24.809Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "documenttype"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 2,
-    "fields": {
-        "organisation": 1,
-        "name": "RTGS",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:38:12.149Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "membershiptype"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 3,
-    "fields": {
-        "organisation": 1,
-        "name": " UPI trfr",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:43:42.132Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "organisation"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 4,
-    "fields": {
-        "organisation": 1,
-        "name": "Bank Transfer",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:43:58.331Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "member"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 5,
-    "fields": {
-        "organisation": 1,
-        "name": "NEFT",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:44:11.808Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "memberdocument"
+  }
 },
 {
-    "model": "membership.paymentmode",
-    "pk": 7,
-    "fields": {
-        "organisation": 1,
-        "name": "Demand Draft",
-        "description": "",
-        "is_active": true,
-        "created_at": "2026-07-18T09:47:33.563Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "userprofile"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 1,
-    "fields": {
-        "name": "Assets",
-        "parent": null,
-        "nature": "ASSET",
-        "display_order": 1,
-        "is_system": true,
-        "is_active": true,
-        "created_at": "2026-07-20T12:40:54.200Z",
-        "updated_at": "2026-07-20T12:40:54.200Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "feemaster"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 2,
-    "fields": {
-        "name": "Liabilities",
-        "parent": null,
-        "nature": "LIABILITY",
-        "display_order": 2,
-        "is_system": true,
-        "is_active": true,
-        "created_at": "2026-07-20T12:41:00.798Z",
-        "updated_at": "2026-07-20T12:41:00.798Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "paymentmode"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 3,
-    "fields": {
-        "name": "Income",
-        "parent": null,
-        "nature": "INCOME",
-        "display_order": 3,
-        "is_system": true,
-        "is_active": true,
-        "created_at": "2026-07-20T12:41:11.946Z",
-        "updated_at": "2026-07-20T12:41:11.946Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "receipt"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 4,
-    "fields": {
-        "name": "Expenses",
-        "parent": null,
-        "nature": "EXPENSE",
-        "display_order": 4,
-        "is_system": true,
-        "is_active": true,
-        "created_at": "2026-07-20T12:41:18.684Z",
-        "updated_at": "2026-07-20T12:41:18.684Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "receiptdetail"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 5,
-    "fields": {
-        "name": "Current Assets",
-        "parent": 1,
-        "nature": "ASSET",
-        "display_order": 10,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:44:25.418Z",
-        "updated_at": "2026-07-20T12:44:25.418Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "memberrenewal"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 6,
-    "fields": {
-        "name": "Fixed Assets",
-        "parent": 1,
-        "nature": "ASSET",
-        "display_order": 11,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:44:35.147Z",
-        "updated_at": "2026-07-20T12:44:35.147Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "ledger"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 7,
-    "fields": {
-        "name": "Current Liabilities",
-        "parent": 2,
-        "nature": "LIABILITY",
-        "display_order": 20,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:44:50.320Z",
-        "updated_at": "2026-07-20T12:44:50.320Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "accountgroup"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 8,
-    "fields": {
-        "name": "Membership Income",
-        "parent": 3,
-        "nature": "INCOME",
-        "display_order": 30,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:45:09.927Z",
-        "updated_at": "2026-07-20T12:45:09.927Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "voucher"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 9,
-    "fields": {
-        "name": "Other Income",
-        "parent": 3,
-        "nature": "INCOME",
-        "display_order": 31,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:45:17.938Z",
-        "updated_at": "2026-07-20T12:45:17.938Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "membership",
+    "model": "voucherentry"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 10,
-    "fields": {
-        "name": "Office Expenses",
-        "parent": 4,
-        "nature": "EXPENSE",
-        "display_order": 40,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:45:30.546Z",
-        "updated_at": "2026-07-20T12:45:30.546Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "event"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 11,
-    "fields": {
-        "name": "Salary Expenses",
-        "parent": 4,
-        "nature": "EXPENSE",
-        "display_order": 41,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:45:37.314Z",
-        "updated_at": "2026-07-20T12:45:37.314Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "eventattendance"
+  }
 },
 {
-    "model": "membership.accountgroup",
-    "pk": 12,
-    "fields": {
-        "name": "Electricity Expenses",
-        "parent": 4,
-        "nature": "EXPENSE",
-        "display_order": 42,
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-20T12:45:43.022Z",
-        "updated_at": "2026-07-20T12:45:43.022Z",
-        "code_prefix": null
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "eventvisitor"
+  }
 },
 {
-    "model": "membership.ledger",
-    "pk": 5,
-    "fields": {
-        "ledger_code": "L0001",
-        "ledger_name": "Cash",
-        "group": 5,
-        "opening_balance": "0.00",
-        "opening_type": "DEBIT",
-        "remarks": "",
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-21T09:02:47.687Z",
-        "updated_at": "2026-07-21T15:26:42.219Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "eventcoupon"
+  }
 },
 {
-    "model": "membership.ledger",
-    "pk": 6,
-    "fields": {
-        "ledger_code": "L0002",
-        "ledger_name": "Bank",
-        "group": 5,
-        "opening_balance": "0.00",
-        "opening_type": "DEBIT",
-        "remarks": "",
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-21T09:02:47.687Z",
-        "updated_at": "2026-07-21T15:26:42.556Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "eventprize"
+  }
 },
 {
-    "model": "membership.ledger",
-    "pk": 7,
-    "fields": {
-        "ledger_code": "1001",
-        "ledger_name": "A.S.Moorthy & Co",
-        "group": 5,
-        "opening_balance": "0.00",
-        "opening_type": "DEBIT",
-        "remarks": "Auto Created for Member : 2026-001",
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-21T09:39:57.348Z",
-        "updated_at": "2026-07-21T09:39:57.348Z"
-    }
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "events",
+    "model": "eventwinner"
+  }
 },
 {
-    "model": "membership.ledger",
-    "pk": 8,
-    "fields": {
-        "ledger_code": "1002",
-        "ledger_name": "Bvc Exports Pvt Ltd",
-        "group": 5,
-        "opening_balance": "0.00",
-        "opening_type": "DEBIT",
-        "remarks": "Auto Created for Member : 2026-002",
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-21T09:40:20.338Z",
-        "updated_at": "2026-07-21T09:40:20.338Z"
-    }
+  "model": "sessions.session",
+  "pk": "sks7ss9p2sz47yw7c6wa2hqzcxnpr43j",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8OoBL934DYRiQqoGktCvjv2uTLnR7zzn3xULc1hq2kZcwEzszyU6_G8b0yG0HdI_t1nnqbV1m5LvCDzr4tVN-Xg7376DGUb-1tUpTitKCSN5RAW_BFYpTQU8SwHjSygNJl4vSKHKyWk3ZoABnBRr2_gDdqDeN:1wmWtb:gwhejlJObpLD5TjKFrr1Jxs0GNokIa8qWvUAF0QI_x4",
+    "expire_date": "2026-08-05T13:21:59.687Z"
+  }
 },
 {
-    "model": "membership.ledger",
-    "pk": 9,
-    "fields": {
-        "ledger_code": "1003",
-        "ledger_name": "Skv Traders",
-        "group": 5,
-        "opening_balance": "0.00",
-        "opening_type": "DEBIT",
-        "remarks": "Auto Created for Member : 2026-003",
-        "is_system": false,
-        "is_active": true,
-        "created_at": "2026-07-21T09:40:26.820Z",
-        "updated_at": "2026-07-21T09:40:26.821Z"
-    }
+  "model": "membership.organisation",
+  "pk": 1,
+  "fields": {
+    "organisation_name": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "short_name": "AVM Sangam",
+    "address": "4 A,Anupanadi Coss Road,\r\nChinthamani,\r\nMadurai-625009",
+    "district": "Madurai",
+    "state": "Tamilnadu",
+    "country": "India",
+    "mobile": "9842693420",
+    "email": "vvats@gmail.com",
+    "website": "",
+    "pan_no": null,
+    "gst_no": null,
+    "registration_no": null,
+    "logo": "organisation/logo/logo_7_XwVqgop.png",
+    "president_signature": "signatures/GTM_sign_AtUu87w.png",
+    "secretary_signature": "signatures/sign1.png",
+    "is_active": false,
+    "created_at": "2026-07-17T11:24:03.421Z"
+  }
+},
+{
+  "model": "membership.assessmentyear",
+  "pk": 1,
+  "fields": {
+    "organisation": 1,
+    "start_year": 2026,
+    "end_year": 2027,
+    "is_active": true,
+    "created_at": "2026-07-18T06:48:22.694Z"
+  }
+},
+{
+  "model": "membership.membershiptype",
+  "pk": 2,
+  "fields": {
+    "name": "Annual",
+    "type": "ANNUAL",
+    "fee": "1500.00",
+    "description": "Test\r\n",
+    "is_active": true
+  }
+},
+{
+  "model": "membership.membershiptype",
+  "pk": 4,
+  "fields": {
+    "name": "LifeTime",
+    "type": "LIFETIME",
+    "fee": "15000.00",
+    "description": "lilfetime  member",
+    "is_active": true
+  }
+},
+{
+  "model": "membership.member",
+  "pk": 5,
+  "fields": {
+    "member_no": 1,
+    "membership_no": "2026-001",
+    "joining_date": "2026-07-01",
+    "membership_valid_upto": "2027-03-31",
+    "organisation": 1,
+    "assessment_year": 1,
+    "membership_type": 2,
+    "status": "ACTIVE",
+    "owner_name": "Vijayan Shanmugamoorthy",
+    "company_name": "A.S.Moorthy & Co",
+    "brand_name": "ASM",
+    "photo": "members/photos/ASV_photo.JPG",
+    "company_logo": "",
+    "mobile": "9842693420",
+    "whatsapp": "9842693420",
+    "email": "nandiappalam@gmail.com",
+    "website": "",
+    "ledger": 7,
+    "address": "60 H-2, Palani Arumuga Nagar,\r\nChinthamani,.",
+    "district": "Madurai",
+    "state": "Tamilnadu",
+    "pincode": "625009",
+    "latitude": null,
+    "longitude": null,
+    "qr_code": "members/qrcode/2026-001_iyGfnzA.png",
+    "gst_no": "33CEYPS5094C1ZI",
+    "fssai_no": "1646+56",
+    "udyam_no": "545646",
+    "factory_license_no": "5459456",
+    "do_license_no": "949465",
+    "trade_license_no": "564489",
+    "fire_noc_no": "",
+    "pollution_no": "",
+    "remarks": "",
+    "created_at": "2026-07-23T13:00:42.049Z",
+    "updated_at": "2026-07-23T13:00:42.049Z"
+  }
+},
+{
+  "model": "membership.member",
+  "pk": 6,
+  "fields": {
+    "member_no": 2,
+    "membership_no": "2026-002",
+    "joining_date": "2026-07-20",
+    "membership_valid_upto": "2027-03-31",
+    "organisation": 1,
+    "assessment_year": 1,
+    "membership_type": 2,
+    "status": "ACTIVE",
+    "owner_name": "chandru",
+    "company_name": "BVC Exports Pvt Ltd",
+    "brand_name": "BVC",
+    "photo": "members/photos/ASM_Appalam_Packaging_Close-Up_jj4L2BB.png",
+    "company_logo": "",
+    "mobile": "9894909973",
+    "whatsapp": "9894909973",
+    "email": "bvcexports@gmail.com",
+    "website": "",
+    "ledger": 8,
+    "address": "133/7B, Palani Aruuga Nagar,\r\nChinthamani,\r\n",
+    "district": "Madurai",
+    "state": "Tamilnadu",
+    "pincode": "625009",
+    "latitude": null,
+    "longitude": null,
+    "qr_code": "members/qrcode/2026-002_gXHn0JX.png",
+    "gst_no": "33AAGCB5094C1ZI",
+    "fssai_no": "1564564564",
+    "udyam_no": "648648",
+    "factory_license_no": "56456489",
+    "do_license_no": "561564894",
+    "trade_license_no": "56456489",
+    "fire_noc_no": "",
+    "pollution_no": "",
+    "remarks": "",
+    "created_at": "2026-07-26T07:19:56.053Z",
+    "updated_at": "2026-07-26T07:19:56.053Z"
+  }
+},
+{
+  "model": "membership.feemaster",
+  "pk": 1,
+  "fields": {
+    "organisation": 1,
+    "fee_name": "Admission Fee",
+    "fee_type": "ADMISSION",
+    "ledger": 15,
+    "default_amount": "500.00",
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:14:39.039Z"
+  }
+},
+{
+  "model": "membership.feemaster",
+  "pk": 2,
+  "fields": {
+    "organisation": 1,
+    "fee_name": "membership fee",
+    "fee_type": "MEMBERSHIP",
+    "ledger": 18,
+    "default_amount": "500.00",
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:15:04.676Z"
+  }
+},
+{
+  "model": "membership.feemaster",
+  "pk": 3,
+  "fields": {
+    "organisation": 1,
+    "fee_name": "Processing Fee",
+    "fee_type": "MEMBERSHIP",
+    "ledger": 16,
+    "default_amount": "200.00",
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:16:32.871Z"
+  }
+},
+{
+  "model": "membership.feemaster",
+  "pk": 4,
+  "fields": {
+    "organisation": 1,
+    "fee_name": "Welfare Fund",
+    "fee_type": "WELFARE",
+    "ledger": 17,
+    "default_amount": "300.00",
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:17:42.186Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 1,
+  "fields": {
+    "organisation": 1,
+    "name": "Cash",
+    "ledger": 5,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:37:24.809Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 2,
+  "fields": {
+    "organisation": 1,
+    "name": "RTGS",
+    "ledger": 6,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:38:12.149Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 3,
+  "fields": {
+    "organisation": 1,
+    "name": " UPI trfr",
+    "ledger": 6,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:43:42.132Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 4,
+  "fields": {
+    "organisation": 1,
+    "name": "Bank Transfer",
+    "ledger": 6,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:43:58.331Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 5,
+  "fields": {
+    "organisation": 1,
+    "name": "NEFT",
+    "ledger": 6,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:44:11.808Z"
+  }
+},
+{
+  "model": "membership.paymentmode",
+  "pk": 7,
+  "fields": {
+    "organisation": 1,
+    "name": "Demand Draft",
+    "ledger": 6,
+    "description": "",
+    "is_active": true,
+    "created_at": "2026-07-18T09:47:33.563Z"
+  }
+},
+{
+  "model": "membership.receipt",
+  "pk": 11,
+  "fields": {
+    "receipt_no": 1,
+    "receipt_date": "2026-07-15",
+    "receipt_type": "MEMBERSHIP",
+    "organisation": 1,
+    "assessment_year": 1,
+    "member": 5,
+    "payment_mode": 3,
+    "reference_no": "2155",
+    "remarks": "",
+    "total_amount": "1500.00",
+    "created_at": "2026-07-25T05:01:15.590Z"
+  }
+},
+{
+  "model": "membership.receiptdetail",
+  "pk": 67,
+  "fields": {
+    "receipt": 11,
+    "fee_master": 1,
+    "amount": "500.00"
+  }
+},
+{
+  "model": "membership.receiptdetail",
+  "pk": 68,
+  "fields": {
+    "receipt": 11,
+    "fee_master": 3,
+    "amount": "200.00"
+  }
+},
+{
+  "model": "membership.receiptdetail",
+  "pk": 69,
+  "fields": {
+    "receipt": 11,
+    "fee_master": 4,
+    "amount": "300.00"
+  }
+},
+{
+  "model": "membership.receiptdetail",
+  "pk": 70,
+  "fields": {
+    "receipt": 11,
+    "fee_master": 2,
+    "amount": "500.00"
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 1,
+  "fields": {
+    "name": "Assets",
+    "parent": null,
+    "nature": "ASSET",
+    "display_order": 1,
+    "is_system": true,
+    "is_active": true,
+    "created_at": "2026-07-20T12:40:54.200Z",
+    "updated_at": "2026-07-20T12:40:54.200Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 2,
+  "fields": {
+    "name": "Liabilities",
+    "parent": null,
+    "nature": "LIABILITY",
+    "display_order": 2,
+    "is_system": true,
+    "is_active": true,
+    "created_at": "2026-07-20T12:41:00.798Z",
+    "updated_at": "2026-07-20T12:41:00.798Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 3,
+  "fields": {
+    "name": "Income",
+    "parent": null,
+    "nature": "INCOME",
+    "display_order": 3,
+    "is_system": true,
+    "is_active": true,
+    "created_at": "2026-07-20T12:41:11.946Z",
+    "updated_at": "2026-07-20T12:41:11.946Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 4,
+  "fields": {
+    "name": "Expenses",
+    "parent": null,
+    "nature": "EXPENSE",
+    "display_order": 4,
+    "is_system": true,
+    "is_active": true,
+    "created_at": "2026-07-20T12:41:18.684Z",
+    "updated_at": "2026-07-20T12:41:18.684Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 5,
+  "fields": {
+    "name": "Current Assets",
+    "parent": 1,
+    "nature": "ASSET",
+    "display_order": 10,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:44:25.418Z",
+    "updated_at": "2026-07-20T12:44:25.418Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 6,
+  "fields": {
+    "name": "Fixed Assets",
+    "parent": 1,
+    "nature": "ASSET",
+    "display_order": 11,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:44:35.147Z",
+    "updated_at": "2026-07-20T12:44:35.147Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 7,
+  "fields": {
+    "name": "Current Liabilities",
+    "parent": 2,
+    "nature": "LIABILITY",
+    "display_order": 20,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:44:50.320Z",
+    "updated_at": "2026-07-20T12:44:50.320Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 8,
+  "fields": {
+    "name": "Membership Income",
+    "parent": 3,
+    "nature": "INCOME",
+    "display_order": 30,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:45:09.927Z",
+    "updated_at": "2026-07-20T12:45:09.927Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 9,
+  "fields": {
+    "name": "Other Income",
+    "parent": 3,
+    "nature": "INCOME",
+    "display_order": 31,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:45:17.938Z",
+    "updated_at": "2026-07-20T12:45:17.938Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 10,
+  "fields": {
+    "name": "Office Expenses",
+    "parent": 4,
+    "nature": "EXPENSE",
+    "display_order": 40,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:45:30.546Z",
+    "updated_at": "2026-07-20T12:45:30.546Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 11,
+  "fields": {
+    "name": "Salary Expenses",
+    "parent": 4,
+    "nature": "EXPENSE",
+    "display_order": 41,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:45:37.314Z",
+    "updated_at": "2026-07-20T12:45:37.314Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 12,
+  "fields": {
+    "name": "Electricity Expenses",
+    "parent": 4,
+    "nature": "EXPENSE",
+    "display_order": 42,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-20T12:45:43.022Z",
+    "updated_at": "2026-07-20T12:45:43.022Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 13,
+  "fields": {
+    "name": "Admission Fee Income",
+    "parent": 3,
+    "nature": "",
+    "display_order": 0,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T09:56:59.211Z",
+    "updated_at": "2026-07-23T09:56:59.211Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 14,
+  "fields": {
+    "name": "Processing Fee Income",
+    "parent": 3,
+    "nature": "",
+    "display_order": 0,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T09:56:59.286Z",
+    "updated_at": "2026-07-23T09:56:59.286Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 15,
+  "fields": {
+    "name": "Welfare Fund Income",
+    "parent": 3,
+    "nature": "",
+    "display_order": 0,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T09:57:00.099Z",
+    "updated_at": "2026-07-23T09:57:00.099Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.accountgroup",
+  "pk": 16,
+  "fields": {
+    "name": "Member Receivable",
+    "parent": 5,
+    "nature": "",
+    "display_order": 0,
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T09:57:09.160Z",
+    "updated_at": "2026-07-23T09:57:09.160Z",
+    "code_prefix": null
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 5,
+  "fields": {
+    "ledger_code": "L0001",
+    "ledger_name": "Cash",
+    "group": 5,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-21T09:02:47.687Z",
+    "updated_at": "2026-07-21T15:26:42.219Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 6,
+  "fields": {
+    "ledger_code": "L0002",
+    "ledger_name": "Bank",
+    "group": 5,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-21T09:02:47.687Z",
+    "updated_at": "2026-07-23T09:35:24.666Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 7,
+  "fields": {
+    "ledger_code": "1001",
+    "ledger_name": "A.S.Moorthy & Co",
+    "group": 5,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "Auto Created for Member : 2026-001",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-21T09:39:57.348Z",
+    "updated_at": "2026-07-21T09:39:57.348Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 8,
+  "fields": {
+    "ledger_code": "1002",
+    "ledger_name": "Bvc Exports Pvt Ltd",
+    "group": 5,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "Auto Created for Member : 2026-002",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-21T09:40:20.338Z",
+    "updated_at": "2026-07-21T09:40:20.338Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 9,
+  "fields": {
+    "ledger_code": "1003",
+    "ledger_name": "Skv Traders",
+    "group": 5,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "Auto Created for Member : 2026-003",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-21T09:40:26.820Z",
+    "updated_at": "2026-07-21T09:40:26.821Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 13,
+  "fields": {
+    "ledger_code": "4501",
+    "ledger_name": "Donation Income",
+    "group": 9,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T06:43:46.207Z",
+    "updated_at": "2026-07-23T06:43:46.207Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 14,
+  "fields": {
+    "ledger_code": "4502",
+    "ledger_name": "Subscription Income",
+    "group": 9,
+    "opening_balance": "0.00",
+    "opening_type": "DEBIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T06:44:04.928Z",
+    "updated_at": "2026-07-23T06:44:04.928Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 15,
+  "fields": {
+    "ledger_code": "4004",
+    "ledger_name": "Admission Fee Income",
+    "group": 13,
+    "opening_balance": "0.00",
+    "opening_type": "CREDIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T10:37:10.993Z",
+    "updated_at": "2026-07-23T10:37:10.993Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 16,
+  "fields": {
+    "ledger_code": "4005",
+    "ledger_name": "Processing Fee Income",
+    "group": 14,
+    "opening_balance": "0.00",
+    "opening_type": "CREDIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T10:37:11.073Z",
+    "updated_at": "2026-07-23T10:37:11.073Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 17,
+  "fields": {
+    "ledger_code": "4006",
+    "ledger_name": "Welfare Fund Income",
+    "group": 15,
+    "opening_balance": "0.00",
+    "opening_type": "CREDIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T10:37:11.120Z",
+    "updated_at": "2026-07-23T10:37:11.120Z"
+  }
+},
+{
+  "model": "membership.ledger",
+  "pk": 18,
+  "fields": {
+    "ledger_code": "4007",
+    "ledger_name": "Membership Fee Income",
+    "group": 8,
+    "opening_balance": "0.00",
+    "opening_type": "CREDIT",
+    "remarks": "",
+    "is_system": false,
+    "is_active": true,
+    "created_at": "2026-07-23T10:37:11.167Z",
+    "updated_at": "2026-07-23T10:37:11.167Z"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 9,
+  "fields": {
+    "voucher": 2,
+    "ledger": 7,
+    "debit": "0.00",
+    "credit": "1000.00",
+    "narration": "",
+    "entry_type": "Dr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 10,
+  "fields": {
+    "voucher": 2,
+    "ledger": 5,
+    "debit": "1000.00",
+    "credit": "0.00",
+    "narration": "",
+    "entry_type": "Dr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 13,
+  "fields": {
+    "voucher": 3,
+    "ledger": 8,
+    "debit": "1500.00",
+    "credit": "0.00",
+    "narration": "",
+    "entry_type": "Dr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 14,
+  "fields": {
+    "voucher": 3,
+    "ledger": 5,
+    "debit": "0.00",
+    "credit": "1500.00",
+    "narration": "",
+    "entry_type": "Dr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 45,
+  "fields": {
+    "voucher": 13,
+    "ledger": 6,
+    "debit": "1500.00",
+    "credit": "0.00",
+    "narration": null,
+    "entry_type": "Dr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 46,
+  "fields": {
+    "voucher": 13,
+    "ledger": 15,
+    "debit": "0.00",
+    "credit": "500.00",
+    "narration": null,
+    "entry_type": "Cr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 47,
+  "fields": {
+    "voucher": 13,
+    "ledger": 16,
+    "debit": "0.00",
+    "credit": "200.00",
+    "narration": null,
+    "entry_type": "Cr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 48,
+  "fields": {
+    "voucher": 13,
+    "ledger": 17,
+    "debit": "0.00",
+    "credit": "300.00",
+    "narration": null,
+    "entry_type": "Cr"
+  }
+},
+{
+  "model": "membership.voucherentry",
+  "pk": 49,
+  "fields": {
+    "voucher": 13,
+    "ledger": 18,
+    "debit": "0.00",
+    "credit": "500.00",
+    "narration": null,
+    "entry_type": "Cr"
+  }
+},
+{
+  "model": "events.event",
+  "pk": 2,
+  "fields": {
+    "event_type": "AGM",
+    "event_code": "EV00001",
+    "event_name": "AGM 2026",
+    "organisation": 1,
+    "assessment_year": 1,
+    "event_date": "2026-08-02",
+    "start_time": "09:00:00",
+    "end_time": "12:00:00",
+    "venue": "Brindhavanam Mahal",
+    "description": "",
+    "registration_open": true,
+    "status": "OPEN",
+    "slug": "ev00001-agm-2026",
+    "qr_enabled": true,
+    "gift_coupon": true,
+    "lucky_draw": true,
+    "max_participants": null,
+    "created_at": "2026-07-26T04:40:18.274Z",
+    "updated_at": "2026-07-26T04:40:18.274Z"
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 23,
+  "fields": {
+    "status": "PRESENT",
+    "event": 2,
+    "member": 5,
+    "entry_type": "MEMBER",
+    "checkin_method": "QR",
+    "check_in_time": "2026-07-27T11:41:59.800Z",
+    "coupon_issued": true,
+    "remarks": ""
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 24,
+  "fields": {
+    "status": "PRESENT",
+    "event": 2,
+    "member": 6,
+    "entry_type": "MEMBER",
+    "checkin_method": "QR",
+    "check_in_time": "2026-07-27T11:42:08.975Z",
+    "coupon_issued": true,
+    "remarks": ""
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 25,
+  "fields": {
+    "status": "PRESENT",
+    "event": 2,
+    "member": null,
+    "entry_type": "VISITOR",
+    "checkin_method": "QR",
+    "check_in_time": "2026-07-27T11:42:59.482Z",
+    "coupon_issued": false,
+    "remarks": ""
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 26,
+  "fields": {
+    "status": "PRESENT",
+    "event": 2,
+    "member": null,
+    "entry_type": "VISITOR",
+    "checkin_method": "QR",
+    "check_in_time": "2026-07-27T11:43:31.457Z",
+    "coupon_issued": false,
+    "remarks": ""
+  }
+},
+{
+  "model": "events.eventvisitor",
+  "pk": 3,
+  "fields": {
+    "event": 2,
+    "visitor_name": "sura",
+    "mobile": "8220049094",
+    "company": "sjv",
+    "city": "madurai",
+    "email": "sura@gmail.com",
+    "referred_by": null,
+    "attendance": 25,
+    "printed": false,
+    "printed_at": null,
+    "created_at": "2026-07-27T11:42:59.527Z"
+  }
+},
+{
+  "model": "events.eventvisitor",
+  "pk": 4,
+  "fields": {
+    "event": 2,
+    "visitor_name": "eni",
+    "mobile": "9942249094",
+    "company": "SKV",
+    "city": "madurai",
+    "email": "sk@gmail.com",
+    "referred_by": null,
+    "attendance": 26,
+    "printed": false,
+    "printed_at": null,
+    "created_at": "2026-07-27T11:43:31.519Z"
+  }
+},
+{
+  "model": "events.eventcoupon",
+  "pk": 20,
+  "fields": {
+    "coupon_no": "C0001",
+    "event": 2,
+    "attendance": 23,
+    "lucky_draw_no": 1,
+    "qr_code": "coupon_qr/C0001_pIISzCF.png",
+    "is_winner": false,
+    "prize_name": "",
+    "printed": false,
+    "printed_at": null,
+    "issued_at": "2026-07-27T11:41:59.853Z"
+  }
+},
+{
+  "model": "events.eventcoupon",
+  "pk": 21,
+  "fields": {
+    "coupon_no": "C0002",
+    "event": 2,
+    "attendance": 24,
+    "lucky_draw_no": 2,
+    "qr_code": "coupon_qr/C0002.png",
+    "is_winner": false,
+    "prize_name": "",
+    "printed": false,
+    "printed_at": null,
+    "issued_at": "2026-07-27T11:42:09.040Z"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add user",
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change user",
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete user",
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view user",
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add assessment year",
+    "content_type": [
+      "membership",
+      "assessmentyear"
+    ],
+    "codename": "add_assessmentyear"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change assessment year",
+    "content_type": [
+      "membership",
+      "assessmentyear"
+    ],
+    "codename": "change_assessmentyear"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete assessment year",
+    "content_type": [
+      "membership",
+      "assessmentyear"
+    ],
+    "codename": "delete_assessmentyear"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view assessment year",
+    "content_type": [
+      "membership",
+      "assessmentyear"
+    ],
+    "codename": "view_assessmentyear"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add document type",
+    "content_type": [
+      "membership",
+      "documenttype"
+    ],
+    "codename": "add_documenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change document type",
+    "content_type": [
+      "membership",
+      "documenttype"
+    ],
+    "codename": "change_documenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete document type",
+    "content_type": [
+      "membership",
+      "documenttype"
+    ],
+    "codename": "delete_documenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view document type",
+    "content_type": [
+      "membership",
+      "documenttype"
+    ],
+    "codename": "view_documenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add membership type",
+    "content_type": [
+      "membership",
+      "membershiptype"
+    ],
+    "codename": "add_membershiptype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change membership type",
+    "content_type": [
+      "membership",
+      "membershiptype"
+    ],
+    "codename": "change_membershiptype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete membership type",
+    "content_type": [
+      "membership",
+      "membershiptype"
+    ],
+    "codename": "delete_membershiptype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view membership type",
+    "content_type": [
+      "membership",
+      "membershiptype"
+    ],
+    "codename": "view_membershiptype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add organisation",
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "codename": "add_organisation"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change organisation",
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "codename": "change_organisation"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete organisation",
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "codename": "delete_organisation"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view organisation",
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "codename": "view_organisation"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add member",
+    "content_type": [
+      "membership",
+      "member"
+    ],
+    "codename": "add_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change member",
+    "content_type": [
+      "membership",
+      "member"
+    ],
+    "codename": "change_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete member",
+    "content_type": [
+      "membership",
+      "member"
+    ],
+    "codename": "delete_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view member",
+    "content_type": [
+      "membership",
+      "member"
+    ],
+    "codename": "view_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add member document",
+    "content_type": [
+      "membership",
+      "memberdocument"
+    ],
+    "codename": "add_memberdocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change member document",
+    "content_type": [
+      "membership",
+      "memberdocument"
+    ],
+    "codename": "change_memberdocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete member document",
+    "content_type": [
+      "membership",
+      "memberdocument"
+    ],
+    "codename": "delete_memberdocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view member document",
+    "content_type": [
+      "membership",
+      "memberdocument"
+    ],
+    "codename": "view_memberdocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add user profile",
+    "content_type": [
+      "membership",
+      "userprofile"
+    ],
+    "codename": "add_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change user profile",
+    "content_type": [
+      "membership",
+      "userprofile"
+    ],
+    "codename": "change_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete user profile",
+    "content_type": [
+      "membership",
+      "userprofile"
+    ],
+    "codename": "delete_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view user profile",
+    "content_type": [
+      "membership",
+      "userprofile"
+    ],
+    "codename": "view_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add fee master",
+    "content_type": [
+      "membership",
+      "feemaster"
+    ],
+    "codename": "add_feemaster"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change fee master",
+    "content_type": [
+      "membership",
+      "feemaster"
+    ],
+    "codename": "change_feemaster"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete fee master",
+    "content_type": [
+      "membership",
+      "feemaster"
+    ],
+    "codename": "delete_feemaster"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view fee master",
+    "content_type": [
+      "membership",
+      "feemaster"
+    ],
+    "codename": "view_feemaster"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add payment mode",
+    "content_type": [
+      "membership",
+      "paymentmode"
+    ],
+    "codename": "add_paymentmode"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change payment mode",
+    "content_type": [
+      "membership",
+      "paymentmode"
+    ],
+    "codename": "change_paymentmode"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete payment mode",
+    "content_type": [
+      "membership",
+      "paymentmode"
+    ],
+    "codename": "delete_paymentmode"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view payment mode",
+    "content_type": [
+      "membership",
+      "paymentmode"
+    ],
+    "codename": "view_paymentmode"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add receipt",
+    "content_type": [
+      "membership",
+      "receipt"
+    ],
+    "codename": "add_receipt"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change receipt",
+    "content_type": [
+      "membership",
+      "receipt"
+    ],
+    "codename": "change_receipt"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete receipt",
+    "content_type": [
+      "membership",
+      "receipt"
+    ],
+    "codename": "delete_receipt"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view receipt",
+    "content_type": [
+      "membership",
+      "receipt"
+    ],
+    "codename": "view_receipt"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add receipt detail",
+    "content_type": [
+      "membership",
+      "receiptdetail"
+    ],
+    "codename": "add_receiptdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change receipt detail",
+    "content_type": [
+      "membership",
+      "receiptdetail"
+    ],
+    "codename": "change_receiptdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete receipt detail",
+    "content_type": [
+      "membership",
+      "receiptdetail"
+    ],
+    "codename": "delete_receiptdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view receipt detail",
+    "content_type": [
+      "membership",
+      "receiptdetail"
+    ],
+    "codename": "view_receiptdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add member renewal",
+    "content_type": [
+      "membership",
+      "memberrenewal"
+    ],
+    "codename": "add_memberrenewal"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change member renewal",
+    "content_type": [
+      "membership",
+      "memberrenewal"
+    ],
+    "codename": "change_memberrenewal"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete member renewal",
+    "content_type": [
+      "membership",
+      "memberrenewal"
+    ],
+    "codename": "delete_memberrenewal"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view member renewal",
+    "content_type": [
+      "membership",
+      "memberrenewal"
+    ],
+    "codename": "view_memberrenewal"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add ledger",
+    "content_type": [
+      "membership",
+      "ledger"
+    ],
+    "codename": "add_ledger"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change ledger",
+    "content_type": [
+      "membership",
+      "ledger"
+    ],
+    "codename": "change_ledger"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete ledger",
+    "content_type": [
+      "membership",
+      "ledger"
+    ],
+    "codename": "delete_ledger"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view ledger",
+    "content_type": [
+      "membership",
+      "ledger"
+    ],
+    "codename": "view_ledger"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Account Group",
+    "content_type": [
+      "membership",
+      "accountgroup"
+    ],
+    "codename": "add_accountgroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Account Group",
+    "content_type": [
+      "membership",
+      "accountgroup"
+    ],
+    "codename": "change_accountgroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Account Group",
+    "content_type": [
+      "membership",
+      "accountgroup"
+    ],
+    "codename": "delete_accountgroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Account Group",
+    "content_type": [
+      "membership",
+      "accountgroup"
+    ],
+    "codename": "view_accountgroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add voucher",
+    "content_type": [
+      "membership",
+      "voucher"
+    ],
+    "codename": "add_voucher"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change voucher",
+    "content_type": [
+      "membership",
+      "voucher"
+    ],
+    "codename": "change_voucher"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete voucher",
+    "content_type": [
+      "membership",
+      "voucher"
+    ],
+    "codename": "delete_voucher"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view voucher",
+    "content_type": [
+      "membership",
+      "voucher"
+    ],
+    "codename": "view_voucher"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add voucher entry",
+    "content_type": [
+      "membership",
+      "voucherentry"
+    ],
+    "codename": "add_voucherentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change voucher entry",
+    "content_type": [
+      "membership",
+      "voucherentry"
+    ],
+    "codename": "change_voucherentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete voucher entry",
+    "content_type": [
+      "membership",
+      "voucherentry"
+    ],
+    "codename": "delete_voucherentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view voucher entry",
+    "content_type": [
+      "membership",
+      "voucherentry"
+    ],
+    "codename": "view_voucherentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event",
+    "content_type": [
+      "events",
+      "event"
+    ],
+    "codename": "add_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event",
+    "content_type": [
+      "events",
+      "event"
+    ],
+    "codename": "change_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event",
+    "content_type": [
+      "events",
+      "event"
+    ],
+    "codename": "delete_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event",
+    "content_type": [
+      "events",
+      "event"
+    ],
+    "codename": "view_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event attendance",
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "codename": "add_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event attendance",
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "codename": "change_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event attendance",
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "codename": "delete_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event attendance",
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "codename": "view_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event visitor",
+    "content_type": [
+      "events",
+      "eventvisitor"
+    ],
+    "codename": "add_eventvisitor"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event visitor",
+    "content_type": [
+      "events",
+      "eventvisitor"
+    ],
+    "codename": "change_eventvisitor"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event visitor",
+    "content_type": [
+      "events",
+      "eventvisitor"
+    ],
+    "codename": "delete_eventvisitor"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event visitor",
+    "content_type": [
+      "events",
+      "eventvisitor"
+    ],
+    "codename": "view_eventvisitor"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event coupon",
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "codename": "add_eventcoupon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event coupon",
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "codename": "change_eventcoupon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event coupon",
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "codename": "delete_eventcoupon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event coupon",
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "codename": "view_eventcoupon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event prize",
+    "content_type": [
+      "events",
+      "eventprize"
+    ],
+    "codename": "add_eventprize"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event prize",
+    "content_type": [
+      "events",
+      "eventprize"
+    ],
+    "codename": "change_eventprize"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event prize",
+    "content_type": [
+      "events",
+      "eventprize"
+    ],
+    "codename": "delete_eventprize"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event prize",
+    "content_type": [
+      "events",
+      "eventprize"
+    ],
+    "codename": "view_eventprize"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add event winner",
+    "content_type": [
+      "events",
+      "eventwinner"
+    ],
+    "codename": "add_eventwinner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change event winner",
+    "content_type": [
+      "events",
+      "eventwinner"
+    ],
+    "codename": "change_eventwinner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete event winner",
+    "content_type": [
+      "events",
+      "eventwinner"
+    ],
+    "codename": "delete_eventwinner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view event winner",
+    "content_type": [
+      "events",
+      "eventwinner"
+    ],
+    "codename": "view_eventwinner"
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$AECI28gpXVemI830ibuwNw$S5KXb1WLLHc8R3wRlOW4ARu2GbuTEtIGeHsmeILf4OA=",
+    "last_login": "2026-07-22T13:21:59.646Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "nandiappalam@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-07-17T11:21:30.791Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$xXXEAq4WfJoKh8Hq4yhO7E$i33LPWA2437KujEP1jOQ/96sOM0WKzN0lzfwyQGcAjs=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "padmaviji",
+    "first_name": "",
+    "last_name": "",
+    "email": "nandiappalam@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-07-25T15:31:04.787Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "membership.voucher",
+  "pk": 1,
+  "fields": {
+    "voucher_no": "RV000001",
+    "voucher_type": "RV",
+    "voucher_date": "2026-07-21",
+    "narration": "",
+    "reference_no": "",
+    "status": "CANCELLED",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-21T15:04:09.548Z",
+    "updated_at": "2026-07-22T08:26:07.482Z"
+  }
+},
+{
+  "model": "membership.voucher",
+  "pk": 2,
+  "fields": {
+    "voucher_no": "RV000002",
+    "voucher_type": "RV",
+    "voucher_date": "2026-07-21",
+    "narration": "test 1",
+    "reference_no": "1254",
+    "status": "CANCELLED",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-21T15:52:09.848Z",
+    "updated_at": "2026-07-25T05:03:03.780Z"
+  }
+},
+{
+  "model": "membership.voucher",
+  "pk": 3,
+  "fields": {
+    "voucher_no": "PV000001",
+    "voucher_type": "PV",
+    "voucher_date": "2026-07-22",
+    "narration": "office expence",
+    "reference_no": "test ",
+    "status": "CANCELLED",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-22T09:40:42.854Z",
+    "updated_at": "2026-07-25T05:03:57.005Z"
+  }
+},
+{
+  "model": "membership.voucher",
+  "pk": 13,
+  "fields": {
+    "voucher_no": "RV00004",
+    "voucher_type": "RV",
+    "voucher_date": "2026-07-15",
+    "narration": "Receipt No 1",
+    "reference_no": "1",
+    "status": "ACTIVE",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-25T05:01:15.604Z",
+    "updated_at": "2026-07-25T05:01:15.604Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-07-26T05:53:18.440Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "object_id": "1",
+    "object_repr": "CP000001",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-07-26T05:53:29.374Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "1",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-07-26T05:54:28.817Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventcoupon"
+    ],
+    "object_id": "2",
+    "object_repr": "CP000001",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-07-26T05:54:37.267Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "2",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-07-26T06:10:12.687Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "3",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-07-26T06:15:49.892Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "4",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-07-26T06:17:34.436Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "5",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-07-26T06:21:33.123Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "6",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-07-26T06:25:26.409Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "7",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-07-26T06:30:28.190Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "8",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-07-26T06:32:18.374Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "9",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-07-26T06:38:21.196Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "10",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-07-26T07:38:03.893Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "12",
+    "object_repr": "2026-002 - chandru",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-07-26T07:38:03.893Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "11",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-07-26T07:48:16.981Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "14",
+    "object_repr": "2026-002 - chandru",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-07-26T07:48:16.982Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "13",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2026-07-26T08:04:39.444Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "15",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2026-07-26T09:44:01.449Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "18",
+    "object_repr": "Attendance #18",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2026-07-26T09:44:01.449Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "17",
+    "object_repr": "Attendance #17",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2026-07-26T09:44:01.449Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "16",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2026-07-27T03:00:30.090Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "19",
+    "object_repr": "Attendance #19",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2026-07-27T03:13:48.866Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "20",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2026-07-27T04:47:33.502Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "21",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2026-07-27T10:23:10.590Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "events",
+      "eventattendance"
+    ],
+    "object_id": "22",
+    "object_repr": "2026-001 - Vijayan Shanmugamoorthy",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2026-07-28T15:13:33.126Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2026-07-28T15:18:00.666Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2026-07-28T15:21:57.710Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Secretary signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2026-07-28T15:31:49.673Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2026-07-28T15:32:27.577Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2026-07-28T15:33:40.843Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2026-07-28T15:34:36.001Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2026-07-28T15:35:01.048Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2026-07-28T15:38:28.495Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "membership",
+      "organisation"
+    ],
+    "object_id": "1",
+    "object_repr": "Tamilnadu Appalam Vadagam Morvathal Association",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"President signature\"]}}]"
+  }
 }
 ]
