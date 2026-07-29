@@ -43,6 +43,18 @@ class Organisation(models.Model):
         null=True,
     )
 
+    president_signature = models.ImageField(
+        upload_to="signatures/",
+        blank=True,
+        null=True
+    )
+
+    secretary_signature = models.ImageField(
+        upload_to="signatures/",
+        blank=True,
+        null=True
+    )
+
 
     is_active = models.BooleanField(default=True)
 
@@ -51,6 +63,7 @@ class Organisation(models.Model):
 
     def __str__(self):
         return self.organisation_name
+
 
 class UserProfile(models.Model):
 

@@ -163,7 +163,17 @@ body{
     letter-spacing:1px;
     color:#0b2c52;
 }
- 
+
+.script-name{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:42px;
+    font-weight:bold;
+    color:#c9a227;
+    margin-top:3mm;
+    line-height:1.1;
+    text-transform:uppercase;
+}
+/*
 .script-name{
     font-family:"Great Vibes", "Brush Script MT", cursive;
     font-size:58px;
@@ -171,7 +181,7 @@ body{
     margin-top:3mm;
     line-height:1;
 }
- 
+ */
 .owner-name{
     font-size:14px;
     font-weight:600;
@@ -214,37 +224,6 @@ body{
  
 /* ============== SIGNATURES ============== */
  
-.signature-area{
-    position:relative;
-    z-index:4;
-    margin-top:8mm;
-    display:flex;
-    justify-content:center;
-    gap:40mm;
-}
- 
-.sign{
-    width:55mm;
-    text-align:center;
-}
- 
-.sign-line{
-    border-top:1.5px solid #cda43d;
-    margin-bottom:2mm;
-}
- 
-.sign-role{
-    font-size:12px;
-    font-weight:700;
-    color:#c9a227;
-    letter-spacing:0.5px;
-}
- 
-.sign-org{
-    font-size:11px;
-    color:#0b2c52;
-    margin-top:0.5mm;
-}
 
 .toolbar{
     text-align:center;
@@ -279,6 +258,63 @@ body{
     }
 
 }
+
+.signature-area{
+    position:absolute;
+    bottom:28mm;
+    left:0;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    gap:80mm;
+    z-index:10;
+}
+
+.sign{
+    width:70mm;
+    text-align:center;
+}
+
+.sign-signature{
+    height:35px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    margin-bottom:4px;
+}
+
+.sign-signature img{
+    max-width:120px;
+    max-height:75px;
+    object-fit:contain;
+    
+}
+
+.sign-line{
+    border-top:1.5px solid #cda43d;
+    margin-bottom:4px;
+}
+
+.sign-role{
+    font-weight:bold;
+    color:#b8860b;
+}
+
+.sign-org{
+    font-size:11px;
+    color:#0b2c52;
+}
+.designer{
+    position:absolute;
+    bottom:16mm;
+    left:0;
+    right:0;
+    text-align:center;
+    font-size:11px;
+    color:#555;
+    z-index:5;
+}
+
 
 
 </style>
@@ -319,25 +355,60 @@ body{
  
     </div>
  
+    <div class="sign">
+
     <div class="signature-area">
- 
-        <div class="sign">
-            <div class="sign-line"></div>
-            <div class="sign-role">President</div>
-            <div class="sign-org">{{ member.organisation.organisation_name }}</div>
+
+    <div class="sign">
+
+        <div class="sign-signature">
+            {% if member.organisation.president_signature %}
+                <img src="{{ member.organisation.president_signature.url }}">
+            {% endif %}
         </div>
- 
-        <div class="sign">
-            <div class="sign-line"></div>
-            <div class="sign-role">Secretary</div>
-            <div class="sign-org">{{ member.organisation.organisation_name }}</div>
+
+        <div class="sign-line"></div>
+
+        <div class="sign-role">
+            President
         </div>
- 
+
+        <div class="sign-org">
+            {{ member.organisation.organisation_name }}
+        </div>
+
     </div>
+
+
+    <div class="sign">
+
+        <div class="sign-signature">
+            {% if member.organisation.secretary_signature %}
+                <img src="{{ member.organisation.secretary_signature.url }}">
+            {% endif %}
+        </div>
+
+        <div class="sign-line"></div>
+
+        <div class="sign-role">
+            Secretary
+        </div>
+
+        <div class="sign-org">
+            {{ member.organisation.organisation_name }}
+        </div>
+
+    </div>
+
+</div>
  
     <div class="footer-navy"></div>
     <div class="ribbon-gold-bottom"></div>
  
+<div class="designer">
+    Designed By : <b>BVC Infotech</b> | 📞 9842693420
+</div>
+
 </div>
  
 </body>

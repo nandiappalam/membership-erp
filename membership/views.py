@@ -4225,3 +4225,12 @@ def income_expenditure(request):
     )
 
 
+def db_check(request):
+    db = settings.DATABASES["default"]
+    return HttpResponse(
+        f"""
+        ENGINE: {db['ENGINE']}<br>
+        NAME: {db['NAME']}<br>
+        HOST: {db.get('HOST', '')}<br>
+        """
+    )
