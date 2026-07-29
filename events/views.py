@@ -730,3 +730,25 @@ def visitor_report_print(request):
     )
 
 
+def member_count(request):
+    members = Member.objects.order_by("-id")[:20]
+
+    html = f"Total Members: {Member.objects.count()}<br><br>"
+
+    for m in members:
+        html += f"{m.id} - {m.owner_name}<br>"
+
+    return HttpResponse(html)
+
+
+
+def db_check(request):
+    db = settings.DATABASES["default"]
+    return HttpResponse(
+        f"""
+        ENGINE: {db['ENGINE']}<br>
+        NAME: {db['NAME']}<br>
+        HOST: {db.get('HOST', '')}<br>
+        """
+    )
+
