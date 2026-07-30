@@ -292,10 +292,6 @@ class EventCoupon(models.Model):
         blank=True
     )
 
-    printed = models.BooleanField(
-        default=False
-    )
-
     printed_at = models.DateTimeField(
         null=True,
         blank=True
@@ -353,11 +349,15 @@ class EventCoupon(models.Model):
 
             qr.save(buffer, format="PNG")
 
+            buffer.seek(0)
+
             self.qr_code.save(
                 f"{self.coupon_no}.png",
                 File(buffer),
                 save=False
             )
+
+            buffer.close()
 
             super().save(update_fields=["qr_code"])
 

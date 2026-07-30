@@ -297,7 +297,12 @@ def coupon_print(request, id):
     if not coupon.printed:
         coupon.printed = True
         coupon.printed_at = timezone.now()
-        coupon.save(update_fields=["printed", "printed_at"])
+        EventCoupon.objects.filter(
+            id=coupon.id
+        ).update(
+            printed=True,
+            printed_at=timezone.now()
+        )
 
     return render(
         request,

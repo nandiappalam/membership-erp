@@ -276,14 +276,19 @@ class Member(models.Model):
             qr_data = qr_url
 
             buffer = BytesIO()
-            qr.save(buffer, format="PNG")
 
-            self.qr_code.save(
-                f"{self.membership_no}.png",
-                ContentFile(buffer.getvalue()),
-                save=False,
+            qr.save(
+                buffer,
+                format="PNG"
             )
 
+            buffer.seek(0)
+
+            self.qr_code.save(
+                f"{self.coupon_no}.png",
+                ContentFile(buffer.read()),
+                save=False,
+            )
             buffer.close()
 
             super().save(update_fields=["qr_code"])
