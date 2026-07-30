@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rdez4=d&*s!c&@-ordz8l*onflc_@fx_opyhzmv$xfwy$x2+r9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'membership',
     "django.contrib.humanize",
     'events.apps.EventsConfig',
+     "cloudinary",
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
@@ -164,4 +166,18 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
 
-SITE_URL = "http://127.0.0.1:8000"
+SITE_URL = os.environ.get(
+    "SITE_URL",
+    "http://127.0.0.1:8000"
+)
+
+
+import cloudinary
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
