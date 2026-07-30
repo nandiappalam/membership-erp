@@ -726,7 +726,6 @@ def member_edit(request, id):
             member.membership_valid_upto = date(valid_year, 3, 31)
 
         if request.FILES.get("photo"):
-            print("PHOTO RECEIVED:", request.FILES["photo"].name)
             member.photo = request.FILES["photo"]
         else:
             print("NO PHOTO RECEIVED")
