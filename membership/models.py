@@ -5,6 +5,7 @@ from io import BytesIO
 from django.core.files import File
 from PIL import Image
 from django.utils import timezone
+from django.core.files.base import ContentFile
 
 class Organisation(models.Model):
     organisation_name = models.CharField(max_length=200)
@@ -156,32 +157,6 @@ class Member(models.Model):
         ("SUSPENDED", "Suspended"),
     )
 
-    def save(self, *args, **kwargs):
-
-        is_new = self.pk is None
-
-        super().save(*args, **kwargs)
-
-        # Auto create member ledger
-        if is_new and self.ledger is None:
-
-            from .models import Ledger, AccountGroup
-
-            group = AccountGroup.objects.get(
-                name="Member Receivable"
-            )
-
-            ledger = Ledger.objects.create(
-                ledger_code=f"MEM-{self.id:05d}",
-                ledger_name=self.company_name.strip(),
-                group=group,
-                opening_balance=0,
-                opening_type="Dr",
-                remarks="Auto created Member Ledger"
-            )
-
-            self.ledger = ledger
-            super().save(update_fields=["ledger"])
 
     # =========================
     # Membership
@@ -232,13 +207,6 @@ class Member(models.Model):
     email = models.EmailField(blank=True)
 
     website = models.URLField(blank=True)
-    ledger = models.ForeignKey(
-        "Ledger",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="member",
-    )
     # =========================
     # Address
     # =========================
@@ -287,34 +255,36 @@ class Member(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def save(self, *args, **kwargs):
 
+        creating = self.pk is None
+
         super().save(*args, **kwargs)
 
-        qr_data = (
-            f"Member No : {self.membership_no}\n"
-            f"Name : {self.owner_name}\n"
-            f"Company : {self.company_name}\n"
-            f"Organisation : {self.organisation.organisation_name}\n"
-            f"Mobile : {self.mobile}\n"
-            f"Valid Upto : {self.membership_valid_upto}"
-        )
+        # Generate QR only once (or when it doesn't exist)
+        if creating or not self.qr_code:
 
-        qr = qrcode.make(qr_data)
+            qr_data = (
+                f"Member No : {self.membership_no}\n"
+                f"Name : {self.owner_name}\n"
+                f"Company : {self.company_name}\n"
+                f"Organisation : {self.organisation.organisation_name}\n"
+                f"Mobile : {self.mobile}\n"
+                f"Valid Upto : {self.membership_valid_upto}"
+            )
 
-        canvas = BytesIO()
+            qr = qrcode.make(qr_data)
 
-        qr.save(canvas, format="PNG")
+            buffer = BytesIO()
+            qr.save(buffer, format="PNG")
 
-        filename = f"{self.membership_no}.png"
+            self.qr_code.save(
+                f"{self.membership_no}.png",
+                ContentFile(buffer.getvalue()),
+                save=False,
+            )
 
-        self.qr_code.save(
-            filename,
-            File(canvas),
-            save=False,
-        )
+            buffer.close()
 
-        canvas.close()
-
-        super().save(update_fields=["qr_code"])
+            super().save(update_fields=["qr_code"])
 
     def __str__(self):
         return f"{self.member_no} - {self.company_name}"

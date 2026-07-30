@@ -649,34 +649,6 @@ def member_create(request):
         member.save()
          
 
-        # ===============================
-        # AUTO CREATE LEDGER
-        # ===============================
-
-        ledger_name = member.company_name.strip().title()
-
-        ledger = Ledger.objects.filter(
-            ledger_name__iexact=ledger_name
-        ).first()
-
-        if ledger is None:
-
-            group = AccountGroup.objects.get(
-                name="Member Receivable"
-            )
-
-            ledger = Ledger.objects.create(
-                ledger_code=get_next_ledger_code(group),
-                ledger_name=ledger_name,
-                group=group,
-                opening_balance=0,
-                opening_type="DEBIT",
-                remarks=f"Auto Created for Member : {member.membership_no}",
-            )
-
-        member.ledger = ledger
-        member.save(update_fields=["ledger"])
-
         messages.success(request, "Member Created Successfully")
 
         return redirect("member_list")
@@ -778,49 +750,22 @@ def member_edit(request, id):
             "membership_types": membership_types,
         },
     )
-
 @login_required(login_url="login")
 def member_delete(request, id):
 
-    member = get_object_or_404(
-        Member,
-        id=id
-    )
+    member = get_object_or_404(Member, id=id)
 
     if request.method == "POST":
-
-        if member.ledger:
-
-            from .models import VoucherEntry
-
-            used = VoucherEntry.objects.filter(
-                ledger=member.ledger
-            ).exists()
-
-            if used:
-                messages.error(
-                    request,
-                    "Cannot delete member. Ledger transactions exist."
-                )
-                return redirect("member_list")
-
-
         member.delete()
-
-        messages.success(
-            request,
-            "Member deleted successfully"
-        )
-
+        messages.success(request, "Member deleted successfully")
         return redirect("member_list")
-
 
     return render(
         request,
         "membership/member/delete.html",
         {
-            "member":member
-        }
+            "member": member,
+        },
     )
 
 @login_required(login_url="login")

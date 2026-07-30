@@ -456,10 +456,8 @@ body{
  
         <div class="photo">
             {% if member.photo %}
-            <div class="photo">
-                <img src="{{ member.photo.url }}" alt="Member Photo">
-            </div>
-            {% endif %}
+<img src="{{ member.photo.url }}" class="member-photo">
+{% endif %}
         </div>
  
         <div class="details">
@@ -488,8 +486,8 @@ body{
  
         <div class="qr">
             {% if member.qr_code %}
-            <img src="{{ member.qr_code.url }}">
-            {% endif %}
+<img src="{{ member.qr_code.url }}" class="qr-photo">
+{% endif %}
         </div>
  
     </div>
