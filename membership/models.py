@@ -6,6 +6,9 @@ from django.core.files import File
 from PIL import Image
 from django.utils import timezone
 from django.core.files.base import ContentFile
+from django.conf import settings
+from django.urls import reverse
+
 
 class Organisation(models.Model):
     organisation_name = models.CharField(max_length=200)
@@ -262,16 +265,15 @@ class Member(models.Model):
         # Generate QR only once (or when it doesn't exist)
         if creating or not self.qr_code:
 
-            qr_data = (
-                f"Member No : {self.membership_no}\n"
-                f"Name : {self.owner_name}\n"
-                f"Company : {self.company_name}\n"
-                f"Organisation : {self.organisation.organisation_name}\n"
-                f"Mobile : {self.mobile}\n"
-                f"Valid Upto : {self.membership_valid_upto}"
+            qr_url = (
+                settings.SITE_URL +
+                reverse(
+                    "member_id_card",
+                    args=[self.id]
+                )
             )
 
-            qr = qrcode.make(qr_data)
+            qr_data = qr_url
 
             buffer = BytesIO()
             qr.save(buffer, format="PNG")

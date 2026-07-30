@@ -40,6 +40,14 @@ ALLOWED_HOSTS = [
     
 ]
 
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https"
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://membership-erp.onrender.com",
+]
 
 # Application definition
 
@@ -171,7 +179,7 @@ LOGOUT_REDIRECT_URL = "login"
 
 SITE_URL = os.environ.get(
     "SITE_URL",
-    "http://127.0.0.1:8000"
+    "https://membership-erp.onrender.com"
 )
 
 
