@@ -262,33 +262,26 @@ class Member(models.Model):
 
         super().save(*args, **kwargs)
 
-        # Generate QR only once (or when it doesn't exist)
         if creating or not self.qr_code:
 
-            qr_url = (
-                settings.SITE_URL +
-                reverse(
-                    "member_id_card",
-                    args=[self.id]
-                )
+            qr_url = settings.SITE_URL + reverse(
+                "member_id_card",
+                args=[self.id]
             )
 
-            qr_data = qr_url
+            # Create QR Image
+            qr = qrcode.make(qr_url)
 
             buffer = BytesIO()
-
-            qr.save(
-                buffer,
-                format="PNG"
-            )
-
+            qr.save(buffer, format="PNG")
             buffer.seek(0)
 
             self.qr_code.save(
-                f"{self.coupon_no}.png",
+                f"{self.membership_no}.png",
                 ContentFile(buffer.read()),
                 save=False,
             )
+
             buffer.close()
 
             super().save(update_fields=["qr_code"])
